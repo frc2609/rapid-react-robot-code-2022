@@ -1,0 +1,11 @@
+{
+  "SysId": {
+    "Analysis Type": "General Mechanism",
+    "AnalyzerJSONLocation": "C:\\Users\\student\\Documents\\armsysid\\geared\\sysid_data20220205-130859.json",
+    "NetworkTables Settings": {
+      "serverTeam": "2609"
+    },
+    "mode": "Client",
+    "serverTeam": "2609"
+  }
+}
