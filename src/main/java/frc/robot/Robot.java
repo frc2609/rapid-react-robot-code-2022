@@ -108,8 +108,8 @@ public class Robot extends TimedRobot {
       ballIsRed = false;
     } else if (match.color == kRedTarget) {
       colorString = "Red";
-      ballIsRed = true;
       ballIsBlue = false;
+      ballIsRed = true;
     } else if (match.color == kGreenTarget) {
       colorString = "Green";
       ballIsBlue = false;
