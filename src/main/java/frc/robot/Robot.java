@@ -36,14 +36,7 @@ public class Robot extends TimedRobot {
   private final XboxController joystick = new XboxController(0);
   // gyro/navx
   private AHRS navx;
-  /*
-  // climbing
-  // do we need to declare these here (can't they be in the climb() function?)
-  private boolean currentlyClimbing; // might have to declare here
-  private double maxPitchForwardDegrees = 15; // placeholder value
-  private double maxPitchBackwardDegrees = -15; // placeholder value
-  // assuming that pitch forward is positive and pitch backward is negative
-  */
+
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
@@ -60,9 +53,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() 
   {
-    //SmartDashboard.putBoolean("Climbing Enabled ", currentlyClimbing);
     //SmartDashboard.putNumber("NavX Pitch:", navx.getPitch());
-    // smart dashboard.put stats (navx connected bool, yaw, pitch, roll, climbing bool)
   }
 
   @Override
@@ -87,6 +78,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // setup barMotor PID
     barMotor.getEncoder().setPosition(0);
     barPID = barMotor.getPIDController();
     barPID.setP(0.034173);
@@ -110,13 +102,15 @@ public class Robot extends TimedRobot {
     frontRightMotor.set(-rightMotors);
     rearRightMotor.set(rightMotors);
     // climbing
-    // 4rx, 5ry joystick axis
+    // 0lx, 1ry, 4rx, 5ry joystick axis
     hookMotor.set(Math.pow(joystick.getRawAxis(5), 3));
     double armSetp = SmartDashboard.getNumber("arm setpoint", -6);
-    if (joystick.getXButton()) { // move climbing bar into place }
+    // activate barMotor
+    if (joystick.getXButton()) {
       barPID.setReference(armSetp, ControlType.kPosition);
       System.out.println("SETTING");
-    }else{
+    }
+    else {
       barMotor.set(0);
     }
     // barMotor.fsset(Math.pow(joystick.getRawAxis(4), 3));
@@ -137,33 +131,4 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {}
-
-  /*
-  public void climb(){
-    // hook motors
-    if (joystick.getLeftBumperPressed())
-    hookMotor.set(-0.2);
-    if (joystick.getRightBumperPressed())
-    hookMotor.set(0.2);
-    if (joystick.getLeftBumperReleased())
-    hookMotor.set(0);
-    if (joystick.getRightBumperReleased())
-    hookMotor.set(0);
-    
-    if (navx.getRoll() >= maxPitchForwardDegrees) 
-      climbingAngleMotor.set(0.2);
-    else if (navx.getRoll() <= maxPitchBackwardDegrees)
-      climbingAngleMotor.set(-0.2); // figure out which direction goes back and forward
-    else
-      climbingAngleMotor.set(0);
-      // above code is for balancing
-
-    // from back of robot:
-    //* roll = tilt left/right
-    //* yaw = turn left/right
-    //* pitch = tilt forward/back <- this is what we need
-    //
-    // probably want a delay so that it doesn't try to readjust when the motor is trying to move the robot
-  }
-  */
 }
