@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser; // selecting auto m
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.Joystick;
 
 import com.revrobotics.CANSparkMax; // motors
 import com.revrobotics.SparkMaxPIDController;
@@ -48,15 +48,15 @@ public class Robot extends TimedRobot {
 
   private final ColorSensorV3 colorSensor1 = new ColorSensorV3(i2cPortDef);
   // private final ColorSensorV3 colorSensor2 = new ColorSensorV3(i2cPortMXP);
-
+  
   private final ColorMatch colorMatcher = new ColorMatch();
-
+  
   // Adjustable colour values
   private final Color kBlueTarget = new Color(0.200, 0.450, 0.300);
   private final Color kGreenTarget = new Color(0.197, 0.561, 0.240);
   private final Color kRedTarget = new Color(0.561, 0.332, 0.100);
   private final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
-
+  
   private static boolean ballIsRed = false;
   private static boolean ballIsBlue = false;
   private static boolean dumpBall = false;
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
     { 
       System.out.println("Failed to initialize NAVX "); 
     }
-
+    
     colorMatcher.addColorMatch(kBlueTarget);
     colorMatcher.addColorMatch(kGreenTarget);
     colorMatcher.addColorMatch(kRedTarget);
@@ -83,10 +83,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() 
   {
     // smart dashboard.put stats (navx connected bool, yaw, pitch, roll, climbing bool)
-
-    //Detects the colour, outputs it into the dashboard, and sets the ball colour ("ballIsBlue", "ballIsRed")
+    // Detects the colour, outputs it into the dashboard, and sets the ball colour ("ballIsBlue", "ballIsRed")
     Color detectedColor = colorSensor1.getColor();
-
     String colorString;
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
 
