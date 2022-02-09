@@ -197,12 +197,13 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    hookMotor.setIdleMode(IdleMode.kCoast);
+  }
 
   @Override
   public void disabledPeriodic() {
-    hookMotor.setIdleMode(IdleMode.kCoast);
-  }
+    SmartDashboard.putNumber("bar enc", barMotor.getEncoder().getPosition());}
 
   @Override
   public void testInit() {}
