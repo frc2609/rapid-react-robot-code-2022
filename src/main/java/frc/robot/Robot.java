@@ -5,28 +5,52 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser; // selecting auto modes
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.Joystick;
 
+import com.revrobotics.CANSparkMax; // motors
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType; // specifying brushless motor type
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
 
+import com.kauailabs.navx.frc.AHRS; // for NavX Gyro
+import edu.wpi.first.wpilibj.SPI; // SPI port, NavX gyro
+import edu.wpi.first.wpilibj.XboxController; // controller
 import com.revrobotics.ColorMatch;
 
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
+  // selecting auto modes
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+    // motors
+  private final CANSparkMax frontLeftMotor = new CANSparkMax(3, MotorType.kBrushless);
+  private final CANSparkMax rearLeftMotor = new CANSparkMax(4, MotorType.kBrushless);
+  private final CANSparkMax frontRightMotor = new CANSparkMax(2, MotorType.kBrushless);
+  private final CANSparkMax rearRightMotor = new CANSparkMax(1, MotorType.kBrushless);
+  private final CANSparkMax hookMotor = new CANSparkMax(6, MotorType.kBrushless);
+  private final CANSparkMax barMotor = new CANSparkMax(5, MotorType.kBrushless);
+  SparkMaxPIDController barPID;
+  // joysticks
+  private final XboxController joystick = new XboxController(0);
+  // gyro/navx
+  private AHRS navx;
+  /*
+  // climbing
+  // do we need to declare these here (can't they be in the climb() function?)
+  private boolean currentlyClimbing; // might have to declare here
+  private double maxPitchForwardDegrees = 15; // placeholder value
+  private double maxPitchBackwardDegrees = -15; // placeholder value
+  // assuming that pitch forward is positive and pitch backward is negative
+  */
 
   private final I2C.Port i2cPortDef = I2C.Port.kOnboard;
   // private final I2C.Port i2cPortMXP = I2C.Port.kMXP;
@@ -46,17 +70,18 @@ public class Robot extends TimedRobot {
   private static boolean ballIsBlue = false;
   private static boolean dumpBall = false;
 
-  private final Joystick opJoystick = new Joystick(0);
   
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    hookMotor.setIdleMode(IdleMode.kBrake);
+    try { navx = new AHRS(SPI.Port.kMXP); }
+    catch (RuntimeException ex) 
+    { 
+      System.out.println("Failed to initialize NAVX "); 
+    }
 
     colorMatcher.addColorMatch(kBlueTarget);
     colorMatcher.addColorMatch(kGreenTarget);
@@ -64,15 +89,12 @@ public class Robot extends TimedRobot {
     colorMatcher.addColorMatch(kYellowTarget);
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
   @Override
-  public void robotPeriodic() {
+  public void robotPeriodic() 
+  {
+    //SmartDashboard.putBoolean("Climbing Enabled ", currentlyClimbing);
+    //SmartDashboard.putNumber("NavX Pitch:", navx.getPitch());
+    // smart dashboard.put stats (navx connected bool, yaw, pitch, roll, climbing bool)
 
     //Detects the colour, outputs it into the dashboard, and sets the ball colour ("ballIsBlue", "ballIsRed")
     Color detectedColor = colorSensor1.getColor();
@@ -109,24 +131,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("Detected Color", colorString);
   }
 
-  /**
-   * This autonomous (along with the chooser code above) shows how to select between different
-   * autonomous modes using the dashboard. The sendable chooser code works with the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-   * uncomment the getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to the switch structure
-   * below with additional strings. If using the SendableChooser make sure to add them to the
-   * chooser code above as well.
-   */
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
   }
 
-  /** This function is called periodically during autonomous. */
+  // auto code
   @Override
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
@@ -140,33 +151,90 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    barMotor.getEncoder().setPosition(0);
+    barPID = barMotor.getPIDController();
+    barPID.setP(0.034173);
+    barPID.setI(0.0001);
+    barPID.setOutputRange(-1, 0.1);
+    hookMotor.setIdleMode(IdleMode.kBrake);
+    SmartDashboard.putNumber("arm setpoint", -19.8);
+  }
 
-  /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    if (opJoystick.getRawButton(8)) {
+  public void teleopPeriodic() 
+  {
+    if (joystick.getYButtonPressed()) { navx.zeroYaw(); }
+    // driving
+    double driveX = Math.pow(joystick.getRawAxis(0), 3);
+    double driveY = Math.pow(joystick.getRawAxis(1), 3);
+    double leftMotors = driveY - driveX;
+    double rightMotors = driveY + driveX;
+    frontLeftMotor.set(leftMotors);
+    rearLeftMotor.set(-leftMotors);
+    frontRightMotor.set(-rightMotors);
+    rearRightMotor.set(rightMotors);
+    // climbing
+    // 4rx, 5ry joystick axis
+    hookMotor.set(Math.pow(joystick.getRawAxis(5), 3));
+    double armSetp = SmartDashboard.getNumber("arm setpoint", -6);
+    if (joystick.getXButton()) { // move climbing bar into place }
+      barPID.setReference(armSetp, ControlType.kPosition);
+      System.out.println("SETTING");
+    }else{
+      barMotor.set(0);
+    }
+    // barMotor.fsset(Math.pow(joystick.getRawAxis(4), 3));
+    SmartDashboard.putNumber("bar enc", barMotor.getEncoder().getPosition());
+
+    // Emergency dump button in case the colour sensor senses the wrong colour
+    if (joystick.getRawButton(8)) {
       ballIsBlue = false;
       ballIsRed = false;
       dumpBall = true;
     }
   }
 
-  /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {}
 
-  /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    hookMotor.setIdleMode(IdleMode.kCoast);
+  }
 
-  /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {}
 
-  /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+  
+  /*
+  public void climb(){
+    // hook motors
+    if (joystick.getLeftBumperPressed())
+    hookMotor.set(-0.2);
+    if (joystick.getRightBumperPressed())
+    hookMotor.set(0.2);
+    if (joystick.getLeftBumperReleased())
+    hookMotor.set(0);
+    if (joystick.getRightBumperReleased())
+    hookMotor.set(0);
+    
+    if (navx.getRoll() >= maxPitchForwardDegrees) 
+      climbingAngleMotor.set(0.2);
+    else if (navx.getRoll() <= maxPitchBackwardDegrees)
+      climbingAngleMotor.set(-0.2); // figure out which direction goes back and forward
+    else
+      climbingAngleMotor.set(0);
+      // above code is for balancing
+    // from back of robot:
+    //* roll = tilt left/right
+    //* yaw = turn left/right
+    //* pitch = tilt forward/back <- this is what we need
+    //
+    // probably want a delay so that it doesn't try to readjust when the motor is trying to move the robot
+  }
+  */
 }
