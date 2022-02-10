@@ -5,7 +5,7 @@ Make sure the arm is moved to the lowest position
 
 Next, enable the robot and move the hooks so that the INNER hooks is on the far end of the arm. Disable and re-enable the robot again (this resets the hook encoder).
 
-Or, instead of disabling/re-enabling the robot you can just press the Back button while the robot is enabled and the hooks are in the correct position.
+Or, instead of disabling/re-enabling the robot you can just press the Back button while the robot is enabled while the hooks are in the correct position.
 
 ## Controls
 
