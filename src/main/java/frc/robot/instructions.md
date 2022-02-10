@@ -92,7 +92,7 @@ rearRightMotor.set(rightMotors);
 (Colours aren't there for some reason in the preview)
 
 ### Using Encoders:
-`hookMotor.getEncoder();`
+`hookMotor.getEncoder().getPosition();`
 
 ## Displaying Information Using Smart Dashboard
 Use this to display information on the Smart Dashboard console.
