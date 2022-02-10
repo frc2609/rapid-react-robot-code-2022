@@ -3,7 +3,7 @@
 ## Setup
 Make sure the arm is moved to the lowest position
 
-Next, enable the robot and move the hooks into (_)
+Next, enable the robot and move the hooks so that the INNER hook is on the far end of the arm. Disable and re-enable the robot again (this resets the hook encoder).
 
 ## Controls
 
