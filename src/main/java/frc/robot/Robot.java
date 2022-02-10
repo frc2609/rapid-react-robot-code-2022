@@ -140,6 +140,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     barMotor.getEncoder().setPosition(0);
+    hookMotor.getEncoder().setPosition(0);
     barPID = barMotor.getPIDController();
     barPID.setP(0.034173);
     barPID.setI(0.0001);
@@ -152,7 +153,14 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() 
   {
     // 0lx, 1ly, 4rx, 5ry joystick axis
+    if (joystick.getBackButtonPressed()) { hookMotor.getEncoder().setPosition(0); }
     if (joystick.getYButtonPressed()) { navx.zeroYaw(); }
+    // Emergency dump button in case the colour sensor senses the wrong colour
+    if (joystick.getStartButtonPressed()) {
+      ballIsBlue = false;
+      ballIsRed = false;
+      dumpBall = true;
+    }
     // driving
     double driveX = Math.pow(joystick.getRawAxis(0), 3);
     double driveY = Math.pow(joystick.getRawAxis(1), 3);
@@ -174,13 +182,7 @@ public class Robot extends TimedRobot {
     }
     // barMotor.fsset(Math.pow(joystick.getRawAxis(4), 3));
     SmartDashboard.putNumber("bar enc", barMotor.getEncoder().getPosition());
-
-    // Emergency dump button in case the colour sensor senses the wrong colour
-    if (joystick.getRawButton(8)) {
-      ballIsBlue = false;
-      ballIsRed = false;
-      dumpBall = true;
-    }
+    SmartDashboard.putNumber("Hook motor encoder", hookMotor.getEncoder().getPosition());
   }
 
   @Override
@@ -190,7 +192,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    SmartDashboard.putNumber("bar enc", barMotor.getEncoder().getPosition());}
+    SmartDashboard.putNumber("bar enc", barMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Hook motor encoder", hookMotor.getEncoder().getPosition());
+  }
 
   @Override
   public void testInit() {}
