@@ -3,10 +3,11 @@
 ## Setup
 Make sure the arm is moved to the lowest position
 
-Next, enable the robot and move the hooks so that the INNER hook is on the far end of the arm. Disable and re-enable the robot again (this resets the hook encoder).
+Next, enable the robot and move the hooks so that the INNER hooks is on the far end of the arm. Disable and re-enable the robot again (this resets the hook encoder).
+
+Or, instead of disabling/re-enabling the robot you can just press the Back button while the robot is enabled and the hooks are in the correct position.
 
 ## Controls
-
 
 Left Joystick X Axis (`joystick.getRawAxis(0)`):
 
@@ -23,6 +24,10 @@ Right Joystick X Axis (`joystick.getRawAxis(4)`);
 Start Button (three horizontal lines):
 
 - Emergency eject balls (if colour sensor fails)
+
+Back Button (two overlapping squares):
+
+- Reset hook encoder (move inner hooks to far end of arm first)
 
 X Button:
 
