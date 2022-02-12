@@ -18,16 +18,17 @@ public class Drive extends SubsystemBase {
   private final CANSparkMax m_rearLeftMotor = new CANSparkMax(4, MotorType.kBrushless);
   private final CANSparkMax m_frontRightMotor = new CANSparkMax(2, MotorType.kBrushless);
   private final CANSparkMax m_rearRightMotor = new CANSparkMax(1, MotorType.kBrushless);
-  private Joystick _driveJoystick;
+  private Joystick m_driveJoystick;
+
   public Drive(Joystick driveJoystick) {
-    _driveJoystick = driveJoystick;
+    m_driveJoystick = driveJoystick;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double driveX = Math.pow(_driveJoystick.getRawAxis(0), 3);
-    double driveY = Math.pow(_driveJoystick.getRawAxis(1), 3);
+    double driveX = Math.pow(m_driveJoystick.getRawAxis(0), 3);
+    double driveY = Math.pow(m_driveJoystick.getRawAxis(1), 3);
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
     setMotors(leftMotors, rightMotors);
