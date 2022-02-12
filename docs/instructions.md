@@ -118,3 +118,9 @@ SmartDashboard.putBoolean("NavX connection status:", navx.isConnected());
 `navx.getPitch()`
 
 `navx.getYaw()`
+
+## Notes
+
+Change 'P' of PID to change motor speed
+
+`// TODO: ` at the start of a comment underline in it blue and show it in the "problems" section.
