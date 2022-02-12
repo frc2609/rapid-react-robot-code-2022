@@ -20,7 +20,7 @@ public class SetArm extends CommandBase {
     desiredPosition = angle;
     // Use addRequirements() here to declare subsystem dependencies.
   }
-  
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
