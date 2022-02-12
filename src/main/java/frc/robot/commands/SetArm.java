@@ -22,14 +22,12 @@ public class SetArm extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // System.out.println("got here in set arm init");
-    //System.out.println(String.format("Setting arm to %.2f degrees", desiredPosition));
+    System.out.println("Setting arm to " + m_desiredPosition);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // System.out.println("got here in set arm exec");
     System.out.println("position " + m_desiredPosition);
     m_climber.setArmPosition(m_desiredPosition);
   }
@@ -37,13 +35,12 @@ public class SetArm extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("ended setarm at "+m_desiredPosition+" degrees");
+    System.out.println("ended setarm at " + m_desiredPosition + " degrees");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return m_climber.isArmInPosition(m_desiredPosition);
-    //return false;
   }
 }
