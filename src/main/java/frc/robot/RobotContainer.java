@@ -10,13 +10,11 @@ import edu.wpi.first.wpilibj.XboxController;
 
 import frc.robot.commands.Traverse;
 import frc.robot.commands.TraverseBack;
-import frc.robot.commands.ExampleCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ColorSensing;
 
 /**
@@ -31,13 +29,14 @@ public class RobotContainer {
   public final JoystickButton climbButton = new JoystickButton(driveJoystick, 3); // X on xbox controller
   public final JoystickButton traverseButton = new JoystickButton(driveJoystick, 1);
   //public final JoystickButton ejectBallButton = new JoystickButton(driveJoystick, );
+
   // subsystems
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drive m_driveSubsystem = new Drive(driveJoystick);
   private final Climber m_climbSubsystem = new Climber(driveJoystick);
   private final ColorSensing m_colorSubsystem = new ColorSensing();
+
   // commands
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  // commands go here when read
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -52,7 +51,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    //climbButton.whenPressed(new sanity());
     climbButton.whenPressed(new Traverse(m_climbSubsystem, driveJoystick));
     traverseButton.whenPressed(new TraverseBack(m_climbSubsystem, driveJoystick));
   }
@@ -63,7 +61,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    // Put autonomous command here when ready
+    return null;
   }
 }
