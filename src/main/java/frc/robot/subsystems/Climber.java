@@ -27,11 +27,7 @@ public class Climber extends SubsystemBase {
     resetEncoder();
     barMotor.setInverted(true);
     barPID = barMotor.getPIDController();
-    pidInit();
-    // //barPID.setP(0.034173);
-    // barPID.setP(0.005);
-    // barPID.setI(0.001);
-    // barPID.setOutputRange(-1, 1);
+    initValues();
     m_stick = stick;
     barMotor.setIdleMode(IdleMode.kBrake);
     hookMotor.setIdleMode(IdleMode.kBrake);
@@ -101,7 +97,7 @@ public class Climber extends SubsystemBase {
     return hookMotor.getEncoder().getPosition();
   }
   
-  private void pidInit(){
+  private void initValues(){
     kP = 5e-5; 
     kI = 1e-6;
     kD = 0; 
