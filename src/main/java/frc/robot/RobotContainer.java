@@ -12,6 +12,7 @@ import frc.robot.commands.Traverse;
 import frc.robot.commands.TraverseBack;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants;
 
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
@@ -25,9 +26,9 @@ import frc.robot.subsystems.ColorSensing;
  */
 public class RobotContainer {
   // joysticks and buttons
-  public final Joystick driveJoystick = new Joystick(0);
-  public final JoystickButton climbButton = new JoystickButton(driveJoystick, 3); // X on xbox controller
-  public final JoystickButton traverseButton = new JoystickButton(driveJoystick, 1);
+  public final Joystick driveJoystick = new Joystick(Constants.LEFT_STICK_X_AXIS);
+  public final JoystickButton climbButton = new JoystickButton(driveJoystick, Constants.X_BUTTON);
+  public final JoystickButton traverseButton = new JoystickButton(driveJoystick, Constants.A_BUTTON);
   //public final JoystickButton ejectBallButton = new JoystickButton(driveJoystick, );
 
   // subsystems
