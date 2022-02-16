@@ -14,6 +14,7 @@ package frc.robot;
  */
 public final class Constants {
     // XBox controller
+    public static final double JOYSTICK_DRIFT_TOLERANCE = 0.1;
     public static final int JOYSTICK_PORT = 0;
     public static final int LEFT_STICK_X_AXIS = 0;
     public static final int LEFT_STICK_Y_AXIS = 1;
@@ -41,7 +42,7 @@ public final class Constants {
     public static final int RIGHT_REAR_MOTOR = 1;
 
     // Positions
-    public static final int MAX_ARM_POS = 100;  // TODO: figure out what the max is
-    public static final int MIN_ARM_POS = 0;  // TODO: figure out what the min is
-
+    public static final int MAX_ARM_POS = 98;
+    public static final int MIN_ARM_POS = 0;
+    public static final double ARM_SPEED_MULTIPLIER = -2.0;
 }

@@ -32,9 +32,9 @@ public class RobotContainer {
   //public final JoystickButton ejectBallButton = new JoystickButton(driveJoystick, );
 
   // subsystems
-  private final Drive m_driveSubsystem = new Drive(joystick);
-  private final Climber m_climbSubsystem = new Climber(joystick);
-  private final ColorSensing m_colorSubsystem = new ColorSensing();
+  public final Drive m_driveSubsystem = new Drive(joystick);
+  public final Climber m_climbSubsystem = new Climber(joystick);
+  public final ColorSensing m_colorSubsystem = new ColorSensing();
 
   // commands
   // commands go here when read

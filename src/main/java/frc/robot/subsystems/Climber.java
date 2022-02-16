@@ -40,7 +40,7 @@ public class Climber extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("HookPositionEncoder", getHookPosition());
-    SmartDashboard.putNumber("BarPositionEncoder", getArmPosition());
+    SmartDashboard.putNumber("BarPositionAngle", getArmPosition());
     manualBarMotorControl();
     manualHookMotorControl();
 
@@ -48,7 +48,8 @@ public class Climber extends SubsystemBase {
   }
 
   public void manualBarMotorControl() {
-    double inc = m_stick.getRawAxis(Constants.RIGHT_STICK_Y_AXIS);  // TODO check if i need to scale this value
+    double rawAxisValue = m_stick.getRawAxis(Constants.RIGHT_STICK_Y_AXIS);
+    double inc = (Math.abs(rawAxisValue) < Constants.JOYSTICK_DRIFT_TOLERANCE ? 0 : rawAxisValue) * Constants.ARM_SPEED_MULTIPLIER;
     armPosition = Math.min(Math.max(armPosition+inc, Constants.MIN_ARM_POS), Constants.MAX_ARM_POS);
     
     setArmPosition(armPosition);
@@ -56,7 +57,7 @@ public class Climber extends SubsystemBase {
 
   public void manualHookMotorControl() {
     double inc = m_stick.getRawAxis(Constants.RIGHT_TRIGGER_AXIS) - m_stick.getRawAxis(Constants.LEFT_TRIGGER_AXIS);
-    setHook(inc);  // TODO check if i need to scale value
+    setHook(inc);
   }
 
   public boolean isArmInPosition(double desiredPosition) {
@@ -90,6 +91,10 @@ public class Climber extends SubsystemBase {
 
   public void disableArm(){
     barMotor.set(0);
+  }
+
+  public void setArmToZero() {
+    armPosition = 0;
   }
 
   private double degToMotorPos(double degrees){
