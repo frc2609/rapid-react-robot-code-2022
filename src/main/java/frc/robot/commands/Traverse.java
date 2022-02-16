@@ -41,6 +41,7 @@ public class Traverse extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_climber.resetHook();
+    System.out.println("Traverse ended");
   }
 
   // Returns true when the command should end.
