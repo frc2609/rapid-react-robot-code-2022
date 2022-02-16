@@ -162,4 +162,4 @@ bin/
 *-window.json
 
 # hash file
-.src/main/deploy/
+src/main/deploy/
