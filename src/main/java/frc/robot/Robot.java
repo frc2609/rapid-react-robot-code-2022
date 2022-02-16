@@ -7,6 +7,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+// for version number
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Date;
+import java.util.Scanner;
+import edu.wpi.first.wpilibj.Filesystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,6 +35,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    printVersion();
   }
 
   /**
@@ -95,4 +104,24 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  public void printVersion()
+  {
+    Date dt = new Date();
+    SmartDashboard.putString("VERSION DATE:", dt.toString());
+    File deployDir = Filesystem.getDeployDirectory();
+    String pathToFile = deployDir.getPath() + File.separator + "hash.txt";
+    File file = new File(pathToFile);
+    Scanner reader;
+    try { 
+      reader = new Scanner(file); 
+      String versionHash = reader.nextLine();
+      SmartDashboard.putString("VERSION HASH:", versionHash);
+      reader.close();
+    }
+    catch (FileNotFoundException e)
+    { 
+      SmartDashboard.putString("VERSION HASH:", "FNF ERROR");
+    }
+  }
 }

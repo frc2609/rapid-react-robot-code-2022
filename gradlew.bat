@@ -1,3 +1,4 @@
+git rev-parse HEAD > .\src\main\deploy\hash.txt
 @rem
 @rem Copyright 2015 the original author or authors.
 @rem
