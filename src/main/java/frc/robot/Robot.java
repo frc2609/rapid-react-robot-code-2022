@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // for version number
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Date;
 import java.util.Scanner;
 import edu.wpi.first.wpilibj.Filesystem;
 
@@ -104,10 +105,11 @@ public class Robot extends TimedRobot {
 
   public void printVersion()
   {
+    Date dt = new Date();
+    SmartDashboard.putString("VERSION DATE:", dt.toString());
     File deployDir = Filesystem.getDeployDirectory();
     String pathToFile = deployDir.getPath() + File.separator + "hash.txt";
     File file = new File(pathToFile);
-    SmartDashboard.putString("FILEPATH:", file.getPath());
     Scanner reader;
     try { 
       reader = new Scanner(file); 
@@ -117,7 +119,7 @@ public class Robot extends TimedRobot {
     }
     catch (FileNotFoundException e)
     { 
-      System.out.println("ERROR: Failed to open hash.txt"); 
+      SmartDashboard.putString("VERSION HASH:", "FNF ERROR");
     }
   }
 }
