@@ -11,17 +11,20 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.lang.Math;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  private final CANSparkMax hookMotor = new CANSparkMax(6, MotorType.kBrushless);
-  private final CANSparkMax barMotor = new CANSparkMax(5, MotorType.kBrushless);
+  private final CANSparkMax hookMotor = new CANSparkMax(Constants.HOOK_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax barMotor = new CANSparkMax(Constants.BAR_MOTOR, MotorType.kBrushless);
   private SparkMaxPIDController barPID;
   private final double ARM_RATIO = 70; // gear ratio * gearbox ratio
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, m_epsilon;
   private Joystick m_stick;
+  private double armPosition = 0;
 
   public Climber(Joystick stick) {
     resetEncoder();
@@ -36,8 +39,24 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("HookPosition", hookMotor.getEncoder().getPosition());
-    setHook(-m_stick.getRawAxis(5));
+    SmartDashboard.putNumber("HookPositionEncoder", getHookPosition());
+    SmartDashboard.putNumber("BarPositionEncoder", getArmPosition());
+    manualBarMotorControl();
+    manualHookMotorControl();
+
+    // setHook(-m_stick.getRawAxis(Constants.RIGHT_STICK_Y_AXIS));
+  }
+
+  public void manualBarMotorControl() {
+    double inc = m_stick.getRawAxis(Constants.RIGHT_STICK_Y_AXIS);  // TODO check if i need to scale this value
+    armPosition = Math.min(Math.max(armPosition+inc, Constants.MIN_ARM_POS), Constants.MAX_ARM_POS);
+    
+    setArmPosition(armPosition);
+  }
+
+  public void manualHookMotorControl() {
+    double inc = m_stick.getRawAxis(Constants.RIGHT_TRIGGER_AXIS) - m_stick.getRawAxis(Constants.LEFT_TRIGGER_AXIS);
+    setHook(inc);  // TODO check if i need to scale value
   }
 
   public boolean isArmInPosition(double desiredPosition) {
@@ -45,7 +64,6 @@ public class Climber extends SubsystemBase {
   }
 
   public void setArmPosition(double position) {
-
     kP = SmartDashboard.getNumber("P Gain", 0);
     kI = SmartDashboard.getNumber("I Gain", 0);
     kD = SmartDashboard.getNumber("D Gain", 0);
@@ -59,8 +77,6 @@ public class Climber extends SubsystemBase {
     allowedErr = SmartDashboard.getNumber("Allowed Closed Loop Error", 0);
     m_epsilon = SmartDashboard.getNumber("epsilon for float compare", 0.01);
     
-
-
     int smartMotionSlot = 0;
     barPID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
     barPID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
