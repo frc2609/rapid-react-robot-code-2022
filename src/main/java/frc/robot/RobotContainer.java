@@ -26,15 +26,15 @@ import frc.robot.subsystems.ColorSensing;
  */
 public class RobotContainer {
   // joysticks and buttons
-  public final Joystick driveJoystick = new Joystick(Constants.LEFT_STICK_X_AXIS);
-  public final JoystickButton climbButton = new JoystickButton(driveJoystick, Constants.X_BUTTON);
-  public final JoystickButton traverseButton = new JoystickButton(driveJoystick, Constants.A_BUTTON);
+  public final Joystick joystick = new Joystick(Constants.JOYSTICK_PORT);
+  public final JoystickButton climbButton = new JoystickButton(joystick, Constants.X_BUTTON);
+  public final JoystickButton traverseButton = new JoystickButton(joystick, Constants.A_BUTTON);
   //public final JoystickButton ejectBallButton = new JoystickButton(driveJoystick, );
 
   // subsystems
-  private final Drive m_driveSubsystem = new Drive(driveJoystick);
-  private final Climber m_climbSubsystem = new Climber(driveJoystick);
-  private final ColorSensing m_colorSubsystem = new ColorSensing();
+  public final Drive m_driveSubsystem = new Drive(joystick);
+  public final Climber m_climbSubsystem = new Climber(joystick);
+  public final ColorSensing m_colorSubsystem = new ColorSensing();
 
   // commands
   // commands go here when read
@@ -52,8 +52,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    climbButton.whenPressed(new Traverse(m_climbSubsystem, driveJoystick));
-    traverseButton.whenPressed(new TraverseBack(m_climbSubsystem, driveJoystick));
+    // climbButton.whenPressed(new Traverse(m_climbSubsystem, driveJoystick));
+    // traverseButton.whenPressed(new TraverseBack(m_climbSubsystem, driveJoystick));
   }
 
   /**
