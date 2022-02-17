@@ -17,6 +17,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ColorSensing;
+import frc.robot.subsystems.Shooter;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -35,6 +36,7 @@ public class RobotContainer {
   public final Drive m_driveSubsystem = new Drive(joystick);
   public final Climber m_climbSubsystem = new Climber(joystick);
   public final ColorSensing m_colorSubsystem = new ColorSensing();
+  public final Shooter m_shooterSubsystem = new Shooter(joystick);
 
   // commands
   // commands go here when read
