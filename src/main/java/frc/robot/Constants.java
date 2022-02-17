@@ -34,12 +34,12 @@ public final class Constants {
     public static final int RIGHT_STICK_BUTTON = 10;
 
     // Motors
-    public static final int HOOK_MOTOR = 6;
-    public static final int BAR_MOTOR = 5;
-    public static final int LEFT_FRONT_MOTOR = 3;
-    public static final int LEFT_REAR_MOTOR = 4;
-    public static final int RIGHT_FRONT_MOTOR = 2;
-    public static final int RIGHT_REAR_MOTOR = 1;
+    public static final int HOOK_MOTOR = 7;
+    public static final int BAR_MOTOR = 6;
+    public static final int LEFT_FRONT_MOTOR = 4;
+    public static final int LEFT_REAR_MOTOR = 5;
+    public static final int RIGHT_FRONT_MOTOR = 3;
+    public static final int RIGHT_REAR_MOTOR = 2;
 
     // Positions
     public static final int MAX_ARM_POS = 98;
