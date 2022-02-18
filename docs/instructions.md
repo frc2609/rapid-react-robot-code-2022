@@ -1,49 +1,59 @@
 # Robot Code
 
 ## Imports
-- `com.revrobotics.CANSparkMax` // motor controllers
+- `com.revrobotics.CANSparkMax` // Spark Max motor controllers
 - `com.revrobotics.CANSparkMaxLowLevel.MotorType` // to tell motor controller to use brushless motor
+- `com.ctre.phoenix.motorcontrol.can.VictorSRX` // VictorSPX motor controllers
 - `com.kauailabs.navx.frc.AHRS` // gyro
 - `edu.wpi.first.wpilibj.SPI` // SPI port (gyro)
+- `edu.wpi.first.wpilibj.Joystick` // Joystick
 - `edu.wpi.first.wpilibj.XboxController` // Xbox Controller
+- `frc.robot.Constants` // constants, e.g. LEFT_STICK_Y_AXIS
+- `edu.wpi.first.wpilibj.SerialPort` // USB ports on RoboRIO
 
 ## Online Install Links
 https://software-metadata.revrobotics.com/REVLib.json
 https://www.kauailabs.com/dist/frc/2022/navx_frc.json
+https://github.com/CrossTheRoadElec/Phoenix-Releases/releases <- install this to use the VictorSPX motor controllers
 
 ## Variable Definitions
 ### Motors:
-Front left (3):
+Spark Max via CAN bus:
 ```java
-private final CANSparkMax frontLeftMotor = new CANSparkMax(3, MotorType.kBrushless);
+private final CANSparkMax motorName = new CANSparkMax(Constants.*_MOTOR, MotorType.kBrushless);
+```
+Replace * with a motor name (e.g. HOOK)
+
+Victor SPX via CAN bus:
+```java
+private final VictorSPX motorName = new VictorSPX(Constants.*_MOTOR);
+```
+Replace * with a motor name (e.g. SHOOTER_LEFT_MOTOR)
+
+### Joysticks:
+```java
+private final Joystick joystickName = new Joystick(Constants.);
 ```
 
-Rear left (4)
+### NavX:
 ```java
-private final CANSparkMax rearLeftMotor = new CANSparkMax(4, MotorType.kBrushless);
-```
-
-Front Right (2)
-```java
-private final CANSparkMax frontRightMotor = new CANSparkMax(2, MotorType.kBrushless);
-```
-
-Rear Right (1)
-```java
-private final CANSparkMax rearRightMotor = new CANSparkMax(1, MotorType.kBrushless);
-```
-### Joysticks and the Gyro:
-NavX MXP is navx
-
-Xbox Controller is joystick
-```java
-private final XboxController joystick = new XboxController(0);
 private AHRS navx;
 // below in robotInit():
 try { navx = new AHRS(SPI.Port.kMXP); }
 catch (RuntimeException ex) 
 { 
     System.out.println("Failed to initialize NAVX "); 
+}
+```
+
+### NavX USB:
+```java
+private AHRS navxUSB;
+// below in robotInit():
+try { navx = new AHRS(SerialPort.Port.kUSB1); }
+catch (RuntimeException ex) 
+{ 
+    System.out.println("Failed to initialize NAVX ON USB"); 
 }
 ```
 
