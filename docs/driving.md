@@ -1,38 +1,35 @@
 # Driving The Robot
 
 ## Setup
-Make sure the arm is moved to the lowest position
 
-Next, enable the robot and move the hooks so that the INNER hooks is on the far end of the arm. Disable and re-enable the robot again (this resets the hook encoder).
+- Turn on the robot circuit breaker
 
-Or, instead of disabling/re-enabling the robot you can just press the Back button while the robot is enabled while the hooks are in the correct position.
+- Make sure the arm is moved to the lowest position
+
+- Enable the robot
 
 ## Controls
 
-Left Joystick X Axis (`joystick.getRawAxis(0)`):
+Left Joystick X Axis:
 
 - Turns robot left and right
 
-Left Joystick Y Axis (`joystick.getRawAxis(1)`):
+Left Joystick Y Axis:
 
 - Moves robot forward and backward
 
-Right Joystick X Axis (`joystick.getRawAxis(4)`);
+Right Joystick X Axis:
 
-- Moves hooks up and down
+- Controls shooter speed (left = reverse, right = forward)
 
-Start Button (three horizontal lines):
+Right Joystick Y Axis:
 
-- Emergency eject balls (if colour sensor fails)
+- Move arm up/down
 
-Back Button (two overlapping squares):
+Left Trigger: 
 
-- Reset hook encoder (move inner hooks to far end of arm first)
+- Move hooks backwards
 
-X Button:
+Right Trigger:
 
-- (HOLD) Raise arm into position
-
-Y Button:
-
-- Reset RoboRIO NavX Y-Axis control
+- Move hooks forwards
