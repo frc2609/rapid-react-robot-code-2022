@@ -21,6 +21,7 @@ Left Joystick Y Axis:
 Right Joystick X Axis:
 
 - Controls shooter speed (left = reverse, right = forward)
+- Controls intake up/down temporarily
 
 Right Joystick Y Axis:
 
