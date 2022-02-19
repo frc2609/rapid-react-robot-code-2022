@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase{
   @Override
   public void periodic() {
     if (m_stick.getRawButton(Constants.B_BUTTON)) {
-      setBelts(0.5);
+      setBelts(1);
     }
     else { 
       setBelts(0); 

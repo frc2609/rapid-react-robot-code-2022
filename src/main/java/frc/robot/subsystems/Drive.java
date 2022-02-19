@@ -37,9 +37,9 @@ public class Drive extends SubsystemBase {
   }
 
   private void setMotors(double left, double right){
-    m_leftFrontMotor.set(-left);
-    m_leftRearMotor.set(-left);
-    m_rightFrontMotor.set(right);
-    m_rightRearMotor.set(right);
+    m_leftFrontMotor.set(-left * 0.3);
+    m_leftRearMotor.set(-left * 0.3);
+    m_rightFrontMotor.set(right * 0.3);
+    m_rightRearMotor.set(right * 0.3);
   }
 }

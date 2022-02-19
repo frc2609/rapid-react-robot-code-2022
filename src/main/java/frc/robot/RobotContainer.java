@@ -37,7 +37,7 @@ public class RobotContainer {
   public final Drive m_driveSubsystem = new Drive(joystick);
   public final Climber m_climbSubsystem = new Climber(joystick);
   //public final ColorSensing m_colorSubsystem = new ColorSensing();
-  //public final Shooter m_shooterSubsystem = new Shooter(joystick);
+  public final Shooter m_shooterSubsystem = new Shooter(joystick);
   public final Intake m_intakeSubsystem = new Intake(joystick);
 
   // commands
