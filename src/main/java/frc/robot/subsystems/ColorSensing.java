@@ -40,8 +40,8 @@ public class ColorSensing extends SubsystemBase {
 
   @Override
   public void periodic() {
-    detectColor(lowerColorSensor, "Lower ");
-    detectColor(upperColorSensor, "Upper ");
+    //detectColor(lowerColorSensor, "Lower ");
+    //detectColor(upperColorSensor, "Upper ");
   }
 
   @Override

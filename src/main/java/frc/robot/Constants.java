@@ -34,7 +34,7 @@ public final class Constants {
     public static final int RIGHT_STICK_BUTTON = 10;
 
     // PWM Motors
-    public static final int LOWER_BELT_MOTOR = 9;
+    public static final int LOWER_BELT_MOTOR = 0;
     public static final int UPPER_BELT_MOTOR = 1;
     public static final int INTAKE_BALL_MOTOR = 2;
     public static final int INTAKE_LIFT_MOTOR = 3;

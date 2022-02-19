@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase{
       setShooter(0);
     }
 
-    intakeLiftMotor.set(m_stick.getRawAxis(Constants.RIGHT_STICK_X_AXIS) * 0.15);
+    intakeLiftMotor.set(m_stick.getRawAxis(Constants.RIGHT_STICK_X_AXIS) * 0.25);
   }
 
   @Override
