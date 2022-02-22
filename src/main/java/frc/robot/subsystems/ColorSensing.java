@@ -49,23 +49,29 @@ public class ColorSensing extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
+  /* configues the color sensor to measure more often, default is res: 18 bit, rate: 100ms, gain: 3x*/
+  //This should be called once to avoid uneccessary writes to the color sensor, dunno where I should put that though :P
+  void colorConfig(ColorSensorV3 colorsensor) {
+    colorsensor.configureColorSensor(ColorSensorV3.ColorSensorResolution.kColorSensorRes18bit, 
+      ColorSensorV3.ColorSensorMeasurementRate.kColorRate25ms, ColorSensorV3.GainFactor.kGain3x);
+  }
+
   private void detectColor(ColorSensorV3 colorSensor, String name) 
   {
     // Detects the colour, outputs it into the dashboard, and sets the ball colour ("ballIsBlue", "ballIsRed")
-    Color detectedColor = colorSensor.getColor();
     String colorString;
-    ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
+    Color match = matchColor(colorSensor);
 
-    if (match.color == kBlueTarget) {
+    if (match == kBlueTarget) {
       colorString = "Blue";
       m_color = BallColor.blue;
-    } else if (match.color == kRedTarget) {
+    } else if (match == kRedTarget) {
       colorString = "Red";
       m_color = BallColor.red;
-    } else if (match.color == kGreenTarget) {
+    } else if (match == kGreenTarget) {
       colorString = "Green";
       m_color = BallColor.other;
-    } else if (match.color == kYellowTarget) {
+    } else if (match == kYellowTarget) {
       colorString = "Yellow";
       m_color = BallColor.other;
     } else {
@@ -73,10 +79,10 @@ public class ColorSensing extends SubsystemBase {
       m_color = BallColor.other;
     }
 
-    SmartDashboard.putNumber(name + "Red", detectedColor.red);
-    SmartDashboard.putNumber(name + "Green", detectedColor.green);
-    SmartDashboard.putNumber(name + "Blue", detectedColor.blue);
-    SmartDashboard.putNumber(name + "Confidence", match.confidence);
+    SmartDashboard.putNumber(name + "Red", colorSensor.getRed());
+    SmartDashboard.putNumber(name + "Green", colorSensor.getGreen());
+    SmartDashboard.putNumber(name + "Blue", colorSensor.getBlue());
+    //SmartDashboard.putNumber(name + "Confidence", match.confidence); // won't work without using Rev code, uneccessary anyways, could implement it though
     SmartDashboard.putString(name + "Detected Color", colorString);
   }
   /* Returns the color of the ball. Use friendlyBall to check whether ball
@@ -97,6 +103,18 @@ public class ColorSensing extends SubsystemBase {
       default:
       return false; // otherwise return false
     }
+  }
+
+  private Color matchColor(ColorSensorV3 colorSensor) 
+  {
+    double distance;
+    Color match;
+
+    double currentRed = (double) colorSensor.getRed();
+    double currentBlue = (double) colorSensor.getBlue();
+    double currentGreen = (double) colorSensor.getGreen();
+
+    return match;
   }
 }
 
