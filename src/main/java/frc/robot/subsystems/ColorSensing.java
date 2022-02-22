@@ -93,6 +93,7 @@ public class ColorSensing extends SubsystemBase {
     SmartDashboard.putNumber(name + "Red", colorSensor.getRed());
     SmartDashboard.putNumber(name + "Green", colorSensor.getGreen());
     SmartDashboard.putNumber(name + "Blue", colorSensor.getBlue());
+    SmartDashboard.putBoolean(name + "isConnected", colorSensor.isConnected());
     // SmartDashboard.putNumber(name + "Confidence", match.confidence); // won't
     // work without using Rev code, uneccessary anyways, could implement it though
     SmartDashboard.putString(name + "Detected Color", colorString);
