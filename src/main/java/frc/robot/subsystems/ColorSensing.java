@@ -27,10 +27,10 @@ public class ColorSensing extends SubsystemBase {
   private BallColor m_color;
   // targets
   private final Color kBlueTarget = new Color(0.200, 0.450, 0.300);
-  private final Color kGreenTarget = new Color(0.197, 0.561, 0.240);
+  // private final Color kGreenTarget = new Color(0.197, 0.561, 0.240);
   private final Color kRedTarget = new Color(0.561, 0.332, 0.100);
-  private final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
-  private final Color[] targetColors = { kBlueTarget, kGreenTarget, kRedTarget, kYellowTarget };
+  // private final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
+  private final Color[] targetColors = { kBlueTarget, kRedTarget };// , kYellowTarget, kGreenTarget };
   // ports
   private final I2C.Port i2cPortRIO = I2C.Port.kOnboard;
   private final I2C.Port i2cPortMXP = I2C.Port.kMXP;
@@ -79,12 +79,6 @@ public class ColorSensing extends SubsystemBase {
     } else if (match == kRedTarget) {
       colorString = "Red";
       m_color = BallColor.red;
-    } else if (match == kGreenTarget) {
-      colorString = "Green";
-      m_color = BallColor.other;
-    } else if (match == kYellowTarget) {
-      colorString = "Yellow";
-      m_color = BallColor.other;
     } else {
       colorString = "Unknown";
       m_color = BallColor.other;
@@ -92,14 +86,18 @@ public class ColorSensing extends SubsystemBase {
 
     SmartDashboard.putNumber(name + "Red", colorSensor.getRed());
     SmartDashboard.putNumber(name + "Green", colorSensor.getGreen());
-    SmartDashboard.putNumber(name + "Blue", colorSensor.getBlue());
+    SmartDashboard.putNumber(name + "Blue", colorSensor.getBlue() * 2);
     SmartDashboard.putBoolean(name + "isConnected", colorSensor.isConnected());
     // SmartDashboard.putNumber(name + "Confidence", match.confidence); // won't
     // work without using Rev code, uneccessary anyways, could implement it though
     SmartDashboard.putString(name + "Detected Color", colorString);
+    SmartDashboard.putNumber(name + "Proximity", colorSensor.getProximity());
+    SmartDashboard.putBoolean(name + "RED BALL", ballIsRed(colorSensor));
+    SmartDashboard.putBoolean(name + "BALL IS THERE", ballIsThere(colorSensor));
   }
 
   /*
+   * \
    * Returns the color of the ball. Use friendlyBall to check whether ball
    * color matches team color or not.
    */
@@ -119,6 +117,18 @@ public class ColorSensing extends SubsystemBase {
       default:
         return false; // otherwise return false
     }
+  }
+
+  public boolean ballIsThere(ColorSensorV3 colorSensor) {
+    int threshold = 1000; // TODO: FIGURE OUT VALUE
+    return colorSensor.getProximity() > threshold;
+  }
+
+  public boolean ballIsRed(ColorSensorV3 colorSensor) {
+    Color color = colorSensor.getColor();
+    double red = color.red;
+    double blue = color.blue;
+    return red > blue;
   }
 
   private ColorMatchResult match(ColorSensorV3 colorSensor, Color[] targetColors) {
