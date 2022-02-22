@@ -12,36 +12,53 @@ import edu.wpi.first.wpilibj.util.Color;
 
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
+
+import java.lang.reflect.Array;
+
 import com.revrobotics.ColorMatch;
 
 public class ColorSensing extends SubsystemBase {
-  public enum BallColor
-  {
+  public enum BallColor {
     red,
     blue,
     other,
   }
+
   private BallColor m_color;
   // targets
   private final Color kBlueTarget = new Color(0.200, 0.450, 0.300);
   private final Color kGreenTarget = new Color(0.197, 0.561, 0.240);
   private final Color kRedTarget = new Color(0.561, 0.332, 0.100);
   private final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
+  private final Color[] targetColors = { kBlueTarget, kGreenTarget, kRedTarget, kYellowTarget };
   // ports
   private final I2C.Port i2cPortRIO = I2C.Port.kOnboard;
   private final I2C.Port i2cPortMXP = I2C.Port.kMXP;
   // sensors
   private final ColorSensorV3 lowerColorSensor = new ColorSensorV3(i2cPortRIO);
   private final ColorSensorV3 upperColorSensor = new ColorSensorV3(i2cPortMXP);
-  private final ColorMatch colorMatcher = new ColorMatch();
-  
+  // private final ColorMatch colorMatcher = new ColorMatch();
+  private int index = -1;
+
   /** Creates a new ColorSensing. */
-  public ColorSensing() {}
+  public ColorSensing() {
+    /*
+     * lowerColorSensor.configureColorSensor(ColorSensorV3.ColorSensorResolution.
+     * kColorSensorRes18bit,
+     * ColorSensorV3.ColorSensorMeasurementRate.kColorRate25ms,
+     * ColorSensorV3.GainFactor.kGain3x);
+     * 
+     * upperColorSensor.configureColorSensor(ColorSensorV3.ColorSensorResolution.
+     * kColorSensorRes18bit,
+     * ColorSensorV3.ColorSensorMeasurementRate.kColorRate25ms,
+     * ColorSensorV3.GainFactor.kGain3x);
+     */
+  }
 
   @Override
   public void periodic() {
-    //detectColor(lowerColorSensor, "Lower ");
-    //detectColor(upperColorSensor, "Upper ");
+    // detectColor(lowerColorSensor, "Lower ");
+    // detectColor(upperColorSensor, "Upper ");
   }
 
   @Override
@@ -49,18 +66,12 @@ public class ColorSensing extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  /* configues the color sensor to measure more often, default is res: 18 bit, rate: 100ms, gain: 3x*/
-  //This should be called once to avoid uneccessary writes to the color sensor, dunno where I should put that though :P
-  void colorConfig(ColorSensorV3 colorsensor) {
-    colorsensor.configureColorSensor(ColorSensorV3.ColorSensorResolution.kColorSensorRes18bit, 
-      ColorSensorV3.ColorSensorMeasurementRate.kColorRate25ms, ColorSensorV3.GainFactor.kGain3x);
-  }
-
-  private void detectColor(ColorSensorV3 colorSensor, String name) 
-  {
-    // Detects the colour, outputs it into the dashboard, and sets the ball colour ("ballIsBlue", "ballIsRed")
+  private void detectColor(ColorSensorV3 colorSensor, String name) {
+    // Detects the colour, outputs it into the dashboard, and sets the ball colour
+    // ("ballIsBlue", "ballIsRed")
     String colorString;
-    Color match = matchColor(colorSensor);
+    // FYI this ignores confidence and will always give a color
+    Color match = match(colorSensor, targetColors).color;
 
     if (match == kBlueTarget) {
       colorString = "Blue";
@@ -82,39 +93,76 @@ public class ColorSensing extends SubsystemBase {
     SmartDashboard.putNumber(name + "Red", colorSensor.getRed());
     SmartDashboard.putNumber(name + "Green", colorSensor.getGreen());
     SmartDashboard.putNumber(name + "Blue", colorSensor.getBlue());
-    //SmartDashboard.putNumber(name + "Confidence", match.confidence); // won't work without using Rev code, uneccessary anyways, could implement it though
+    // SmartDashboard.putNumber(name + "Confidence", match.confidence); // won't
+    // work without using Rev code, uneccessary anyways, could implement it though
     SmartDashboard.putString(name + "Detected Color", colorString);
   }
-  /* Returns the color of the ball. Use friendlyBall to check whether ball
-  *  color matches team color or not. */
-  public BallColor color() { return m_color; }
+
+  /*
+   * Returns the color of the ball. Use friendlyBall to check whether ball
+   * color matches team color or not.
+   */
+  public BallColor color() {
+    return m_color;
+  }
 
   /* Returns true if the ball color matches the alliance color. */
-  public boolean friendlyBall()
-  {
+  public boolean friendlyBall() {
     // check if ball color matches color of current alliance
     boolean team = SmartDashboard.getBoolean("IsRedAlliance", true);
-    switch (m_color)
-    {
+    switch (m_color) {
       case red:
-      return team; // if team red, true, if team blue, false
+        return team; // if team red, true, if team blue, false
       case blue:
-      return !team; // if team red, false, if team blue, true
+        return !team; // if team red, false, if team blue, true
       default:
-      return false; // otherwise return false
+        return false; // otherwise return false
     }
   }
 
-  private Color matchColor(ColorSensorV3 colorSensor) 
-  {
-    double distance;
-    Color match;
+  private ColorMatchResult match(ColorSensorV3 colorSensor, Color[] targetColors) {
+    /*
+     * double distance;
+     * Color match;
+     * double shortestDistance = Double.MAX_VALUE;
+     * double distance;
+     * 
+     * double currentR = (double) colorSensor.getRed();
+     * double currentB = (double) colorSensor.getBlue();
+     * double currentG = (double) colorSensor.getGreen();
+     * 
+     * double redRDifference = currentR - targetColors[2].red;
+     * double redBDifference = currentB - targetColors[2].blue;
+     * double
+     * 
+     * distance =
+     */
+    Color detectedColor = new Color(colorSensor.getRed(), colorSensor.getGreen(), colorSensor.getBlue());
+    double magnitude = colorSensor.getRed() + colorSensor.getBlue() + colorSensor.getGreen();
+    if (magnitude > 0) {
+      double minDistance = 1.0;
+      int idx = 0;
 
-    double currentRed = (double) colorSensor.getRed();
-    double currentBlue = (double) colorSensor.getBlue();
-    double currentGreen = (double) colorSensor.getGreen();
+      for (int i = 0; i < targetColors.length; i++) {
+        double targetDistance = CalculateDistance(targetColors[i], detectedColor);
 
-    return match;
+        if (targetDistance < minDistance) {
+          minDistance = targetDistance;
+          idx = i;
+        }
+      }
+      ColorMatchResult match = new ColorMatchResult(targetColors[idx], 1.0 - (minDistance / magnitude));
+      return match;
+    } else {
+      return new ColorMatchResult(Color.kBlack, 0.0);
+    }
+  }
+
+  private static double CalculateDistance(Color color1, Color color2) {
+    double redDiff = color1.red - color2.red;
+    double greenDiff = color1.green - color2.green;
+    double blueDiff = color1.blue - color2.blue;
+
+    return Math.sqrt((redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff) / 2);
   }
 }
-
