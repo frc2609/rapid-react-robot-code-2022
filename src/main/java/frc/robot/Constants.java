@@ -53,4 +53,5 @@ public final class Constants {
     public static final int MAX_ARM_POS = 98;
     public static final int MIN_ARM_POS = 0;
     public static final double ARM_SPEED_MULTIPLIER = -2.0;
+    public static final double DRIVE_SPEED_MULTIPLIER = 0.5;
 }
