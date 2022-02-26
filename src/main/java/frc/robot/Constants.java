@@ -32,6 +32,10 @@ public final class Constants {
     public static final int RIGHT_BUMPER = 6;
     public static final int LEFT_STICK_BUTTON = 9;
     public static final int RIGHT_STICK_BUTTON = 10;
+    public static final int POV_UP_BUTTON = 0;
+    public static final int POV_DOWN_BUTTON = 180;
+    public static final int POV_RIGHT_BUTTON = 90;
+    public static final int POV_LEFT_BUTTON = 270;
 
     // PWM Motors
     public static final int LOWER_BELT_MOTOR = 0;
