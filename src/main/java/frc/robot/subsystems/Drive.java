@@ -31,15 +31,15 @@ public class Drive extends SubsystemBase {
     // This method will be called once per scheduler run
     double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.LEFT_STICK_X_AXIS), 3);
     double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.LEFT_STICK_Y_AXIS), 3);
-    double leftMotors = (driveY - driveX) * Constants.DRIVE_SPEED_MULTIPLIER;
-    double rightMotors = (driveY + driveX) * Constants.DRIVE_SPEED_MULTIPLIER;
+    double leftMotors = driveY - driveX;
+    double rightMotors = driveY + driveX;
     setMotors(leftMotors, rightMotors);
   }
 
   private void setMotors(double left, double right){
-    m_leftFrontMotor.set(-left);
-    m_leftRearMotor.set(-left);
-    m_rightFrontMotor.set(right);
-    m_rightRearMotor.set(right);
+    m_leftFrontMotor.set(-left * Constants.DRIVE_SPEED_MULTIPLIER);
+    m_leftRearMotor.set(-left * Constants.DRIVE_SPEED_MULTIPLIER);
+    m_rightFrontMotor.set(right * Constants.DRIVE_SPEED_MULTIPLIER);
+    m_rightRearMotor.set(right * Constants.DRIVE_SPEED_MULTIPLIER);
   }
 }
