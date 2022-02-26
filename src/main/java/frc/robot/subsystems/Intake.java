@@ -30,10 +30,10 @@ public class Intake extends SubsystemBase{
     }
     
     if (m_stick.getRawButton(Constants.A_BUTTON)) {
-      setShooter(0.5);
+      setIntake(0.5);
     }
     else {
-      setShooter(0);
+      setIntake(0);
     }
 
     intakeLiftMotor.set(m_stick.getRawAxis(Constants.RIGHT_STICK_X_AXIS) * 0.25);
@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase{
     upperBeltMotor.set(speed);
   }
 
-  public void setShooter(double speed) {
+  public void setIntake(double speed) {
     intakeBallMotor.set(speed);
   }
 }
