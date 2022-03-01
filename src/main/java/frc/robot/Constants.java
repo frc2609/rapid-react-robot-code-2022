@@ -5,11 +5,15 @@
 package frc.robot;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
@@ -42,7 +46,7 @@ public final class Constants {
     public static final int UPPER_BELT_MOTOR = 1;
     public static final int INTAKE_BALL_MOTOR = 2;
     public static final int INTAKE_LIFT_MOTOR = 3;
-    
+
     // CAN Motors
     public static final int SHOOTER_RIGHT_MOTOR = 9;
     public static final int SHOOTER_LEFT_MOTOR = 8;
@@ -57,4 +61,15 @@ public final class Constants {
     public static final int MAX_ARM_POS = 98;
     public static final int MIN_ARM_POS = 0;
     public static final double ARM_SPEED_MULTIPLIER = -2.0;
+
+    // Shooter PID values
+    public static final double proportialPIDConstant = 0.0002;
+    public static final double integralPIDConstant = 0.0;
+    public static final double derivativePIDConstant = 0.0;
+    public static final double integralPIDZone = 0.0;
+    public static final double leftFeedForwardPIDConstant = 0.000175;
+    public static final double rightFeedForwardPIDConstant = 0.000170;
+    public static final double maxPIDOutput = 1.0;
+    public static final double minPIDOutput = 0.0;
+    public static final double velocityPIDTolerance = 30;
 }
