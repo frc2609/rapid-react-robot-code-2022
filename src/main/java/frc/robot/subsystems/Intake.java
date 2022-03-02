@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj.Joystick;
 
 import frc.robot.Constants;
+import frc.robot.Constants.XboxConstants;
 
 
 public class Intake extends SubsystemBase{
@@ -22,21 +23,21 @@ public class Intake extends SubsystemBase{
 
   @Override
   public void periodic() {
-    if (m_stick.getRawButton(Constants.B_BUTTON)) {
+    if (m_stick.getRawButton(XboxConstants.B_BUTTON)) {
       setBelts(1);
     }
     else { 
       setBelts(0); 
     }
     
-    if (m_stick.getRawButton(Constants.A_BUTTON)) {
+    if (m_stick.getRawButton(XboxConstants.A_BUTTON)) {
       setIntake(0.5);
     }
     else {
       setIntake(0);
     }
 
-    intakeLiftMotor.set(m_stick.getRawAxis(Constants.RIGHT_STICK_X_AXIS) * 0.25);
+    intakeLiftMotor.set(m_stick.getRawAxis(XboxConstants.RIGHT_STICK_X_AXIS) * 0.25);
   }
 
   @Override

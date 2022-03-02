@@ -12,6 +12,9 @@ import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Constants.ShooterPidConstants;
+import frc.robot.Constants.XboxConstants;
+
 
 public class Shooter extends SubsystemBase {
   private final CANSparkMax shooterLeftMotor = new CANSparkMax(Constants.SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
@@ -51,19 +54,19 @@ public class Shooter extends SubsystemBase {
     leftPIDController = shooterLeftMotor.getPIDController();
     rightPIDController = shooterRightMotor.getPIDController();
 
-    leftPIDController.setP(Constants.proportialPIDConstant);
-    leftPIDController.setI(Constants.integralPIDConstant);
-    leftPIDController.setD(Constants.derivativePIDConstant);
-    leftPIDController.setIZone(Constants.integralPIDConstant);
-    leftPIDController.setFF(Constants.leftFeedForwardPIDConstant);
-    leftPIDController.setOutputRange(Constants.minPIDOutput, Constants.maxPIDOutput);
+    leftPIDController.setP(ShooterPidConstants.proportialPIDConstant);
+    leftPIDController.setI(ShooterPidConstants.integralPIDConstant);
+    leftPIDController.setD(ShooterPidConstants.derivativePIDConstant);
+    leftPIDController.setIZone(ShooterPidConstants.integralPIDConstant);
+    leftPIDController.setFF(ShooterPidConstants.leftFeedForwardPIDConstant);
+    leftPIDController.setOutputRange(ShooterPidConstants.minPIDOutput, ShooterPidConstants.maxPIDOutput);
 
-    rightPIDController.setP(Constants.proportialPIDConstant);
-    rightPIDController.setI(Constants.integralPIDConstant);
-    rightPIDController.setD(Constants.derivativePIDConstant);
-    rightPIDController.setIZone(Constants.integralPIDConstant);
-    rightPIDController.setFF(Constants.rightFeedForwardPIDConstant);
-    rightPIDController.setOutputRange(Constants.minPIDOutput, Constants.maxPIDOutput);
+    rightPIDController.setP(ShooterPidConstants.proportialPIDConstant);
+    rightPIDController.setI(ShooterPidConstants.integralPIDConstant);
+    rightPIDController.setD(ShooterPidConstants.derivativePIDConstant);
+    rightPIDController.setIZone(ShooterPidConstants.integralPIDConstant);
+    rightPIDController.setFF(ShooterPidConstants.rightFeedForwardPIDConstant);
+    rightPIDController.setOutputRange(ShooterPidConstants.minPIDOutput, ShooterPidConstants.maxPIDOutput);
     stop();
 
     shooterLeftMotor.burnFlash();
@@ -103,19 +106,19 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Joystick POV", pov);
     if (!m_pressed) {
       switch (pov) {
-        case Constants.POV_UP_BUTTON:
+        case XboxConstants.POV_UP_BUTTON:
           m_pressed = true;
           m_speed += 10;
           break;
-        case Constants.POV_DOWN_BUTTON:
+        case XboxConstants.POV_DOWN_BUTTON:
           m_pressed = true;
           m_speed -= 10;
           break;
-        case Constants.POV_LEFT_BUTTON:
+        case XboxConstants.POV_LEFT_BUTTON:
           m_pressed = true;
           m_speed -= 100;
           break;
-        case Constants.POV_RIGHT_BUTTON:
+        case XboxConstants.POV_RIGHT_BUTTON:
           m_pressed = true;
           m_speed += 100;
           break;

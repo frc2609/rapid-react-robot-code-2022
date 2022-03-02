@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.Constants.XboxConstants;
 //import frc.robot.RobotContainer;
 
 public class Drive extends SubsystemBase {
@@ -29,8 +30,8 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.LEFT_STICK_X_AXIS), 3);
-    double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.LEFT_STICK_Y_AXIS), 3);
+    double driveX = Math.pow(m_driveJoystick.getRawAxis(XboxConstants.LEFT_STICK_X_AXIS), 3);
+    double driveY = Math.pow(m_driveJoystick.getRawAxis(XboxConstants.LEFT_STICK_Y_AXIS), 3);
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
     setMotors(leftMotors, rightMotors);

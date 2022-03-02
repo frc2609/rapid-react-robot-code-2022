@@ -12,9 +12,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.XboxConstants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.lang.Math;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
@@ -48,15 +48,15 @@ public class Climber extends SubsystemBase {
   }
 
   public void manualBarMotorControl() {
-    double rawAxisValue = m_stick.getRawAxis(Constants.RIGHT_STICK_Y_AXIS);
-    double inc = (Math.abs(rawAxisValue) < Constants.JOYSTICK_DRIFT_TOLERANCE ? 0 : rawAxisValue) * Constants.ARM_SPEED_MULTIPLIER;
+    double rawAxisValue = m_stick.getRawAxis(XboxConstants.RIGHT_STICK_Y_AXIS);
+    double inc = (Math.abs(rawAxisValue) < XboxConstants.JOYSTICK_DRIFT_TOLERANCE ? 0 : rawAxisValue) * Constants.ARM_SPEED_MULTIPLIER;
     armPosition = Math.min(Math.max(armPosition+inc, Constants.MIN_ARM_POS), Constants.MAX_ARM_POS);
     
     setArmPosition(armPosition);
   }
 
   public void manualHookMotorControl() {
-    double inc = m_stick.getRawAxis(Constants.RIGHT_TRIGGER_AXIS) - m_stick.getRawAxis(Constants.LEFT_TRIGGER_AXIS);
+    double inc = m_stick.getRawAxis(XboxConstants.RIGHT_TRIGGER_AXIS) - m_stick.getRawAxis(XboxConstants.LEFT_TRIGGER_AXIS);
     setHook(inc);
   }
 
