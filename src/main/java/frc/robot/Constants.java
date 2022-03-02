@@ -53,14 +53,17 @@ public final class Constants {
     }  
 
     // CAN Motors
-    public static final int SHOOTER_RIGHT_MOTOR = 9;
-    public static final int SHOOTER_LEFT_MOTOR = 8;
-    public static final int HOOK_MOTOR = 7;
-    public static final int BAR_MOTOR = 6;
-    public static final int LEFT_FRONT_MOTOR = 4;
-    public static final int LEFT_REAR_MOTOR = 5;
-    public static final int RIGHT_FRONT_MOTOR = 3;
-    public static final int RIGHT_REAR_MOTOR = 2;
+    public final class CanMotorIdConstants {
+        public static final int SHOOTER_RIGHT_MOTOR = 9;
+        public static final int SHOOTER_LEFT_MOTOR = 8;
+        public static final int HOOK_MOTOR = 7;
+        public static final int BAR_MOTOR = 6;
+        public static final int LEFT_FRONT_MOTOR = 4;
+        public static final int LEFT_REAR_MOTOR = 5;
+        public static final int RIGHT_FRONT_MOTOR = 3;
+        public static final int RIGHT_REAR_MOTOR = 2;
+    }
+    
 
     // Positions
     public static final int MAX_ARM_POS = 98;

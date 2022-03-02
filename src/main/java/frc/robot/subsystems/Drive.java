@@ -12,15 +12,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.Constants.XboxConstants;
+import frc.robot.Constants.CanMotorIdConstants;
 //import frc.robot.RobotContainer;
 
 public class Drive extends SubsystemBase {
   /** Creates a new Drive. */
   
-  private final CANSparkMax m_leftFrontMotor = new CANSparkMax(Constants.LEFT_FRONT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax m_leftRearMotor = new CANSparkMax(Constants.LEFT_REAR_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax m_rightFrontMotor = new CANSparkMax(Constants.RIGHT_FRONT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax m_rightRearMotor = new CANSparkMax(Constants.RIGHT_REAR_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax m_leftFrontMotor = new CANSparkMax(CanMotorIdConstants.LEFT_FRONT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax m_leftRearMotor = new CANSparkMax(CanMotorIdConstants.LEFT_REAR_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax m_rightFrontMotor = new CANSparkMax(CanMotorIdConstants.RIGHT_FRONT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax m_rightRearMotor = new CANSparkMax(CanMotorIdConstants.RIGHT_REAR_MOTOR, MotorType.kBrushless);
   private Joystick m_driveJoystick;
 
   public Drive(Joystick driveJoystick) {

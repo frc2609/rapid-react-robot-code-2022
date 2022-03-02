@@ -13,13 +13,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.XboxConstants;
+import frc.robot.Constants.CanMotorIdConstants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  private final CANSparkMax hookMotor = new CANSparkMax(Constants.HOOK_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax barMotor = new CANSparkMax(Constants.BAR_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax hookMotor = new CANSparkMax(CanMotorIdConstants.HOOK_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax barMotor = new CANSparkMax(CanMotorIdConstants.BAR_MOTOR, MotorType.kBrushless);
   private SparkMaxPIDController barPID;
   private final double ARM_RATIO = 70; // gear ratio * gearbox ratio
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, m_epsilon;

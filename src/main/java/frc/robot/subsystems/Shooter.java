@@ -14,11 +14,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterPidConstants;
 import frc.robot.Constants.XboxConstants;
+import frc.robot.Constants.CanMotorIdConstants;
 
 
 public class Shooter extends SubsystemBase {
-  private final CANSparkMax shooterLeftMotor = new CANSparkMax(Constants.SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax shooterRightMotor = new CANSparkMax(Constants.SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax shooterLeftMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax shooterRightMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
   private Joystick m_stick;
   private boolean m_pressed = false;
   private double m_speed = 0; // double to avoid integer division
