@@ -30,8 +30,8 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController leftPIDController;
   private SparkMaxPIDController rotatePIDController;
 
-  double h1 = 0.045; // height of camera in meters (from ground)
-  double h2 = 0.23; // height of retroreflective tape in meters (from ground)
+  double h1 = 1.1303; // height of camera in meters (from ground)
+  double h2 = 1.5; // height of retroreflective tape in meters (from ground)
   double a1 = 0 * (Math.PI / 180.0); // angle of camera in degrees to radians
   double a2;
   double distance;
@@ -40,7 +40,7 @@ public class Shooter extends SubsystemBase {
   double denominator;
   double rpm;
   double metersPerSecond;
-  double angle_from_example_calc = 56.78;
+  double angle_from_example_calc = 0.0; //56.78;
   double ty;
   double tx;
   double shooterPosition;
