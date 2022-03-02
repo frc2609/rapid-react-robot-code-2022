@@ -67,21 +67,24 @@ public class Shooter extends SubsystemBase {
     leftPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
     leftPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
     leftPIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
-    leftPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput, Constants.ShooterPid.maxShooterPIDOutput);
+    leftPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
+        Constants.ShooterPid.maxShooterPIDOutput);
 
     rightPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
     rightPIDController.setI(Constants.ShooterPid.integralPIDConstant);
     rightPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
     rightPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
     rightPIDController.setFF(Constants.ShooterPid.rightFeedForwardPIDConstant);
-    rightPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput, Constants.ShooterPid.maxShooterPIDOutput);
+    rightPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
+        Constants.ShooterPid.maxShooterPIDOutput);
 
     rotatePIDController.setP(Constants.ShooterPid.proportialPIDConstant);
     rotatePIDController.setI(Constants.ShooterPid.integralPIDConstant);
     rotatePIDController.setD(Constants.ShooterPid.derivativePIDConstant);
     rotatePIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
     rotatePIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
-    rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput, Constants.ShooterPid.maxRotatePIDOutput);
+    rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
+        Constants.ShooterPid.maxRotatePIDOutput);
     stop();
 
     shooterLeftMotor.burnFlash();
@@ -118,7 +121,7 @@ public class Shooter extends SubsystemBase {
     tx = txEntry.getDouble(0.0);
     shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.ShooterPid.MIN_TURRET_POS),
         Constants.ShooterPid.MAX_TURRET_POS);
-    rotatePIDController.setP((shooterPosition / 360));
+    rotatePIDController.setReference((shooterPosition / 360), ControlType.kPosition);
   }
 
   @Override
