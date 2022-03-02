@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.Constants.CanMotorIdConstants;
+import frc.robot.Constants.ArmValueConstants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -50,8 +51,8 @@ public class Climber extends SubsystemBase {
 
   public void manualBarMotorControl() {
     double rawAxisValue = m_stick.getRawAxis(XboxConstants.RIGHT_STICK_Y_AXIS);
-    double inc = (Math.abs(rawAxisValue) < XboxConstants.JOYSTICK_DRIFT_TOLERANCE ? 0 : rawAxisValue) * Constants.ARM_SPEED_MULTIPLIER;
-    armPosition = Math.min(Math.max(armPosition+inc, Constants.MIN_ARM_POS), Constants.MAX_ARM_POS);
+    double inc = (Math.abs(rawAxisValue) < XboxConstants.JOYSTICK_DRIFT_TOLERANCE ? 0 : rawAxisValue) * ArmValueConstants.ARM_SPEED_MULTIPLIER;
+    armPosition = Math.min(Math.max(armPosition+inc, ArmValueConstants.MIN_ARM_POS), ArmValueConstants.MAX_ARM_POS);
     
     setArmPosition(armPosition);
   }

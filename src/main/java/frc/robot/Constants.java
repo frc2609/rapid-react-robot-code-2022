@@ -66,9 +66,11 @@ public final class Constants {
     
 
     // Positions
-    public static final int MAX_ARM_POS = 98;
-    public static final int MIN_ARM_POS = 0;
-    public static final double ARM_SPEED_MULTIPLIER = -2.0;
+    public final class ArmValueConstants {
+        public static final int MAX_ARM_POS = 98;
+        public static final int MIN_ARM_POS = 0;
+        public static final double ARM_SPEED_MULTIPLIER = -2.0;
+    }
 
     // Shooter PID values
     public final class ShooterPidConstants {
