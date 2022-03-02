@@ -15,17 +15,22 @@ import frc.robot.Constants.ShooterPidConstants;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.Constants.CanMotorIdConstants;
 
-
 public class Shooter extends SubsystemBase {
-  private final CANSparkMax shooterLeftMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_LEFT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax shooterRightMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_RIGHT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax shooterLeftMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_LEFT_MOTOR,
+      MotorType.kBrushless);
+  private final CANSparkMax shooterRightMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_RIGHT_MOTOR,
+      MotorType.kBrushless);
+  private final CANSparkMax shooterRotateMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_ROTATE_MOTOR,
+      MotorType.kBrushless);
   private Joystick m_stick;
   private boolean m_pressed = false;
   private double m_speed = 0; // double to avoid integer division
   private RelativeEncoder rightMotorEncoder;
   private RelativeEncoder leftMotorEncoder;
+  private RelativeEncoder rotateMotorEncoder;
   private SparkMaxPIDController rightPIDController;
   private SparkMaxPIDController leftPIDController;
+  private SparkMaxPIDController rotatePIDController;
 
   double h1 = 0.045; // height of camera in meters (from ground)
   double h2 = 0.23; // height of retroreflective tape in meters (from ground)
@@ -38,6 +43,9 @@ public class Shooter extends SubsystemBase {
   double rpm;
   double metersPerSecond;
   double angle_from_example_calc = 56.78;
+  double ty;
+  double tx;
+  double shooterPosition;
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   NetworkTable table = inst.getTable("limelight");
@@ -50,36 +58,46 @@ public class Shooter extends SubsystemBase {
     shooterLeftMotor.follow(shooterRightMotor, true);
     leftMotorEncoder = shooterLeftMotor.getEncoder();
     rightMotorEncoder = shooterRightMotor.getEncoder();
+    rotateMotorEncoder = shooterRotateMotor.getEncoder();
 
     leftPIDController = shooterLeftMotor.getPIDController();
     rightPIDController = shooterRightMotor.getPIDController();
+    rotatePIDController = shooterRotateMotor.getPIDController();
 
     leftPIDController.setP(ShooterPidConstants.proportialPIDConstant);
     leftPIDController.setI(ShooterPidConstants.integralPIDConstant);
     leftPIDController.setD(ShooterPidConstants.derivativePIDConstant);
     leftPIDController.setIZone(ShooterPidConstants.integralPIDConstant);
     leftPIDController.setFF(ShooterPidConstants.leftFeedForwardPIDConstant);
-    leftPIDController.setOutputRange(ShooterPidConstants.minPIDOutput, ShooterPidConstants.maxPIDOutput);
+    leftPIDController.setOutputRange(ShooterPidConstants.minShooterPIDOutput, ShooterPidConstants.maxShooterPIDOutput);
 
     rightPIDController.setP(ShooterPidConstants.proportialPIDConstant);
     rightPIDController.setI(ShooterPidConstants.integralPIDConstant);
     rightPIDController.setD(ShooterPidConstants.derivativePIDConstant);
     rightPIDController.setIZone(ShooterPidConstants.integralPIDConstant);
     rightPIDController.setFF(ShooterPidConstants.rightFeedForwardPIDConstant);
-    rightPIDController.setOutputRange(ShooterPidConstants.minPIDOutput, ShooterPidConstants.maxPIDOutput);
+    rightPIDController.setOutputRange(ShooterPidConstants.minShooterPIDOutput, ShooterPidConstants.maxShooterPIDOutput);
+
+    rotatePIDController.setP(ShooterPidConstants.proportialPIDConstant);
+    rotatePIDController.setI(ShooterPidConstants.integralPIDConstant);
+    rotatePIDController.setD(ShooterPidConstants.derivativePIDConstant);
+    rotatePIDController.setIZone(ShooterPidConstants.integralPIDConstant);
+    rotatePIDController.setFF(ShooterPidConstants.leftFeedForwardPIDConstant);
+    rotatePIDController.setOutputRange(ShooterPidConstants.minRotatePIDOutput, ShooterPidConstants.maxRotatePIDOutput);
     stop();
 
     shooterLeftMotor.burnFlash();
     shooterRightMotor.burnFlash();
+    shooterRotateMotor.burnFlash();
   }
 
   public void stop() {
     shooterRightMotor.set(0.0);
+    shooterRotateMotor.set(0.0);
   }
 
   public void setVelocity() {
-    double tx = txEntry.getDouble(0.0);
-    double ty = tyEntry.getDouble(0.0);
+    ty = tyEntry.getDouble(0.0);
     System.out.println("tx: " + tx + " ty: " + ty);
 
     a2 = ty * (Math.PI / 180.0);
@@ -96,6 +114,13 @@ public class Shooter extends SubsystemBase {
     rpm = metersPerSecond / 0.00524;
     System.out.println("rpm: " + rpm);
     rightPIDController.setReference(rpm, ControlType.kVelocity);
+  }
+
+  public void rotateShooter() {
+    tx = txEntry.getDouble(0.0);
+    shooterPosition = Math.min(Math.max(shooterPosition + tx, ShooterPidConstants.MIN_TURRET_POS),
+        ShooterPidConstants.MAX_TURRET_POS);
+    rotatePIDController.setP((shooterPosition / 360));
   }
 
   @Override

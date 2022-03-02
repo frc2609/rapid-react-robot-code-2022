@@ -47,9 +47,10 @@ public final class Constants {
         public static final int UPPER_BELT_MOTOR = 1;
         public static final int INTAKE_BALL_MOTOR = 2;
         public static final int INTAKE_LIFT_MOTOR = 3;
-    }  
+    }
 
     public final class CanMotorIdConstants {
+        public static final int SHOOTER_ROTATE_MOTOR = 10;
         public static final int SHOOTER_RIGHT_MOTOR = 9;
         public static final int SHOOTER_LEFT_MOTOR = 8;
         public static final int HOOK_MOTOR = 7;
@@ -59,7 +60,7 @@ public final class Constants {
         public static final int RIGHT_FRONT_MOTOR = 3;
         public static final int RIGHT_REAR_MOTOR = 2;
     }
-    
+
     public final class ArmValueConstants {
         public static final int MAX_ARM_POS = 98;
         public static final int MIN_ARM_POS = 0;
@@ -73,8 +74,12 @@ public final class Constants {
         public static final double integralPIDZone = 0.0;
         public static final double leftFeedForwardPIDConstant = 0.000175;
         public static final double rightFeedForwardPIDConstant = 0.000170;
-        public static final double maxPIDOutput = 1.0;
-        public static final double minPIDOutput = 0.0;
+        public static final double maxShooterPIDOutput = 1.0;
+        public static final double minShooterPIDOutput = 0.0;
+        public static final double maxRotatePIDOutput = 1.0;
+        public static final double minRotatePIDOutput = -1.0;
         public static final double velocityPIDTolerance = 30;
+        public static final int MAX_TURRET_POS = 180;
+        public static final int MIN_TURRET_POS = 0;
     }
 }
