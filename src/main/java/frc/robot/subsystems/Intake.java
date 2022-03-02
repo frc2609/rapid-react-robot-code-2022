@@ -6,14 +6,15 @@ import edu.wpi.first.wpilibj.Joystick;
 
 import frc.robot.Constants;
 import frc.robot.Constants.XboxConstants;
+import frc.robot.Constants.PwmMotorIdConstants;
 
 
 public class Intake extends SubsystemBase{
 
-  private final PWMVictorSPX lowerBeltMotor = new PWMVictorSPX(Constants.LOWER_BELT_MOTOR);
-  private final PWMVictorSPX upperBeltMotor = new PWMVictorSPX(Constants.UPPER_BELT_MOTOR);
-  private final PWMVictorSPX intakeLiftMotor = new PWMVictorSPX(Constants.INTAKE_LIFT_MOTOR);
-  private final PWMVictorSPX intakeBallMotor = new PWMVictorSPX(Constants.INTAKE_BALL_MOTOR);
+  private final PWMVictorSPX lowerBeltMotor = new PWMVictorSPX(PwmMotorIdConstants.LOWER_BELT_MOTOR);
+  private final PWMVictorSPX upperBeltMotor = new PWMVictorSPX(PwmMotorIdConstants.UPPER_BELT_MOTOR);
+  private final PWMVictorSPX intakeLiftMotor = new PWMVictorSPX(PwmMotorIdConstants.INTAKE_LIFT_MOTOR);
+  private final PWMVictorSPX intakeBallMotor = new PWMVictorSPX(PwmMotorIdConstants.INTAKE_BALL_MOTOR);
   private final Joystick m_stick;
 
   public Intake(Joystick stick) 
