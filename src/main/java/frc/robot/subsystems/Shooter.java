@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase {
   double angle_from_example_calc = 0.0; //56.78;
   double ty;
   double tx;
-  double tv_double;
+  double tv;
   double shooterPosition;
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -100,9 +100,9 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setVelocity() {
-    tv_double = tvEntry.getDouble(0.0);
+    tv = tvEntry.getDouble(0.0);
 
-    if(tv_double == 0) {
+    if(tv <= 0) {
       System.out.println("no valid limelight target");
       rightPIDController.setReference(0, ControlType.kVelocity);
       return;
