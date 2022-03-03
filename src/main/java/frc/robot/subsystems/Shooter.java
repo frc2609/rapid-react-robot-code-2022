@@ -28,10 +28,10 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController rightPIDController;
   private SparkMaxPIDController rotatePIDController;
 
-  double h1 = 1.1303; // height of camera in meters (from ground)
-  double h2 = 1.5; // height of retroreflective tape in meters (from ground)
-  double a1 = 0 * (Math.PI / 180.0); // angle of camera in degrees to radians
-  double a2;
+  double cameraHeight = 1.1303; // height of camera in meters (from ground)
+  double tapeHeight = 1.5; // height of retroreflective tape in meters (from ground)
+  double cameraAngle = 0 * (Math.PI / 180.0); // angle of camera in degrees to radians
+  double cameraAndTapeAngleDelta;
   double distance;
   double distanceH;
   double numerator;
@@ -75,14 +75,14 @@ public class Shooter extends SubsystemBase {
     rotatePIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
     rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
         Constants.ShooterPid.maxRotatePIDOutput);
-    stop();
+    stopShooterMotors();
 
     // shooterLeftMotor.burnFlash();
     // shooterRightMotor.burnFlash();
     // shooterRotateMotor.burnFlash();
   }
 
-  public void stop() {
+  public void stopShooterMotors() {
     shooterRightMotor.set(0.0);
     shooterRotateMotor.set(0.0);
   }
@@ -101,8 +101,8 @@ public class Shooter extends SubsystemBase {
     ty = tyEntry.getDouble(0.0);
     System.out.println("tx: " + tx + " ty: " + ty);
 
-    a2 = ty * (Math.PI / 180.0);
-    distance = (h2 - h1) / Math.tan(a1 + a2);
+    cameraAndTapeAngleDelta = ty * (Math.PI / 180.0);
+    distance = (tapeHeight - cameraHeight) / Math.tan(cameraAngle + cameraAndTapeAngleDelta);
     System.out.println("distance: " + distance);
 
     distanceH = Math.sqrt(Math.pow(distance, 2) - Math.pow(1.878, 2));
@@ -122,6 +122,12 @@ public class Shooter extends SubsystemBase {
     shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.ShooterPid.MIN_TURRET_POS),
         Constants.ShooterPid.MAX_TURRET_POS);
     rotatePIDController.setReference((shooterPosition / 360), ControlType.kPosition);
+  }
+
+  public void setMotors(double set) {
+    SmartDashboard.putNumber("Shooter Speed", set);
+    shooterLeftMotor.set(-set);
+    shooterRightMotor.set(set);
   }
 
   @Override
@@ -155,11 +161,5 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
     setVelocity();
-  }
-
-  public void setMotors(double set) {
-    SmartDashboard.putNumber("Shooter Speed", set);
-    shooterLeftMotor.set(-set);
-    shooterRightMotor.set(set);
   }
 }
