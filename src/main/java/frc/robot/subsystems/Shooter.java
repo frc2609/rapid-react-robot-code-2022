@@ -26,7 +26,6 @@ public class Shooter extends SubsystemBase {
   private RelativeEncoder rightMotorEncoder;
   private RelativeEncoder rotateMotorEncoder;
   private SparkMaxPIDController rightPIDController;
-  // private SparkMaxPIDController leftPIDController;
   private SparkMaxPIDController rotatePIDController;
 
   double h1 = 1.1303; // height of camera in meters (from ground)
@@ -58,17 +57,8 @@ public class Shooter extends SubsystemBase {
     rightMotorEncoder = shooterRightMotor.getEncoder();
     rotateMotorEncoder = shooterRotateMotor.getEncoder();
 
-    // leftPIDController = shooterLeftMotor.getPIDController();
     rightPIDController = shooterRightMotor.getPIDController();
     rotatePIDController = shooterRotateMotor.getPIDController();
-
-    // leftPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
-    // leftPIDController.setI(Constants.ShooterPid.integralPIDConstant);
-    // leftPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    // leftPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
-    // leftPIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
-    // leftPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
-    //     Constants.ShooterPid.maxShooterPIDOutput);
 
     rightPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
     rightPIDController.setI(Constants.ShooterPid.integralPIDConstant);
