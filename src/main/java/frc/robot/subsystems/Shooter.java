@@ -43,7 +43,6 @@ public class Shooter extends SubsystemBase {
   double angle_from_example_calc = 0.0; //56.78;
   double ty;
   double tx;
-  boolean tv;
   double tv_double;
   double shooterPosition;
 
@@ -101,10 +100,9 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setVelocity() {
-    tv = tvEntry.getBoolean(false);
     tv_double = tvEntry.getDouble(0.0);
 
-    if(!tv && tv_double == 0) {
+    if(tv_double == 0) {
       System.out.println("no valid limelight target");
       rightPIDController.setReference(0, ControlType.kVelocity);
       return;
