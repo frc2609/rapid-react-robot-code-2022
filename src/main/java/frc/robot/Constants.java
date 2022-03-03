@@ -17,7 +17,7 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public final class XboxConstants {
+    public final class Xbox {
         public static final double JOYSTICK_DRIFT_TOLERANCE = 0.1;
         public static final int JOYSTICK_PORT = 0;
         public static final int LEFT_STICK_X_AXIS = 0;
@@ -42,14 +42,14 @@ public final class Constants {
         public static final int POV_LEFT_BUTTON = 270;
     }
 
-    public final class PwmMotorIdConstants {
+    public final class PwmMotorId {
         public static final int LOWER_BELT_MOTOR = 0;
         public static final int UPPER_BELT_MOTOR = 1;
         public static final int INTAKE_BALL_MOTOR = 2;
         public static final int INTAKE_LIFT_MOTOR = 3;
     }
 
-    public final class CanMotorIdConstants {
+    public final class CanMotorId {
         public static final int SHOOTER_ROTATE_MOTOR = 10;
         public static final int SHOOTER_RIGHT_MOTOR = 9;
         public static final int SHOOTER_LEFT_MOTOR = 8;
@@ -61,13 +61,13 @@ public final class Constants {
         public static final int RIGHT_REAR_MOTOR = 2;
     }
 
-    public final class ArmValueConstants {
+    public final class ArmValue {
         public static final int MAX_ARM_POS = 98;
         public static final int MIN_ARM_POS = 0;
         public static final double ARM_SPEED_MULTIPLIER = -2.0;
     }
 
-    public final class ShooterPidConstants {
+    public final class ShooterPid {
         public static final double proportialPIDConstant = 0.0002;
         public static final double integralPIDConstant = 0.0;
         public static final double derivativePIDConstant = 0.0;

@@ -4,16 +4,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj.Joystick;
 
-import frc.robot.Constants.XboxConstants;
-import frc.robot.Constants.PwmMotorIdConstants;
+import frc.robot.Constants;
 
 
 public class Intake extends SubsystemBase{
 
-  private final PWMVictorSPX lowerBeltMotor = new PWMVictorSPX(PwmMotorIdConstants.LOWER_BELT_MOTOR);
-  private final PWMVictorSPX upperBeltMotor = new PWMVictorSPX(PwmMotorIdConstants.UPPER_BELT_MOTOR);
-  private final PWMVictorSPX intakeLiftMotor = new PWMVictorSPX(PwmMotorIdConstants.INTAKE_LIFT_MOTOR);
-  private final PWMVictorSPX intakeBallMotor = new PWMVictorSPX(PwmMotorIdConstants.INTAKE_BALL_MOTOR);
+  private final PWMVictorSPX lowerBeltMotor = new PWMVictorSPX(Constants.PwmMotorId.LOWER_BELT_MOTOR);
+  private final PWMVictorSPX upperBeltMotor = new PWMVictorSPX(Constants.PwmMotorId.UPPER_BELT_MOTOR);
+  private final PWMVictorSPX intakeLiftMotor = new PWMVictorSPX(Constants.PwmMotorId.INTAKE_LIFT_MOTOR);
+  private final PWMVictorSPX intakeBallMotor = new PWMVictorSPX(Constants.PwmMotorId.INTAKE_BALL_MOTOR);
   private final Joystick m_stick;
 
   public Intake(Joystick stick) 
@@ -23,21 +22,21 @@ public class Intake extends SubsystemBase{
 
   @Override
   public void periodic() {
-    if (m_stick.getRawButton(XboxConstants.B_BUTTON)) {
+    if (m_stick.getRawButton(Constants.Xbox.B_BUTTON)) {
       setBelts(1);
     }
     else { 
       setBelts(0); 
     }
     
-    if (m_stick.getRawButton(XboxConstants.A_BUTTON)) {
+    if (m_stick.getRawButton(Constants.Xbox.A_BUTTON)) {
       setIntake(0.5);
     }
     else {
       setIntake(0);
     }
 
-    intakeLiftMotor.set(m_stick.getRawAxis(XboxConstants.RIGHT_STICK_X_AXIS) * 0.25);
+    intakeLiftMotor.set(m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_X_AXIS) * 0.25);
   }
 
   @Override

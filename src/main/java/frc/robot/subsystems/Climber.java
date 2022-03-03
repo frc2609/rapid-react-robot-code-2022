@@ -11,16 +11,14 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.XboxConstants;
-import frc.robot.Constants.CanMotorIdConstants;
-import frc.robot.Constants.ArmValueConstants;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  private final CANSparkMax hookMotor = new CANSparkMax(CanMotorIdConstants.HOOK_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax barMotor = new CANSparkMax(CanMotorIdConstants.BAR_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax hookMotor = new CANSparkMax(Constants.CanMotorId.HOOK_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax barMotor = new CANSparkMax(Constants.CanMotorId.BAR_MOTOR, MotorType.kBrushless);
   private SparkMaxPIDController barPID;
   private final double ARM_RATIO = 70; // gear ratio * gearbox ratio
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, m_epsilon;
@@ -49,15 +47,15 @@ public class Climber extends SubsystemBase {
   }
 
   public void manualBarMotorControl() {
-    double rawAxisValue = m_stick.getRawAxis(XboxConstants.RIGHT_STICK_Y_AXIS);
-    double inc = (Math.abs(rawAxisValue) < XboxConstants.JOYSTICK_DRIFT_TOLERANCE ? 0 : rawAxisValue) * ArmValueConstants.ARM_SPEED_MULTIPLIER;
-    armPosition = Math.min(Math.max(armPosition+inc, ArmValueConstants.MIN_ARM_POS), ArmValueConstants.MAX_ARM_POS);
+    double rawAxisValue = m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS);
+    double inc = (Math.abs(rawAxisValue) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE ? 0 : rawAxisValue) * Constants.ArmValue.ARM_SPEED_MULTIPLIER;
+    armPosition = Math.min(Math.max(armPosition+inc, Constants.ArmValue.MIN_ARM_POS), Constants.ArmValue.MAX_ARM_POS);
     
     setArmPosition(armPosition);
   }
 
   public void manualHookMotorControl() {
-    double inc = m_stick.getRawAxis(XboxConstants.RIGHT_TRIGGER_AXIS) - m_stick.getRawAxis(XboxConstants.LEFT_TRIGGER_AXIS);
+    double inc = m_stick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS) - m_stick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS);
     setHook(inc);
   }
 

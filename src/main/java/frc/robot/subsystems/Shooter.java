@@ -11,16 +11,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.ShooterPidConstants;
-import frc.robot.Constants.XboxConstants;
-import frc.robot.Constants.CanMotorIdConstants;
+import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-  private final CANSparkMax shooterLeftMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_LEFT_MOTOR,
+  private final CANSparkMax shooterLeftMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_LEFT_MOTOR,
       MotorType.kBrushless);
-  private final CANSparkMax shooterRightMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_RIGHT_MOTOR,
+  private final CANSparkMax shooterRightMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_RIGHT_MOTOR,
       MotorType.kBrushless);
-  private final CANSparkMax shooterRotateMotor = new CANSparkMax(CanMotorIdConstants.SHOOTER_ROTATE_MOTOR,
+  private final CANSparkMax shooterRotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
       MotorType.kBrushless);
   private Joystick m_stick;
   private boolean m_pressed = false;
@@ -64,26 +62,26 @@ public class Shooter extends SubsystemBase {
     rightPIDController = shooterRightMotor.getPIDController();
     rotatePIDController = shooterRotateMotor.getPIDController();
 
-    leftPIDController.setP(ShooterPidConstants.proportialPIDConstant);
-    leftPIDController.setI(ShooterPidConstants.integralPIDConstant);
-    leftPIDController.setD(ShooterPidConstants.derivativePIDConstant);
-    leftPIDController.setIZone(ShooterPidConstants.integralPIDConstant);
-    leftPIDController.setFF(ShooterPidConstants.leftFeedForwardPIDConstant);
-    leftPIDController.setOutputRange(ShooterPidConstants.minShooterPIDOutput, ShooterPidConstants.maxShooterPIDOutput);
+    leftPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
+    leftPIDController.setI(Constants.ShooterPid.integralPIDConstant);
+    leftPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
+    leftPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
+    leftPIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
+    leftPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput, Constants.ShooterPid.maxShooterPIDOutput);
 
-    rightPIDController.setP(ShooterPidConstants.proportialPIDConstant);
-    rightPIDController.setI(ShooterPidConstants.integralPIDConstant);
-    rightPIDController.setD(ShooterPidConstants.derivativePIDConstant);
-    rightPIDController.setIZone(ShooterPidConstants.integralPIDConstant);
-    rightPIDController.setFF(ShooterPidConstants.rightFeedForwardPIDConstant);
-    rightPIDController.setOutputRange(ShooterPidConstants.minShooterPIDOutput, ShooterPidConstants.maxShooterPIDOutput);
+    rightPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
+    rightPIDController.setI(Constants.ShooterPid.integralPIDConstant);
+    rightPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
+    rightPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
+    rightPIDController.setFF(Constants.ShooterPid.rightFeedForwardPIDConstant);
+    rightPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput, Constants.ShooterPid.maxShooterPIDOutput);
 
-    rotatePIDController.setP(ShooterPidConstants.proportialPIDConstant);
-    rotatePIDController.setI(ShooterPidConstants.integralPIDConstant);
-    rotatePIDController.setD(ShooterPidConstants.derivativePIDConstant);
-    rotatePIDController.setIZone(ShooterPidConstants.integralPIDConstant);
-    rotatePIDController.setFF(ShooterPidConstants.leftFeedForwardPIDConstant);
-    rotatePIDController.setOutputRange(ShooterPidConstants.minRotatePIDOutput, ShooterPidConstants.maxRotatePIDOutput);
+    rotatePIDController.setP(Constants.ShooterPid.proportialPIDConstant);
+    rotatePIDController.setI(Constants.ShooterPid.integralPIDConstant);
+    rotatePIDController.setD(Constants.ShooterPid.derivativePIDConstant);
+    rotatePIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
+    rotatePIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
+    rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput, Constants.ShooterPid.maxRotatePIDOutput);
     stop();
 
     shooterLeftMotor.burnFlash();
@@ -118,8 +116,8 @@ public class Shooter extends SubsystemBase {
 
   public void rotateShooter() {
     tx = txEntry.getDouble(0.0);
-    shooterPosition = Math.min(Math.max(shooterPosition + tx, ShooterPidConstants.MIN_TURRET_POS),
-        ShooterPidConstants.MAX_TURRET_POS);
+    shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.ShooterPid.MIN_TURRET_POS),
+        Constants.ShooterPid.MAX_TURRET_POS);
     rotatePIDController.setP((shooterPosition / 360));
   }
 
@@ -131,19 +129,19 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Joystick POV", pov);
     if (!m_pressed) {
       switch (pov) {
-        case XboxConstants.POV_UP_BUTTON:
+        case Constants.Xbox.POV_UP_BUTTON:
           m_pressed = true;
           m_speed += 10;
           break;
-        case XboxConstants.POV_DOWN_BUTTON:
+        case Constants.Xbox.POV_DOWN_BUTTON:
           m_pressed = true;
           m_speed -= 10;
           break;
-        case XboxConstants.POV_LEFT_BUTTON:
+        case Constants.Xbox.POV_LEFT_BUTTON:
           m_pressed = true;
           m_speed -= 100;
           break;
-        case XboxConstants.POV_RIGHT_BUTTON:
+        case Constants.Xbox.POV_RIGHT_BUTTON:
           m_pressed = true;
           m_speed += 100;
           break;

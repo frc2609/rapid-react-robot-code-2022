@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.Climber;
-import frc.robot.Constants.XboxConstants;
+import frc.robot.Constants;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -19,6 +19,6 @@ public class ClimbingSequence extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     // start pos 98.15
     // end pos 77.64
-    addCommands(new SetArm(climber, 98.15), new WaitForButtonPress(stick, XboxConstants.RIGHT_STICK_X_AXIS));
+    addCommands(new SetArm(climber, 98.15), new WaitForButtonPress(stick, Constants.Xbox.RIGHT_STICK_X_AXIS));
   }
 }

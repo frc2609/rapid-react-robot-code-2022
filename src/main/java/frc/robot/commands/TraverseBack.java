@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 import frc.robot.Constants;
-import frc.robot.Constants.XboxConstants;
 
 public class TraverseBack extends CommandBase {
   /** Creates a new Traverse. */
@@ -32,7 +31,7 @@ public class TraverseBack extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_climber.setHook(-m_stick.getRawAxis(XboxConstants.RIGHT_STICK_Y_AXIS));
+    m_climber.setHook(-m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS));
     // start pos 98.15
     // end pos 77.64
     double progress = (Math.abs(m_climber.getHookPosition()-123))/(123);
@@ -51,6 +50,6 @@ public class TraverseBack extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_stick.getRawButton(XboxConstants.B_BUTTON);
+    return m_stick.getRawButton(Constants.Xbox.B_BUTTON);
   }
 }
