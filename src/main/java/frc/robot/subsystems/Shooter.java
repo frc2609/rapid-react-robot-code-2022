@@ -24,8 +24,9 @@ public class Shooter extends SubsystemBase {
   private boolean m_pressed = false;
   private double m_speed = 0; // double to avoid integer division
   private RelativeEncoder rightMotorEncoder;
+  private RelativeEncoder rotateMotorEncoder;
   private SparkMaxPIDController rightPIDController;
-  private SparkMaxPIDController leftPIDController;
+  // private SparkMaxPIDController leftPIDController;
   private SparkMaxPIDController rotatePIDController;
 
   double h1 = 1.1303; // height of camera in meters (from ground)
@@ -55,6 +56,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Set", 0);
     shooterLeftMotor.follow(shooterRightMotor, true);
     rightMotorEncoder = shooterRightMotor.getEncoder();
+    rotateMotorEncoder = shooterRotateMotor.getEncoder();
 
     // leftPIDController = shooterLeftMotor.getPIDController();
     rightPIDController = shooterRightMotor.getPIDController();
