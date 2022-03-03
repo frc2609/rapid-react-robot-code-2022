@@ -89,9 +89,9 @@ public class Shooter extends SubsystemBase {
         Constants.ShooterPid.maxRotatePIDOutput);
     stop();
 
-    shooterLeftMotor.burnFlash();
-    shooterRightMotor.burnFlash();
-    shooterRotateMotor.burnFlash();
+    // shooterLeftMotor.burnFlash();
+    // shooterRightMotor.burnFlash();
+    // shooterRotateMotor.burnFlash();
   }
 
   public void stop() {
