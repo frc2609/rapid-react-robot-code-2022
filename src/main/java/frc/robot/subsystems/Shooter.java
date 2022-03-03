@@ -43,12 +43,14 @@ public class Shooter extends SubsystemBase {
   double angle_from_example_calc = 0.0; //56.78;
   double ty;
   double tx;
+  boolean tv;
   double shooterPosition;
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   NetworkTable table = inst.getTable("limelight");
   NetworkTableEntry txEntry = table.getEntry("tx");
   NetworkTableEntry tyEntry = table.getEntry("ty");
+  NetworkTableEntry tvEntry = table.getEntry("tv");
 
   public Shooter(Joystick stick) {
     m_stick = stick;
@@ -98,6 +100,15 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setVelocity() {
+    tv = tvEntry.getBoolean(false);
+    if(!tv) {
+      System.out.println("no valid limelight target");
+      rightPIDController.setReference(0, ControlType.kVelocity);
+      return;
+    }
+
+    System.out.println("found limelight target");
+    
     ty = tyEntry.getDouble(0.0);
     System.out.println("tx: " + tx + " ty: " + ty);
 
