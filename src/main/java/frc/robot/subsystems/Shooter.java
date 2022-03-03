@@ -24,8 +24,6 @@ public class Shooter extends SubsystemBase {
   private boolean m_pressed = false;
   private double m_speed = 0; // double to avoid integer division
   private RelativeEncoder rightMotorEncoder;
-  private RelativeEncoder leftMotorEncoder;
-  private RelativeEncoder rotateMotorEncoder;
   private SparkMaxPIDController rightPIDController;
   private SparkMaxPIDController leftPIDController;
   private SparkMaxPIDController rotatePIDController;
@@ -56,21 +54,19 @@ public class Shooter extends SubsystemBase {
     m_stick = stick;
     SmartDashboard.putNumber("Shooter Set", 0);
     shooterLeftMotor.follow(shooterRightMotor, true);
-    leftMotorEncoder = shooterLeftMotor.getEncoder();
     rightMotorEncoder = shooterRightMotor.getEncoder();
-    rotateMotorEncoder = shooterRotateMotor.getEncoder();
 
-    leftPIDController = shooterLeftMotor.getPIDController();
+    // leftPIDController = shooterLeftMotor.getPIDController();
     rightPIDController = shooterRightMotor.getPIDController();
     rotatePIDController = shooterRotateMotor.getPIDController();
 
-    leftPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
-    leftPIDController.setI(Constants.ShooterPid.integralPIDConstant);
-    leftPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    leftPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
-    leftPIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
-    leftPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
-        Constants.ShooterPid.maxShooterPIDOutput);
+    // leftPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
+    // leftPIDController.setI(Constants.ShooterPid.integralPIDConstant);
+    // leftPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
+    // leftPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
+    // leftPIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
+    // leftPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
+    //     Constants.ShooterPid.maxShooterPIDOutput);
 
     rightPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
     rightPIDController.setI(Constants.ShooterPid.integralPIDConstant);
@@ -174,5 +170,4 @@ public class Shooter extends SubsystemBase {
     shooterLeftMotor.set(-set);
     shooterRightMotor.set(set);
   }
-
 }
