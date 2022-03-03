@@ -30,8 +30,8 @@ public class Shooter extends SubsystemBase {
 
   double cameraHeight = 1.1303; // height of camera in meters (from ground)
   double tapeHeight = 1.5; // height of retroreflective tape in meters (from ground)
-  double cameraAngle = 0 * (Math.PI / 180.0); // angle of camera in degrees to radians
-  double cameraAndTapeAngleDelta;
+  double cameraAngleDegrees = 0; // angle of camera in degrees
+  double cameraAndTapeAngleDeltaDegrees; // difference in vertical angle between camera and target
   double distance;
   double distanceH;
   double numerator;
@@ -75,6 +75,7 @@ public class Shooter extends SubsystemBase {
     rotatePIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
     rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
         Constants.ShooterPid.maxRotatePIDOutput);
+
     stopShooterMotors();
 
     // shooterLeftMotor.burnFlash();
@@ -91,22 +92,31 @@ public class Shooter extends SubsystemBase {
     tv = tvEntry.getDouble(0.0);
 
     if(tv <= 0) {
-      System.out.println("no valid limelight target");
+      SmartDashboard.putBoolean("valid limelight target", false);
       rightPIDController.setReference(0, ControlType.kVelocity);
       return;
     }
 
-    System.out.println("found limelight target");
+    SmartDashboard.putBoolean("valid limelight target", true);
     
-    ty = tyEntry.getDouble(0.0);
-    System.out.println("tx: " + tx + " ty: " + ty);
+    tx = tyEntry.getDouble(0);
+    ty = tyEntry.getDouble(0);
 
-    cameraAndTapeAngleDelta = ty * (Math.PI / 180.0);
-    distance = (tapeHeight - cameraHeight) / Math.tan(cameraAngle + cameraAndTapeAngleDelta);
+    SmartDashboard.putNumber("tx", tx);
+    SmartDashboard.putNumber("ty", ty);
+
+
+    cameraAndTapeAngleDeltaDegrees = ty * (Math.PI / 180.0);
+    distance = (tapeHeight - cameraHeight) / Math.tan(degToRad(cameraAngleDegrees) + degToRad(cameraAndTapeAngleDeltaDegrees));
+
     System.out.println("distance: " + distance);
+    SmartDashboard.putNumber("distance (m)", distance);
+
 
     distanceH = Math.sqrt(Math.pow(distance, 2) - Math.pow(1.878, 2));
     System.out.println("distanceH:" + distanceH);
+    SmartDashboard.putNumber("distanceH (m)", distanceH);
+
     numerator = -4.9 * Math.pow(distanceH, 2);
     denominator = (1.878 - Math.tan(angle_from_example_calc * (Math.PI / 180.0)) * distanceH)
         * Math.pow(Math.cos(angle_from_example_calc * (Math.PI / 180.0)), 2);
@@ -114,6 +124,46 @@ public class Shooter extends SubsystemBase {
 
     rpm = metersPerSecond / 0.00524;
     System.out.println("rpm: " + rpm);
+    SmartDashboard.putNumber("flywheel rpm", rpm);
+    rightPIDController.setReference(rpm, ControlType.kVelocity);
+  }
+
+  private void fernCalculateFlywheelRpm() {
+    tv = tvEntry.getDouble(0.0);
+
+    if(tv <= 0) {
+      SmartDashboard.putBoolean("valid limelight target", false);
+      rightPIDController.setReference(0, ControlType.kVelocity);
+      return;
+    }
+
+    SmartDashboard.putBoolean("valid limelight target", true);
+    
+    tx = tyEntry.getDouble(0);
+    ty = tyEntry.getDouble(0);
+
+    SmartDashboard.putNumber("tx", tx);
+    SmartDashboard.putNumber("ty", ty);
+
+
+    cameraAndTapeAngleDeltaDegrees = ty * (Math.PI / 180.0);
+    distance = (tapeHeight - cameraHeight) / Math.tan(degToRad(cameraAngleDegrees) + degToRad(cameraAndTapeAngleDeltaDegrees));
+
+    SmartDashboard.putNumber("distance (m)", distance);
+
+
+    distanceH = Math.sqrt(Math.pow(distance, 2) - Math.pow(1.878, 2));
+    System.out.println("distanceH:" + distanceH);
+    SmartDashboard.putNumber("distanceH (m)", distanceH);
+
+    numerator = -4.9 * Math.pow(distanceH, 2);
+    denominator = (1.878 - Math.tan(angle_from_example_calc * (Math.PI / 180.0)) * distanceH)
+        * Math.pow(Math.cos(angle_from_example_calc * (Math.PI / 180.0)), 2);
+    metersPerSecond = Math.sqrt(numerator / denominator);
+
+    rpm = metersPerSecond / 0.00524;
+    System.out.println("rpm: " + rpm);
+    SmartDashboard.putNumber("flywheel rpm", rpm);
     rightPIDController.setReference(rpm, ControlType.kVelocity);
   }
 
@@ -128,6 +178,10 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Speed", set);
     shooterLeftMotor.set(-set);
     shooterRightMotor.set(set);
+  }
+
+  private double degToRad(double degrees) {
+    return degrees * Math.PI / 180;
   }
 
   @Override
