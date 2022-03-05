@@ -30,7 +30,7 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController leftPIDController;
   private SparkMaxPIDController rotatePIDController;
 
-  double h1 = 1.1303; // height of camera in meters (from ground)
+  double h1 = 0.8382; // height of camera in meters (from ground)
   double h2 = 1.5; // height of retroreflective tape in meters (from ground)
   double a1 = 0 * (Math.PI / 180.0); // angle of camera in degrees to radians
   double a2;
@@ -40,7 +40,7 @@ public class Shooter extends SubsystemBase {
   double denominator;
   double rpm;
   double metersPerSecond;
-  double angle_from_example_calc = 0.0; //56.78;
+  double angle_from_example_calc = 20.8; // 56.78;
   double ty;
   double tx;
   boolean tv;
@@ -104,19 +104,19 @@ public class Shooter extends SubsystemBase {
     tv = tvEntry.getBoolean(false);
     tv_double = tvEntry.getDouble(0.0);
 
-    if(!tv && tv_double == 0) {
+    if (!tv && tv_double == 0) {
       System.out.println("no valid limelight target");
       rightPIDController.setReference(0, ControlType.kVelocity);
       return;
     }
 
     System.out.println("found limelight target");
-    
+
     ty = tyEntry.getDouble(0.0);
     System.out.println("tx: " + tx + " ty: " + ty);
 
     a2 = ty * (Math.PI / 180.0);
-    distance = (h2 - h1) / Math.tan(a1 + a2);
+    distance = (h2 - h1) / Math.tan(angle_from_example_calc * (Math.PI / 180.0) + a2); // a1 + a2 (in radians)
     System.out.println("distance: " + distance);
 
     distanceH = Math.sqrt(Math.pow(distance, 2) - Math.pow(1.878, 2));
