@@ -210,8 +210,16 @@ public class Shooter extends SubsystemBase {
     if (pov == -1)
       m_pressed = false;
 
-    if (m_stick.getRawButtonPressed(Constants.Xbox.START_BUTTON)) {
-      shooterRightMotor.disable();
+    if(m_stick.getRawButtonPressed(Constants.Xbox.RIGHT_BUMPER)) {
+      m_speed += 200;
+    }
+
+    if(m_stick.getRawButtonPressed(Constants.Xbox.LEFT_BUMPER)) {
+      m_speed -= 200;
+    }
+
+    if(m_stick.getRawButtonPressed(Constants.Xbox.START_BUTTON)) {
+      // shooterRightMotor.disable();
       m_speed = 0;
     }
     SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
