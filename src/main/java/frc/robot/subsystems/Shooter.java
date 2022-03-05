@@ -4,6 +4,7 @@ import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -38,7 +39,7 @@ public class Shooter extends SubsystemBase {
   double denominator;
   double rpm;
   double metersPerSecond;
-  double angle_from_example_calc = 0.0; //56.78;
+  double angle_from_example_calc = 0.0; // 56.78;
   double ty;
   double tx;
   double tv;
@@ -63,7 +64,7 @@ public class Shooter extends SubsystemBase {
     rightPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
     rightPIDController.setI(Constants.ShooterPid.integralPIDConstant);
     rightPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    rightPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
+    rightPIDController.setIZone(Constants.ShooterPid.integralPIDZone);
     rightPIDController.setFF(Constants.ShooterPid.rightFeedForwardPIDConstant);
     rightPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
         Constants.ShooterPid.maxShooterPIDOutput);
@@ -75,6 +76,8 @@ public class Shooter extends SubsystemBase {
     rotatePIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
     rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
         Constants.ShooterPid.maxRotatePIDOutput);
+    shooterRightMotor.setIdleMode(IdleMode.kCoast);
+    shooterLeftMotor.setIdleMode(IdleMode.kCoast);
 
     stopShooterMotors();
 
@@ -89,56 +92,57 @@ public class Shooter extends SubsystemBase {
   }
 
   // public void setVelocity() {
-  //   tv = tvEntry.getDouble(0.0);
+  // tv = tvEntry.getDouble(0.0);
 
-  //   if(tv <= 0) {
-  //     SmartDashboard.putBoolean("valid limelight target", false);
-  //     // rightPIDController.setReference(0, ControlType.kVelocity);
-  //     return;
-  //   }
+  // if(tv <= 0) {
+  // SmartDashboard.putBoolean("valid limelight target", false);
+  // // rightPIDController.setReference(0, ControlType.kVelocity);
+  // return;
+  // }
 
-  //   SmartDashboard.putBoolean("valid limelight target", true);
-    
-  //   tx = tyEntry.getDouble(0);
-  //   ty = tyEntry.getDouble(0);
+  // SmartDashboard.putBoolean("valid limelight target", true);
 
-  //   SmartDashboard.putNumber("tx", tx);
-  //   SmartDashboard.putNumber("ty", ty);
+  // tx = tyEntry.getDouble(0);
+  // ty = tyEntry.getDouble(0);
 
+  // SmartDashboard.putNumber("tx", tx);
+  // SmartDashboard.putNumber("ty", ty);
 
-  //   cameraAndTapeAngleDeltaDegrees = ty * (Math.PI / 180.0);
-  //   distance = (tapeHeight - cameraHeight) / Math.tan(degToRad(cameraAngleDegrees) + degToRad(cameraAndTapeAngleDeltaDegrees));
+  // cameraAndTapeAngleDeltaDegrees = ty * (Math.PI / 180.0);
+  // distance = (tapeHeight - cameraHeight) /
+  // Math.tan(degToRad(cameraAngleDegrees) +
+  // degToRad(cameraAndTapeAngleDeltaDegrees));
 
-  //   System.out.println("distance: " + distance);
-  //   SmartDashboard.putNumber("distance (m)", distance);
+  // System.out.println("distance: " + distance);
+  // SmartDashboard.putNumber("distance (m)", distance);
 
+  // distanceH = Math.sqrt(Math.pow(distance, 2) - Math.pow(1.878, 2));
+  // System.out.println("distanceH:" + distanceH);
+  // SmartDashboard.putNumber("distanceH (m)", distanceH);
 
-  //   distanceH = Math.sqrt(Math.pow(distance, 2) - Math.pow(1.878, 2));
-  //   System.out.println("distanceH:" + distanceH);
-  //   SmartDashboard.putNumber("distanceH (m)", distanceH);
+  // numerator = -4.9 * Math.pow(distanceH, 2);
+  // denominator = (1.878 - Math.tan(angle_from_example_calc * (Math.PI / 180.0))
+  // * distanceH)
+  // * Math.pow(Math.cos(angle_from_example_calc * (Math.PI / 180.0)), 2);
+  // metersPerSecond = Math.sqrt(numerator / denominator);
 
-  //   numerator = -4.9 * Math.pow(distanceH, 2);
-  //   denominator = (1.878 - Math.tan(angle_from_example_calc * (Math.PI / 180.0)) * distanceH)
-  //       * Math.pow(Math.cos(angle_from_example_calc * (Math.PI / 180.0)), 2);
-  //   metersPerSecond = Math.sqrt(numerator / denominator);
-
-  //   rpm = metersPerSecond / 0.00524;
-  //   System.out.println("rpm: " + rpm);
-  //   SmartDashboard.putNumber("flywheel rpm", rpm);
-  //   rightPIDController.setReference(rpm, ControlType.kVelocity);
+  // rpm = metersPerSecond / 0.00524;
+  // System.out.println("rpm: " + rpm);
+  // SmartDashboard.putNumber("flywheel rpm", rpm);
+  // rightPIDController.setReference(rpm, ControlType.kVelocity);
   // }
 
   private void fernCalculateFlywheelRpm() {
     tv = tvEntry.getDouble(0.0);
 
-    if(tv <= 0) {
+    if (tv <= 0) {
       SmartDashboard.putBoolean("valid limelight target", false);
       // rightPIDController.setReference(0, ControlType.kVelocity);
       return;
     }
 
     SmartDashboard.putBoolean("valid limelight target", true);
-    
+
     tx = tyEntry.getDouble(0);
     ty = tyEntry.getDouble(0);
 
@@ -146,7 +150,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("ty", ty);
 
     cameraAndTapeAngleDeltaDegrees = ty;
-    distance = (tapeHeight - cameraHeight) / Math.tan(degToRad(cameraAngleDegrees) + degToRad(cameraAndTapeAngleDeltaDegrees));
+    distance = (tapeHeight - cameraHeight)
+        / Math.tan(degToRad(cameraAngleDegrees) + degToRad(cameraAndTapeAngleDeltaDegrees));
 
     SmartDashboard.putNumber("distance (m)", distance);
 
@@ -176,35 +181,43 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    fernCalculateFlywheelRpm();
-    // double move = m_stick.getRawAxis(Constants.RIGHT_TRIGGER_AXIS);
-    // setMotors(Math.abs(move) < Constants.JOYSTICK_DRIFT_TOLERANCE ? 0 : move);
-    // int pov = m_stick.getPOV();
-    // SmartDashboard.putNumber("Joystick POV", pov);
-    // if (!m_pressed) {
-    //   switch (pov) {
-    //     case Constants.Xbox.POV_UP_BUTTON:
-    //       m_pressed = true;
-    //       m_speed += 10;
-    //       break;
-    //     case Constants.Xbox.POV_DOWN_BUTTON:
-    //       m_pressed = true;
-    //       m_speed -= 10;
-    //       break;
-    //     case Constants.Xbox.POV_LEFT_BUTTON:
-    //       m_pressed = true;
-    //       m_speed -= 100;
-    //       break;
-    //     case Constants.Xbox.POV_RIGHT_BUTTON:
-    //       m_pressed = true;
-    //       m_speed += 100;
-    //       break;
-    //   }
-    // }
-    // if (pov == -1)
-    //   m_pressed = false;
-    // SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
-    // SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
+    // fernCalculateFlywheelRpm();
+    // double move = m_stick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS);
+    // setMotors(Math.abs(move) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE ? 0 :
+    // move);
+    int pov = m_stick.getPOV();
+    SmartDashboard.putNumber("Joystick POV", pov);
+    if (!m_pressed) {
+      switch (pov) {
+        case Constants.Xbox.POV_UP_BUTTON:
+          m_pressed = true;
+          m_speed += 10;
+          break;
+        case Constants.Xbox.POV_DOWN_BUTTON:
+          m_pressed = true;
+          m_speed -= 10;
+          break;
+        case Constants.Xbox.POV_LEFT_BUTTON:
+          m_pressed = true;
+          m_speed -= 100;
+          break;
+        case Constants.Xbox.POV_RIGHT_BUTTON:
+          m_pressed = true;
+          m_speed += 100;
+          break;
+      }
+    }
+    if (pov == -1)
+      m_pressed = false;
+
+    if (m_stick.getRawButtonPressed(Constants.Xbox.START_BUTTON)) {
+      shooterRightMotor.disable();
+      m_speed = 0;
+    }
+    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
     // setVelocity();
-   }
+    rightPIDController.setReference(m_speed, ControlType.kVelocity);
+
+  }
 }

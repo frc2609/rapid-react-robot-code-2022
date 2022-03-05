@@ -69,9 +69,9 @@ public final class Constants {
 
     public final class ShooterPid {
         public static final double proportialPIDConstant = 0.0002;
-        public static final double integralPIDConstant = 0.0;
+        public static final double integralPIDConstant = 0.0002;
         public static final double derivativePIDConstant = 0.0;
-        public static final double integralPIDZone = 0.0;
+        public static final double integralPIDZone = 5.0;
         public static final double leftFeedForwardPIDConstant = 0.000175;
         public static final double rightFeedForwardPIDConstant = 0.000170;
         public static final double maxShooterPIDOutput = 1.0;
