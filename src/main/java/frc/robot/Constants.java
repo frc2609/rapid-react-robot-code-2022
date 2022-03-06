@@ -26,11 +26,11 @@ public final class Constants {
         public static final int RIGHT_STICK_Y_AXIS = 5;
         public static final int LEFT_TRIGGER_AXIS = 2;
         public static final int RIGHT_TRIGGER_AXIS = 3;
-        public static final int A_BUTTON = 1;
-        public static final int B_BUTTON = 2;
-        public static final int X_BUTTON = 3;
-        public static final int Y_BUTTON = 4;
-        public static final int START_BUTTON = 8;
+        public static final int A_BUTTON = 2;  // 1
+        public static final int B_BUTTON = 3;  // 2
+        public static final int X_BUTTON = 1;  // 3
+        public static final int Y_BUTTON = 4;  // 4
+        public static final int START_BUTTON = 10;  // 8
         public static final int BACK_BUTTON = 7;
         public static final int LEFT_BUMPER = 5;
         public static final int RIGHT_BUMPER = 6;
@@ -51,8 +51,8 @@ public final class Constants {
 
     public final class CanMotorId {
         public static final int SHOOTER_ROTATE_MOTOR = 10;
-        public static final int SHOOTER_RIGHT_MOTOR = 9;
-        public static final int SHOOTER_LEFT_MOTOR = 8;
+        public static final int SHOOTER_RIGHT_MOTOR = 9;  // 9
+        public static final int SHOOTER_LEFT_MOTOR = 8;  // 8
         public static final int HOOK_MOTOR = 7;
         public static final int BAR_MOTOR = 6;
         public static final int LEFT_FRONT_MOTOR = 4;
@@ -73,7 +73,7 @@ public final class Constants {
         public static final double derivativePIDConstant = 0.0;
         public static final double integralPIDZone = 5.0;
         public static final double leftFeedForwardPIDConstant = 0.000175;
-        public static final double rightFeedForwardPIDConstant = 0.000170;
+        public static final double rightFeedForwardPIDConstant = 0.000183;
         public static final double maxShooterPIDOutput = 1.0;
         public static final double minShooterPIDOutput = 0.0;
         public static final double maxRotatePIDOutput = 1.0;
