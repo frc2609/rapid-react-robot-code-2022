@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -24,6 +25,10 @@ public class Drive extends SubsystemBase {
 
   public Drive(Joystick driveJoystick) {
     m_driveJoystick = driveJoystick;
+    m_leftFrontMotor.setIdleMode(IdleMode.kCoast);
+    m_leftRearMotor.setIdleMode(IdleMode.kCoast);
+    m_rightFrontMotor.setIdleMode(IdleMode.kCoast);
+    m_rightRearMotor.setIdleMode(IdleMode.kCoast);
   }
 
   @Override
