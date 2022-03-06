@@ -222,6 +222,18 @@ public class Shooter extends SubsystemBase {
       // shooterRightMotor.disable();
       m_speed = 0;
     }
+
+    if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
+      // shooterRightMotor.disable();
+      m_speed = 4800;
+    }
+
+    if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
+      // shooterRightMotor.disable();
+      m_speed = 1600;
+    }
+
+
     SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
     // setVelocity();
