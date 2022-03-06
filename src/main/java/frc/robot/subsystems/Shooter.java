@@ -225,7 +225,7 @@ public class Shooter extends SubsystemBase {
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
       // shooterRightMotor.disable();
-      m_speed = 4800;
+      m_speed = 4600;
     }
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
