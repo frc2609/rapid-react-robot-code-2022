@@ -15,11 +15,11 @@ import frc.robot.Constants;
 
 public class Drive extends SubsystemBase {
   /** Creates a new Drive. */
-  
-  private final CANSparkMax m_leftFrontMotor = new CANSparkMax(Constants.CanMotorId.LEFT_FRONT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax m_leftRearMotor = new CANSparkMax(Constants.CanMotorId.LEFT_REAR_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax m_rightFrontMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_FRONT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax m_rightRearMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_REAR_MOTOR, MotorType.kBrushless);
+
+  private final CANSparkMax m_leftFrontMotor = new CANSparkMax(Constants.LEFT_FRONT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax m_leftRearMotor = new CANSparkMax(Constants.LEFT_REAR_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax m_rightFrontMotor = new CANSparkMax(Constants.RIGHT_FRONT_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax m_rightRearMotor = new CANSparkMax(Constants.RIGHT_REAR_MOTOR, MotorType.kBrushless);
   private Joystick m_driveJoystick;
 
   public Drive(Joystick driveJoystick) {
@@ -29,14 +29,14 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), 3);
-    double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS), 3);
+    double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.LEFT_STICK_X_AXIS), 3);
+    double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.LEFT_STICK_Y_AXIS), 3);
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
-    setMotors(leftMotors, rightMotors);
+    // setMotors(leftMotors, rightMotors);
   }
 
-  private void setMotors(double left, double right){
+  private void setMotors(double left, double right) {
     m_leftFrontMotor.set(-left * 0.3);
     m_leftRearMotor.set(-left * 0.3);
     m_rightFrontMotor.set(right * 0.3);

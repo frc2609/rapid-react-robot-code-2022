@@ -4,16 +4,24 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 
 //import frc.robot.commands.Traverse;
 //import frc.robot.commands.TraverseBack;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.Xbox;
-
+// import frc.robot.Constants.Xbox;
+import frc.robot.MP.Looper;
+import frc.robot.commands.ArmStartClimb;
+import frc.robot.commands.ClimbAndReach;
+import frc.robot.commands.ToggleManualClimb;
+import frc.robot.subsystems.Climber;
 //import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
 //import frc.robot.subsystems.ColorSensing;
@@ -31,20 +39,20 @@ import frc.robot.subsystems.Intake;
  */
 public class RobotContainer {
   // joysticks and buttons
-  public final Joystick joystick = new Joystick(Xbox.JOYSTICK_PORT);
-  // public final JoystickButton climbButton = new JoystickButton(joystick,
-  // Constants.X_BUTTON);
-  // public final JoystickButton traverseButton = new JoystickButton(joystick,
-  // Constants.A_BUTTON);
-  // public final JoystickButton ejectBallButton = new
-  // JoystickButton(driveJoystick, );
+  public final Joystick joystick = new Joystick(Constants.JOYSTICK_PORT);
+  public final JoystickButton climbButton = new JoystickButton(joystick,
+      Constants.X_BUTTON);
+  public final JoystickButton traverseButton = new JoystickButton(joystick,
+      Constants.A_BUTTON);
+  public final JoystickButton ejectBallButton = new JoystickButton(joystick, Constants.Y_BUTTON);
 
   // subsystems
   public final Drive m_driveSubsystem = new Drive(joystick);
-  // public final Climber m_climbSubsystem = new Climber(joystick);
+  public final Climber m_climbSubsystem = new Climber(joystick);
   // public final ColorSensing m_colorSubsystem = new ColorSensing();
   public final Shooter m_shooterSubsystem = new Shooter(joystick);
   public final Intake m_intakeSubsystem = new Intake(joystick);
+  public Looper enabledLooper;
 
   // commands
   // commands go here when read
@@ -55,6 +63,17 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    enabledLooper = new Looper();
+
+    // try {
+    // enabledLooper.register(drivetrain.getLooper());
+    // enabledLooper.register(slider.getLooper());
+    // } catch (Throwable t) {
+    // System.out.println(t.getMessage());
+    // System.out.println(t.getStackTrace());
+    // }
+
   }
 
   /**
@@ -66,9 +85,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // climbButton.whenPressed(new Traverse(m_climbSubsystem, driveJoystick));
-    // traverseButton.whenPressed(new TraverseBack(m_climbSubsystem,
-    // driveJoystick));
+    climbButton.whenPressed(new ClimbAndReach(m_climbSubsystem));
+    traverseButton.whenPressed(new ToggleManualClimb(m_climbSubsystem));
+    ejectBallButton.whenPressed(new ArmStartClimb(m_climbSubsystem));
   }
 
   /**
