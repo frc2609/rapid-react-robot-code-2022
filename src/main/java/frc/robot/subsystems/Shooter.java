@@ -20,15 +20,19 @@ public class Shooter extends SubsystemBase {
       MotorType.kBrushless);
   private final CANSparkMax shooterRotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
       MotorType.kBrushless);
+  private final CANSparkMax shooterHoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
+      MotorType.kBrushless);
   private Joystick m_stick;
   private boolean m_pressed = false;
   private double m_speed = 0; // double to avoid integer division
   private RelativeEncoder rightMotorEncoder;
   private RelativeEncoder leftMotorEncoder;
   private RelativeEncoder rotateMotorEncoder;
+  private RelativeEncoder hoodMotorEncoder;
   private SparkMaxPIDController rightPIDController;
   private SparkMaxPIDController leftPIDController;
   private SparkMaxPIDController rotatePIDController;
+  private SparkMaxPIDController hoodPIDController;
 
   double h1 = 0.8382; // height of camera in meters (from ground)
   double h2 = 1.5; // height of retroreflective tape in meters (from ground)
@@ -60,6 +64,7 @@ public class Shooter extends SubsystemBase {
     leftMotorEncoder = shooterLeftMotor.getEncoder();
     rightMotorEncoder = shooterRightMotor.getEncoder();
     rotateMotorEncoder = shooterRotateMotor.getEncoder();
+    hoodMotorEncoder = shooterHoodMotor.getEncoder();
 
     leftPIDController = shooterLeftMotor.getPIDController();
     rightPIDController = shooterRightMotor.getPIDController();
@@ -87,6 +92,14 @@ public class Shooter extends SubsystemBase {
     rotatePIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
     rotatePIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
     rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
+        Constants.ShooterPid.maxRotatePIDOutput);
+
+    hoodPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
+    hoodPIDController.setI(Constants.ShooterPid.integralPIDConstant);
+    hoodPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
+    hoodPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
+    hoodPIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
+    hoodPIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
         Constants.ShooterPid.maxRotatePIDOutput);
     stop();
 
