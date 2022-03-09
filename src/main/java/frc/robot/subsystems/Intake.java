@@ -22,11 +22,19 @@ public class Intake extends SubsystemBase{
 
   @Override
   public void periodic() {
+    if (m_stick.getRawButton(Constants.Xbox.B_BUTTON) || m_stick.getRawButton(Constants.Xbox.A_BUTTON)) {
+      lowerBeltMotor.set(1);
+    }
+    else {
+      lowerBeltMotor.set(0); // if BOTH not pressed
+    }
+
     if (m_stick.getRawButton(Constants.Xbox.B_BUTTON)) {
       setBelts(1);
     }
     else { 
-      setBelts(0); 
+      //setBelts(0); 
+      upperBeltMotor.set(0);
     }
     
     if (m_stick.getRawButton(Constants.Xbox.A_BUTTON)) {
