@@ -50,6 +50,7 @@ public class Shooter extends SubsystemBase {
   boolean tv;
   double tv_double;
   double shooterPosition;
+  double hoodPos = 0;
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   NetworkTable table = inst.getTable("limelight");
@@ -106,11 +107,13 @@ public class Shooter extends SubsystemBase {
     shooterLeftMotor.burnFlash();
     shooterRightMotor.burnFlash();
     shooterRotateMotor.burnFlash();
+    shooterHoodMotor.burnFlash();
   }
 
   public void stop() {
     shooterRightMotor.set(0.0);
     shooterRotateMotor.set(0.0);
+    shooterHoodMotor.set(0.0);
   }
 
   public void setVelocity() {
@@ -151,6 +154,10 @@ public class Shooter extends SubsystemBase {
     rotatePIDController.setReference((shooterPosition / 360), ControlType.kPosition);
   }
 
+  public void setHood() {
+    hoodPIDController.setReference(Math.abs(hoodPos), ControlType.kPosition);
+  }
+
   @Override
   public void periodic() {
     // double move = m_stick.getRawAxis(Constants.RIGHT_TRIGGER_AXIS);
@@ -179,9 +186,17 @@ public class Shooter extends SubsystemBase {
     }
     if (pov == -1)
       m_pressed = false;
+    if (m_stick.getRawButtonPressed(Constants.Xbox.LEFT_BUMPER)) {
+      hoodPos -= 0.25;
+    } else if (m_stick.getRawButtonPressed(Constants.Xbox.RIGHT_BUMPER)) {
+      hoodPos += 0.25;
+    }
     SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
+    SmartDashboard.putNumber("Hood Position (setpoint)", hoodPos);
+    SmartDashboard.putNumber("Hood Position (actual)", hoodMotorEncoder.getPosition());
     setVelocity();
+    setHood();
   }
 
   public void setMotors(double set) {
