@@ -58,7 +58,6 @@ public class Shooter extends SubsystemBase {
 
   public Shooter(Joystick stick) {
     m_stick = stick;
-    SmartDashboard.putNumber("Shooter Set", 0);
     shooterLeftMotor.follow(shooterRightMotor, true);
 
     shooterRightMotor.setIdleMode(IdleMode.kCoast);
