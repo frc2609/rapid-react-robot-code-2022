@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -24,8 +23,7 @@ public class Shooter extends SubsystemBase {
   private final CANSparkMax hoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
       MotorType.kBrushless);
   private Joystick m_stick;
-  private boolean m_pressed = false;
-  private double m_speed = 0; // double to avoid integer division
+  private double flywheelRpm = 0; // double to avoid integer division
   private RelativeEncoder rightFlywheelEncoder;
   private RelativeEncoder rotateEncoder;
   private RelativeEncoder hoodEncoder;
@@ -144,39 +142,39 @@ public class Shooter extends SubsystemBase {
 
     switch (pov) {
       case Constants.Xbox.POV_LEFT_BUTTON:
-        m_speed -= 100;
+        flywheelRpm -= 100;
         break;
       case Constants.Xbox.POV_RIGHT_BUTTON:
-        m_speed += 100;
+        flywheelRpm += 100;
         break;
       default:
         break;
     }
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.RIGHT_BUMPER)) {
-      m_speed += 200;
+      flywheelRpm += 200;
     }
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.LEFT_BUMPER)) {
-      m_speed -= 200;
+      flywheelRpm -= 200;
     }
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.START_BUTTON)) {
-      m_speed = 0;
+      flywheelRpm = 0;
     }
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
-      m_speed = 4600;
+      flywheelRpm = 4600;
     }
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
-      m_speed = 1600;
+      flywheelRpm = 1600;
     }
 
     SmartDashboard.putNumber("Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
-    SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
+    SmartDashboard.putNumber("Shooter Set (setpoint rpm)", flywheelRpm);
 
-    rightFlywheelPIDController.setReference(m_speed, ControlType.kVelocity);
+    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
   }
 
   private void manualSetHoodPos() {
