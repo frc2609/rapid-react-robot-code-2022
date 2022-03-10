@@ -113,12 +113,6 @@ public class Shooter extends SubsystemBase {
     rotatePIDController.setReference((shooterPosition / 360), ControlType.kPosition);
   }
 
-  public void setMotors(double set) {
-    SmartDashboard.putNumber("Shooter Speed", set);
-    shooterLeftMotor.set(-set);
-    shooterRightMotor.set(set);
-  }
-
   private double degToRad(double degrees) {
     return degrees * Math.PI / 180;
   }
