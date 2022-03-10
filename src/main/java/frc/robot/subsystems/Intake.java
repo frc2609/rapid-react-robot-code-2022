@@ -22,14 +22,7 @@ public class Intake extends SubsystemBase{
 
   @Override
   public void periodic() {
-    if (m_stick.getRawButton(Constants.Xbox.B_BUTTON) || m_stick.getRawButton(Constants.Xbox.A_BUTTON)) {
-      lowerBeltMotor.set(1);
-    }
-    else {
-      lowerBeltMotor.set(0); // if BOTH not pressed
-    }
-
-    if (m_stick.getRawButton(Constants.Xbox.B_BUTTON)) {
+    if (m_stick.getRawButton(Constants.Logitech.BUTTON_3)) {
       setBelts(1);
     }
     else { 
@@ -37,14 +30,14 @@ public class Intake extends SubsystemBase{
       upperBeltMotor.set(0);
     }
     
-    if (m_stick.getRawButton(Constants.Xbox.A_BUTTON)) {
+    if (m_stick.getRawButton(Constants.Logitech.BUTTON_2)) {
       setIntake(0.5);
     }
     else {
       setIntake(0);
     }
 
-    intakeLiftMotor.set(m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_X_AXIS) * 0.25);
+    intakeLiftMotor.set(m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS) * 0.25);
   }
 
   @Override

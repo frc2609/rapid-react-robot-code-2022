@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -14,41 +14,33 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-  private final CANSparkMax shooterLeftMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_LEFT_MOTOR,
+  private final CANSparkMax leftFlywheelMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_LEFT_MOTOR,
       MotorType.kBrushless);
-  private final CANSparkMax shooterRightMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_RIGHT_MOTOR,
+  private final CANSparkMax rightFlywheelMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_RIGHT_MOTOR,
       MotorType.kBrushless);
-  private final CANSparkMax shooterRotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
+  private final CANSparkMax rotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
+      MotorType.kBrushless);
+  private final CANSparkMax hoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
       MotorType.kBrushless);
   private final CANSparkMax shooterHoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
       MotorType.kBrushless);
   private Joystick m_stick;
-  private boolean m_pressed = false;
-  private double m_speed = 0; // double to avoid integer division
-  private RelativeEncoder rightMotorEncoder;
-  private RelativeEncoder leftMotorEncoder;
-  private RelativeEncoder rotateMotorEncoder;
-  private RelativeEncoder hoodMotorEncoder;
-  private SparkMaxPIDController rightPIDController;
-  private SparkMaxPIDController leftPIDController;
+  private double flywheelRpm = 0; // double to avoid integer division
+  private RelativeEncoder rightFlywheelEncoder;
+  private RelativeEncoder rotateEncoder;
+  private RelativeEncoder hoodEncoder;
+  private SparkMaxPIDController rightFlywheelPIDController;
   private SparkMaxPIDController rotatePIDController;
   private SparkMaxPIDController hoodPIDController;
 
-  double h1 = 0.8382; // height of camera in meters (from ground)
-  double h2 = 1.5; // height of retroreflective tape in meters (from ground)
-  double a1 = 0 * (Math.PI / 180.0); // angle of camera in degrees to radians
-  double a2;
+  double cameraHeight = 0.864; // height of camera in meters (from ground)
+  double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
+  double cameraAngleDegrees = 60; // angle of camera in degrees
+  double cameraAndTapeAngleDeltaDegrees; // difference in vertical angle between camera and target
   double distance;
-  double distanceH;
-  double numerator;
-  double denominator;
-  double rpm;
-  double metersPerSecond;
-  double angle_from_example_calc = 20.8; // 56.78;
   double ty;
   double tx;
-  boolean tv;
-  double tv_double;
+  double tv;
   double shooterPosition;
   double hoodPos = 0;
 
@@ -60,98 +52,167 @@ public class Shooter extends SubsystemBase {
 
   public Shooter(Joystick stick) {
     m_stick = stick;
-    SmartDashboard.putNumber("Shooter Set", 0);
-    shooterLeftMotor.follow(shooterRightMotor, true);
-    leftMotorEncoder = shooterLeftMotor.getEncoder();
-    rightMotorEncoder = shooterRightMotor.getEncoder();
-    rotateMotorEncoder = shooterRotateMotor.getEncoder();
-    hoodMotorEncoder = shooterHoodMotor.getEncoder();
+    leftFlywheelMotor.follow(rightFlywheelMotor, true);
 
-    leftPIDController = shooterLeftMotor.getPIDController();
-    rightPIDController = shooterRightMotor.getPIDController();
-    rotatePIDController = shooterRotateMotor.getPIDController();
+    rightFlywheelMotor.setIdleMode(IdleMode.kCoast);
+    leftFlywheelMotor.setIdleMode(IdleMode.kCoast);
 
-    leftPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
-    leftPIDController.setI(Constants.ShooterPid.integralPIDConstant);
-    leftPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    leftPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
-    leftPIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
-    leftPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
-        Constants.ShooterPid.maxShooterPIDOutput);
+    rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
+    rotateEncoder = rotateMotor.getEncoder();
+    hoodEncoder = hoodMotor.getEncoder();
 
-    rightPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
-    rightPIDController.setI(Constants.ShooterPid.integralPIDConstant);
-    rightPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    rightPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
-    rightPIDController.setFF(Constants.ShooterPid.rightFeedForwardPIDConstant);
-    rightPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
-        Constants.ShooterPid.maxShooterPIDOutput);
+    rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
+    rotatePIDController = rotateMotor.getPIDController();
+    hoodPIDController = hoodMotor.getPIDController();
 
-    rotatePIDController.setP(Constants.ShooterPid.proportialPIDConstant);
-    rotatePIDController.setI(Constants.ShooterPid.integralPIDConstant);
-    rotatePIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    rotatePIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
-    rotatePIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
-    rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
-        Constants.ShooterPid.maxRotatePIDOutput);
+    rightFlywheelPIDController.setP(Constants.Flywheel.proportialPIDConstant);
+    rightFlywheelPIDController.setI(Constants.Flywheel.integralPIDConstant);
+    rightFlywheelPIDController.setD(Constants.Flywheel.derivativePIDConstant);
+    rightFlywheelPIDController.setIZone(Constants.Flywheel.integralPIDZone);
+    rightFlywheelPIDController.setFF(Constants.Flywheel.FeedForwardPIDConstant);
+    rightFlywheelPIDController.setOutputRange(Constants.Flywheel.minPIDOutput,
+        Constants.Flywheel.maxPIDOutput);
 
-    hoodPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
-    hoodPIDController.setI(Constants.ShooterPid.integralPIDConstant);
-    hoodPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    hoodPIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
-    hoodPIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
-    hoodPIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
-        Constants.ShooterPid.maxRotatePIDOutput);
-    stop();
+    rotatePIDController.setP(Constants.Rotate.proportialPIDConstant);
+    rotatePIDController.setI(Constants.Rotate.integralPIDConstant);
+    rotatePIDController.setD(Constants.Rotate.derivativePIDConstant);
+    rotatePIDController.setIZone(Constants.Rotate.integralPIDConstant);
+    rotatePIDController.setFF(Constants.Rotate.feedForwardPIDConstant);
+    rotatePIDController.setOutputRange(Constants.Rotate.minPIDOutput,
+        Constants.Rotate.maxPIDOutput);
 
-    shooterLeftMotor.burnFlash();
-    shooterRightMotor.burnFlash();
-    shooterRotateMotor.burnFlash();
-    shooterHoodMotor.burnFlash();
+    hoodPIDController.setP(Constants.Hood.proportialPIDConstant);
+    hoodPIDController.setI(Constants.Hood.integralPIDConstant);
+    hoodPIDController.setD(Constants.Hood.derivativePIDConstant);
+    hoodPIDController.setIZone(Constants.Hood.integralPIDConstant);
+    hoodPIDController.setFF(Constants.Hood.feedForwardPIDConstant);
+    hoodPIDController.setOutputRange(Constants.Hood.minPIDOutput,
+        Constants.Hood.maxPIDOutput);
+
+    stopMotors();
+    resetMotorEncoders();
   }
 
-  public void stop() {
-    shooterRightMotor.set(0.0);
-    shooterRotateMotor.set(0.0);
-    shooterHoodMotor.set(0.0);
+  public void stopMotors() {
+    rightFlywheelMotor.set(0.0);
+    rotateMotor.set(0.0);
+    hoodMotor.set(0.0);
   }
 
-  public void setVelocity() {
-    tv = tvEntry.getBoolean(false);
-    tv_double = tvEntry.getDouble(0.0);
+  public void resetMotorEncoders() {
+    hoodEncoder.setPosition(0.0);
+    rotateEncoder.setPosition(0.0);
+  }
 
-    if (!tv && tv_double == 0) {
-      System.out.println("no valid limelight target");
-      rightPIDController.setReference(0, ControlType.kVelocity);
+  public void autoRotateShooter() {
+    tx = txEntry.getDouble(0.0);
+    shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.Rotate.MIN_TURRET_POS),
+        Constants.Rotate.MAX_TURRET_POS);
+    rotatePIDController.setReference((shooterPosition / 360), ControlType.kPosition);
+  }
+
+  private double degToRad(double degrees) {
+    return degrees * Math.PI / 180;
+  }
+
+  private void calcDistance() {
+    tv = tvEntry.getDouble(0.0);
+
+    if (tv <= 0) {
+      SmartDashboard.putBoolean("valid limelight target", false);
       return;
     }
 
-    System.out.println("found limelight target");
+    SmartDashboard.putBoolean("valid limelight target", true);
 
-    ty = tyEntry.getDouble(0.0);
-    System.out.println("tx: " + tx + " ty: " + ty);
+    tx = tyEntry.getDouble(0);
+    ty = tyEntry.getDouble(0);
 
-    a2 = ty * (Math.PI / 180.0);
-    distance = (h2 - h1) / Math.tan(angle_from_example_calc * (Math.PI / 180.0) + a2); // a1 + a2 (in radians)
-    System.out.println("distance: " + distance);
+    SmartDashboard.putNumber("tx", tx);
+    SmartDashboard.putNumber("ty", ty);
 
-    distanceH = Math.sqrt(Math.pow(distance, 2) - Math.pow(1.878, 2));
-    System.out.println("distanceH:" + distanceH);
-    numerator = -4.9 * Math.pow(distanceH, 2);
-    denominator = (1.878 - Math.tan(angle_from_example_calc * (Math.PI / 180.0)) * distanceH)
-        * Math.pow(Math.cos(angle_from_example_calc * (Math.PI / 180.0)), 2);
-    metersPerSecond = Math.sqrt(numerator / denominator);
+    cameraAndTapeAngleDeltaDegrees = ty;
+    distance = (tapeHeight - cameraHeight)
+        / Math.tan(degToRad(cameraAngleDegrees) + degToRad(cameraAndTapeAngleDeltaDegrees));
 
-    rpm = metersPerSecond / 0.00524;
-    System.out.println("rpm: " + rpm);
-    rightPIDController.setReference(rpm, ControlType.kVelocity);
+    SmartDashboard.putNumber("limelight distance (m)", distance);
   }
 
-  public void rotateShooter() {
-    tx = txEntry.getDouble(0.0);
-    shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.ShooterPid.MIN_TURRET_POS),
-        Constants.ShooterPid.MAX_TURRET_POS);
-    rotatePIDController.setReference((shooterPosition / 360), ControlType.kPosition);
+  private void manualSetFlywheelRpm() {
+    int pov = m_stick.getPOV();
+    SmartDashboard.putNumber("Joystick POV", pov);
+
+    // might be worth using the bottom bumper buttons on the logitech controller instead of the D-pad
+
+    switch (pov) {
+      case Constants.Logitech.POV_LEFT_BUTTON:
+        flywheelRpm -= 100;
+        break;
+      case Constants.Logitech.POV_RIGHT_BUTTON:
+        flywheelRpm += 100;
+        break;
+      default:
+        break;
+    }
+
+    if(m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_BUMPER)) {
+      flywheelRpm += 200;
+    }
+
+    if(m_stick.getRawButtonPressed(Constants.Logitech.LEFT_BUMPER)) {
+      flywheelRpm -= 200;
+    }
+
+    if(m_stick.getRawButtonPressed(Constants.Logitech.START_BUTTON)) {
+      flywheelRpm = 0;
+    }
+
+    if(m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
+      flywheelRpm = 4600;
+    }
+
+    if(m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
+      flywheelRpm = 1600;
+    }
+
+    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter Set (setpoint rpm)", flywheelRpm);
+
+    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
+  }
+
+  private void manualSetHoodPos() {
+    int pov = m_stick.getPOV();
+    SmartDashboard.putNumber("Joystick POV", pov);
+
+    switch (pov) {
+      case Constants.Logitech.POV_UP_BUTTON:
+        hoodPos += 0.1;
+        break;
+      case Constants.Logitech.POV_DOWN_BUTTON:
+        hoodPos -= 0.1;
+        break;
+      default:
+        break;
+    }
+
+    hoodPos = Math.max(Math.min(hoodPos, Constants.Hood.MAX_POS), Constants.Hood.MIN_POS);
+
+    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
+
+    SmartDashboard.putNumber("Hood Position (setpoint)", hoodPos);
+    SmartDashboard.putNumber("Hood Position (actual)", hoodEncoder.getPosition());
+  }
+
+  private void manualSetRotate() {
+    double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
+
+    val = (val < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
+    
+    SmartDashboard.putNumber("Rotate Velocity (setpoint)", val);
+    SmartDashboard.putNumber("Rotate Velocity (actual)", rotateEncoder.getVelocity());
+
+    rotateMotor.set(val/4);
   }
 
   public void setHood() {
@@ -160,49 +221,9 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // double move = m_stick.getRawAxis(Constants.RIGHT_TRIGGER_AXIS);
-    // setMotors(Math.abs(move) < Constants.JOYSTICK_DRIFT_TOLERANCE ? 0 : move);
-    int pov = m_stick.getPOV();
-    SmartDashboard.putNumber("Joystick POV", pov);
-    if (!m_pressed) {
-      switch (pov) {
-        case Constants.Xbox.POV_UP_BUTTON:
-          m_pressed = true;
-          m_speed += 10;
-          break;
-        case Constants.Xbox.POV_DOWN_BUTTON:
-          m_pressed = true;
-          m_speed -= 10;
-          break;
-        case Constants.Xbox.POV_LEFT_BUTTON:
-          m_pressed = true;
-          m_speed -= 100;
-          break;
-        case Constants.Xbox.POV_RIGHT_BUTTON:
-          m_pressed = true;
-          m_speed += 100;
-          break;
-      }
-    }
-    if (pov == -1)
-      m_pressed = false;
-    if (m_stick.getRawButtonPressed(Constants.Xbox.LEFT_BUMPER)) {
-      hoodPos -= 0.25;
-    } else if (m_stick.getRawButtonPressed(Constants.Xbox.RIGHT_BUMPER)) {
-      hoodPos += 0.25;
-    }
-    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
-    SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
-    SmartDashboard.putNumber("Hood Position (setpoint)", hoodPos);
-    SmartDashboard.putNumber("Hood Position (actual)", hoodMotorEncoder.getPosition());
-    setVelocity();
-    setHood();
+    manualSetFlywheelRpm();
+    manualSetHoodPos();
+    manualSetRotate();
+    calcDistance();
   }
-
-  public void setMotors(double set) {
-    SmartDashboard.putNumber("Shooter Speed", set);
-    shooterLeftMotor.set(-set);
-    shooterRightMotor.set(set);
-  }
-
 }

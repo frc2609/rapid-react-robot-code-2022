@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -24,13 +25,17 @@ public class Drive extends SubsystemBase {
 
   public Drive(Joystick driveJoystick) {
     m_driveJoystick = driveJoystick;
+    m_leftFrontMotor.setIdleMode(IdleMode.kCoast);
+    m_leftRearMotor.setIdleMode(IdleMode.kCoast);
+    m_rightFrontMotor.setIdleMode(IdleMode.kCoast);
+    m_rightRearMotor.setIdleMode(IdleMode.kCoast);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), 3);
-    double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS), 3);
+    double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.Logitech.LEFT_STICK_X_AXIS), 3);
+    double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.Logitech.LEFT_STICK_Y_AXIS), 3);
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
     setMotors(leftMotors, rightMotors);
