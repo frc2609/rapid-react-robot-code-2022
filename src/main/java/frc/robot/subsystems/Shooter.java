@@ -65,29 +65,29 @@ public class Shooter extends SubsystemBase {
     rotatePIDController = rotateMotor.getPIDController();
     hoodPIDController = hoodMotor.getPIDController();
 
-    rightFlywheelPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
-    rightFlywheelPIDController.setI(Constants.ShooterPid.integralPIDConstant);
-    rightFlywheelPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    rightFlywheelPIDController.setIZone(Constants.ShooterPid.integralPIDZone);
-    rightFlywheelPIDController.setFF(Constants.ShooterPid.rightFeedForwardPIDConstant);
-    rightFlywheelPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
-        Constants.ShooterPid.maxShooterPIDOutput);
+    rightFlywheelPIDController.setP(Constants.Flywheel.proportialPIDConstant);
+    rightFlywheelPIDController.setI(Constants.Flywheel.integralPIDConstant);
+    rightFlywheelPIDController.setD(Constants.Flywheel.derivativePIDConstant);
+    rightFlywheelPIDController.setIZone(Constants.Flywheel.integralPIDZone);
+    rightFlywheelPIDController.setFF(Constants.Flywheel.FeedForwardPIDConstant);
+    rightFlywheelPIDController.setOutputRange(Constants.Flywheel.minPIDOutput,
+        Constants.Flywheel.maxPIDOutput);
 
-    rotatePIDController.setP(Constants.ShooterPid.proportialPIDConstant);
-    rotatePIDController.setI(Constants.ShooterPid.integralPIDConstant);
-    rotatePIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    rotatePIDController.setIZone(Constants.ShooterPid.integralPIDConstant);
-    rotatePIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
-    rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
-        Constants.ShooterPid.maxRotatePIDOutput);
+    rotatePIDController.setP(Constants.Rotate.proportialPIDConstant);
+    rotatePIDController.setI(Constants.Rotate.integralPIDConstant);
+    rotatePIDController.setD(Constants.Rotate.derivativePIDConstant);
+    rotatePIDController.setIZone(Constants.Rotate.integralPIDConstant);
+    rotatePIDController.setFF(Constants.Rotate.feedForwardPIDConstant);
+    rotatePIDController.setOutputRange(Constants.Rotate.minPIDOutput,
+        Constants.Rotate.maxPIDOutput);
 
-    hoodPIDController.setP(Constants.HoodPid.proportialPIDConstant);
-    hoodPIDController.setI(Constants.HoodPid.integralPIDConstant);
-    hoodPIDController.setD(Constants.HoodPid.derivativePIDConstant);
-    hoodPIDController.setIZone(Constants.HoodPid.integralPIDConstant);
-    hoodPIDController.setFF(Constants.HoodPid.leftFeedForwardPIDConstant);
-    hoodPIDController.setOutputRange(Constants.HoodPid.minHoodPIDOutput,
-        Constants.HoodPid.maxHoodPIDOutput);
+    hoodPIDController.setP(Constants.Hood.proportialPIDConstant);
+    hoodPIDController.setI(Constants.Hood.integralPIDConstant);
+    hoodPIDController.setD(Constants.Hood.derivativePIDConstant);
+    hoodPIDController.setIZone(Constants.Hood.integralPIDConstant);
+    hoodPIDController.setFF(Constants.Hood.feedForwardPIDConstant);
+    hoodPIDController.setOutputRange(Constants.Hood.minPIDOutput,
+        Constants.Hood.maxPIDOutput);
 
     stopMotors();
     resetMotorEncoders();
@@ -106,8 +106,8 @@ public class Shooter extends SubsystemBase {
 
   public void autoRotateShooter() {
     tx = txEntry.getDouble(0.0);
-    shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.ShooterPid.MIN_TURRET_POS),
-        Constants.ShooterPid.MAX_TURRET_POS);
+    shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.Rotate.MIN_TURRET_POS),
+        Constants.Rotate.MAX_TURRET_POS);
     rotatePIDController.setReference((shooterPosition / 360), ControlType.kPosition);
   }
 
@@ -202,7 +202,7 @@ public class Shooter extends SubsystemBase {
       hoodPos -= 0.1;
     }
 
-    hoodPos = Math.max(Math.min(hoodPos, Constants.HoodPid.MAX_POS), Constants.HoodPid.MIN_POS);
+    hoodPos = Math.max(Math.min(hoodPos, Constants.Hood.MAX_POS), Constants.Hood.MIN_POS);
 
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 

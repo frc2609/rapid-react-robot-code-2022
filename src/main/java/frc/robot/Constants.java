@@ -52,8 +52,8 @@ public final class Constants {
     public final class CanMotorId {
         public static final int SHOOTER_HOOD_MOTOR = 11;
         public static final int SHOOTER_ROTATE_MOTOR = 10;
-        public static final int SHOOTER_RIGHT_MOTOR = 9;  // 9
-        public static final int SHOOTER_LEFT_MOTOR = 8;  // 8
+        public static final int SHOOTER_RIGHT_MOTOR = 9;
+        public static final int SHOOTER_LEFT_MOTOR = 8;
         public static final int HOOK_MOTOR = 7;
         public static final int BAR_MOTOR = 6;
         public static final int LEFT_FRONT_MOTOR = 4;
@@ -68,32 +68,37 @@ public final class Constants {
         public static final double ARM_SPEED_MULTIPLIER = -2.0;
     }
 
-    public final class ShooterPid {
+    public final class Rotate {
         public static final double proportialPIDConstant = 0.0002;
         public static final double integralPIDConstant = 0.0002;
         public static final double derivativePIDConstant = 0.0;
         public static final double integralPIDZone = 5.0;
-        public static final double leftFeedForwardPIDConstant = 0.000175;
-        public static final double rightFeedForwardPIDConstant = 0.000183;
-        public static final double maxShooterPIDOutput = 1.0;
-        public static final double minShooterPIDOutput = 0.0;
-        public static final double maxRotatePIDOutput = 1.0;
-        public static final double minRotatePIDOutput = -1.0;
-        public static final double velocityPIDTolerance = 30;
+        public static final double feedForwardPIDConstant = 0.000175;
+        public static final double maxPIDOutput = 1.0;
+        public static final double minPIDOutput = -1.0;
         public static final int MAX_TURRET_POS = 180;
         public static final int MIN_TURRET_POS = 0;
     }
 
-    public final class HoodPid {
+    public final class Hood {
         public static final double proportialPIDConstant = 1;
         public static final double integralPIDConstant = 0.0002;
         public static final double derivativePIDConstant = 0.0;
         public static final double integralPIDZone = 0.0;
-        public static final double leftFeedForwardPIDConstant = 0.0;
-        public static final double maxHoodPIDOutput = 1.0;
-        public static final double minHoodPIDOutput = -1.0;
+        public static final double feedForwardPIDConstant = 0.0;
+        public static final double maxPIDOutput = 1.0;
+        public static final double minPIDOutput = -1.0;
         public static final double MAX_POS = 3.0;
         public static final double MIN_POS = 0.0;
+    }
 
+    public final class Flywheel {
+        public static final double proportialPIDConstant = 0.0002;
+        public static final double integralPIDConstant = 0.0002;
+        public static final double derivativePIDConstant = 0.0;
+        public static final double integralPIDZone = 5.0;
+        public static final double FeedForwardPIDConstant = 0.000183;
+        public static final double maxPIDOutput = 1.0;
+        public static final double minPIDOutput = 0.0;
     }
 }
