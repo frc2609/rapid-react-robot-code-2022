@@ -38,12 +38,6 @@ public class Shooter extends SubsystemBase {
   double cameraAngleDegrees = 60; // angle of camera in degrees
   double cameraAndTapeAngleDeltaDegrees; // difference in vertical angle between camera and target
   double distance;
-  double distanceH;
-  double numerator;
-  double denominator;
-  double rpm;
-  double metersPerSecond;
-  double angle_from_example_calc = 0.0; // 56.78;
   double ty;
   double tx;
   double tv;
