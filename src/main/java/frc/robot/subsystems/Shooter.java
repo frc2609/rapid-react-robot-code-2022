@@ -96,11 +96,6 @@ public class Shooter extends SubsystemBase {
         Constants.HoodPid.maxHoodPIDOutput);
 
     stopShooterMotors();
-
-    // shooterLeftMotor.burnFlash();
-    // shooterRightMotor.burnFlash();
-    // shooterRotateMotor.burnFlash();
-    shooterHoodMotor.burnFlash();
   }
 
   public void stopShooterMotors() {
@@ -110,47 +105,6 @@ public class Shooter extends SubsystemBase {
 
     hoodMotorEncoder.setPosition(0.0);
   }
-
-  // public void setVelocity() {
-  // tv = tvEntry.getDouble(0.0);
-
-  // if(tv <= 0) {
-  // SmartDashboard.putBoolean("valid limelight target", false);
-  // // rightPIDController.setReference(0, ControlType.kVelocity);
-  // return;
-  // }
-
-  // SmartDashboard.putBoolean("valid limelight target", true);
-
-  // tx = tyEntry.getDouble(0);
-  // ty = tyEntry.getDouble(0);
-
-  // SmartDashboard.putNumber("tx", tx);
-  // SmartDashboard.putNumber("ty", ty);
-
-  // cameraAndTapeAngleDeltaDegrees = ty * (Math.PI / 180.0);
-  // distance = (tapeHeight - cameraHeight) /
-  // Math.tan(degToRad(cameraAngleDegrees) +
-  // degToRad(cameraAndTapeAngleDeltaDegrees));
-
-  // System.out.println("distance: " + distance);
-  // SmartDashboard.putNumber("distance (m)", distance);
-
-  // distanceH = Math.sqrt(Math.pow(distance, 2) - Math.pow(1.878, 2));
-  // System.out.println("distanceH:" + distanceH);
-  // SmartDashboard.putNumber("distanceH (m)", distanceH);
-
-  // numerator = -4.9 * Math.pow(distanceH, 2);
-  // denominator = (1.878 - Math.tan(angle_from_example_calc * (Math.PI / 180.0))
-  // * distanceH)
-  // * Math.pow(Math.cos(angle_from_example_calc * (Math.PI / 180.0)), 2);
-  // metersPerSecond = Math.sqrt(numerator / denominator);
-
-  // rpm = metersPerSecond / 0.00524;
-  // System.out.println("rpm: " + rpm);
-  // SmartDashboard.putNumber("flywheel rpm", rpm);
-  // rightPIDController.setReference(rpm, ControlType.kVelocity);
-  // }
 
   private void fernCalculateFlywheelRpm() {
     tv = tvEntry.getDouble(0.0);
@@ -204,7 +158,6 @@ public class Shooter extends SubsystemBase {
 
     if (tv <= 0) {
       SmartDashboard.putBoolean("valid limelight target", false);
-      // rightPIDController.setReference(0, ControlType.kVelocity);
       return;
     }
 
@@ -220,10 +173,10 @@ public class Shooter extends SubsystemBase {
     distance = (tapeHeight - cameraHeight)
         / Math.tan(degToRad(cameraAngleDegrees) + degToRad(cameraAndTapeAngleDeltaDegrees));
 
-    SmartDashboard.putNumber("distance (m)", distance);
+    SmartDashboard.putNumber("limelight distance (m)", distance);
   }
 
-  private void setFlywheelRpm() {
+  private void manualSetFlywheelRpm() {
     int pov = m_stick.getPOV();
     SmartDashboard.putNumber("Joystick POV", pov);
     if (!m_pressed) {
@@ -258,7 +211,6 @@ public class Shooter extends SubsystemBase {
     }
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.START_BUTTON)) {
-      // shooterRightMotor.disable();
       m_speed = 0;
     }
 
@@ -275,11 +227,11 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
-    // setVelocity();
+
     rightPIDController.setReference(m_speed, ControlType.kVelocity);
   }
 
-  private void setHoodPos() {
+  private void manualSetHoodPos() {
     if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
       hoodPos += 0.1;
     }
@@ -296,7 +248,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Hood Position (actual)", hoodMotorEncoder.getPosition());
   }
 
-  private void setRotate() {
+  private void manualSetRotate() {
     double val = m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_X_AXIS);
     
     SmartDashboard.putNumber("Rotate Velocity (setpoint)", val);
@@ -307,13 +259,9 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // fernCalculateFlywheelRpm();
-    // double move = m_stick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS);
-    // setMotors(Math.abs(move) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE ? 0 :
-    // move);
-    setFlywheelRpm();
-    setHoodPos();
-    setRotate();
+    manualSetFlywheelRpm();
+    manualSetHoodPos();
+    manualSetRotate();
     calcDistance();
   }
 }
