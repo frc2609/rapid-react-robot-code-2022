@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 //import frc.robot.commands.TraverseBack;
 import edu.wpi.first.wpilibj2.command.Command;
 // import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.Xbox;
+import frc.robot.Constants.Logitech;
 
 //import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
@@ -31,7 +31,7 @@ import frc.robot.subsystems.Intake;
  */
 public class RobotContainer {
   // joysticks and buttons
-  public final Joystick joystick = new Joystick(Xbox.JOYSTICK_PORT);
+  public final Joystick joystick = new Joystick(Logitech.JOYSTICK_PORT);
   // public final JoystickButton climbButton = new JoystickButton(joystick,
   // Constants.X_BUTTON);
   // public final JoystickButton traverseButton = new JoystickButton(joystick,

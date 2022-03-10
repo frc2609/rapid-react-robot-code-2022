@@ -17,7 +17,7 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public final class Xbox {
+    public final class Logitech {
         public static final double JOYSTICK_DRIFT_TOLERANCE = 0.1;
         public static final int JOYSTICK_PORT = 0;
         public static final int LEFT_STICK_X_AXIS = 0;
@@ -26,10 +26,10 @@ public final class Constants {
         public static final int RIGHT_STICK_Y_AXIS = 3;  // 5
         public static final int LEFT_TRIGGER_AXIS = 2;
         public static final int RIGHT_TRIGGER_AXIS = 3;
-        public static final int A_BUTTON = 2;  // 1
-        public static final int B_BUTTON = 3;  // 2
-        public static final int X_BUTTON = 1;  // 3
-        public static final int Y_BUTTON = 4;  // 4
+        public static final int BUTTON_2 = 2;  // 1
+        public static final int BUTTON_3 = 3;  // 2
+        public static final int BUTTON_1 = 1;  // 3
+        public static final int BUTTON_4 = 4;  // 4
         public static final int START_BUTTON = 10;  // 8
         public static final int BACK_BUTTON = 7;
         public static final int LEFT_BUMPER = 5;

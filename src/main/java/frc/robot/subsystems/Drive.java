@@ -34,8 +34,8 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), 3);
-    double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS), 3);
+    double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.Logitech.LEFT_STICK_X_AXIS), 3);
+    double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.Logitech.LEFT_STICK_Y_AXIS), 3);
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
     setMotors(leftMotors, rightMotors);

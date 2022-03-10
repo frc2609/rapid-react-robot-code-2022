@@ -143,33 +143,33 @@ public class Shooter extends SubsystemBase {
     // might be worth using the bottom bumper buttons on the logitech controller instead of the D-pad
 
     switch (pov) {
-      case Constants.Xbox.POV_LEFT_BUTTON:
+      case Constants.Logitech.POV_LEFT_BUTTON:
         flywheelRpm -= 100;
         break;
-      case Constants.Xbox.POV_RIGHT_BUTTON:
+      case Constants.Logitech.POV_RIGHT_BUTTON:
         flywheelRpm += 100;
         break;
       default:
         break;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Xbox.RIGHT_BUMPER)) {
+    if(m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_BUMPER)) {
       flywheelRpm += 200;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Xbox.LEFT_BUMPER)) {
+    if(m_stick.getRawButtonPressed(Constants.Logitech.LEFT_BUMPER)) {
       flywheelRpm -= 200;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Xbox.START_BUTTON)) {
+    if(m_stick.getRawButtonPressed(Constants.Logitech.START_BUTTON)) {
       flywheelRpm = 0;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
+    if(m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
       flywheelRpm = 4600;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
+    if(m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
       flywheelRpm = 1600;
     }
 
@@ -184,10 +184,10 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Joystick POV", pov);
 
     switch (pov) {
-      case Constants.Xbox.POV_UP_BUTTON:
+      case Constants.Logitech.POV_UP_BUTTON:
         hoodPos += 0.1;
         break;
-      case Constants.Xbox.POV_DOWN_BUTTON:
+      case Constants.Logitech.POV_DOWN_BUTTON:
         hoodPos -= 0.1;
         break;
       default:
@@ -203,9 +203,9 @@ public class Shooter extends SubsystemBase {
   }
 
   private void manualSetRotate() {
-    double val = m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_X_AXIS);
+    double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
 
-    val = (val < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
+    val = (val < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
     
     SmartDashboard.putNumber("Rotate Velocity (setpoint)", val);
     SmartDashboard.putNumber("Rotate Velocity (actual)", rotateEncoder.getVelocity());
