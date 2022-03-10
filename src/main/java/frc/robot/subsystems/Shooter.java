@@ -15,21 +15,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-  private final CANSparkMax shooterLeftMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_LEFT_MOTOR,
+  private final CANSparkMax leftFlywheelMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_LEFT_MOTOR,
       MotorType.kBrushless);
-  private final CANSparkMax shooterRightMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_RIGHT_MOTOR,
+  private final CANSparkMax rightFlywheelMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_RIGHT_MOTOR,
       MotorType.kBrushless);
-  private final CANSparkMax shooterRotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
+  private final CANSparkMax rotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
       MotorType.kBrushless);
-  private final CANSparkMax shooterHoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
+  private final CANSparkMax hoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
       MotorType.kBrushless);
   private Joystick m_stick;
   private boolean m_pressed = false;
   private double m_speed = 0; // double to avoid integer division
-  private RelativeEncoder rightMotorEncoder;
-  private RelativeEncoder rotateMotorEncoder;
-  private RelativeEncoder hoodMotorEncoder;
-  private SparkMaxPIDController rightPIDController;
+  private RelativeEncoder rightFlywheelEncoder;
+  private RelativeEncoder rotateEncoder;
+  private RelativeEncoder hoodEncoder;
+  private SparkMaxPIDController rightFlywheelPIDController;
   private SparkMaxPIDController rotatePIDController;
   private SparkMaxPIDController hoodPIDController;
 
@@ -52,25 +52,25 @@ public class Shooter extends SubsystemBase {
 
   public Shooter(Joystick stick) {
     m_stick = stick;
-    shooterLeftMotor.follow(shooterRightMotor, true);
+    leftFlywheelMotor.follow(rightFlywheelMotor, true);
 
-    shooterRightMotor.setIdleMode(IdleMode.kCoast);
-    shooterLeftMotor.setIdleMode(IdleMode.kCoast);
+    rightFlywheelMotor.setIdleMode(IdleMode.kCoast);
+    leftFlywheelMotor.setIdleMode(IdleMode.kCoast);
 
-    rightMotorEncoder = shooterRightMotor.getEncoder();
-    rotateMotorEncoder = shooterRotateMotor.getEncoder();
-    hoodMotorEncoder = shooterHoodMotor.getEncoder();
+    rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
+    rotateEncoder = rotateMotor.getEncoder();
+    hoodEncoder = hoodMotor.getEncoder();
 
-    rightPIDController = shooterRightMotor.getPIDController();
-    rotatePIDController = shooterRotateMotor.getPIDController();
-    hoodPIDController = shooterHoodMotor.getPIDController();
+    rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
+    rotatePIDController = rotateMotor.getPIDController();
+    hoodPIDController = hoodMotor.getPIDController();
 
-    rightPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
-    rightPIDController.setI(Constants.ShooterPid.integralPIDConstant);
-    rightPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
-    rightPIDController.setIZone(Constants.ShooterPid.integralPIDZone);
-    rightPIDController.setFF(Constants.ShooterPid.rightFeedForwardPIDConstant);
-    rightPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
+    rightFlywheelPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
+    rightFlywheelPIDController.setI(Constants.ShooterPid.integralPIDConstant);
+    rightFlywheelPIDController.setD(Constants.ShooterPid.derivativePIDConstant);
+    rightFlywheelPIDController.setIZone(Constants.ShooterPid.integralPIDZone);
+    rightFlywheelPIDController.setFF(Constants.ShooterPid.rightFeedForwardPIDConstant);
+    rightFlywheelPIDController.setOutputRange(Constants.ShooterPid.minShooterPIDOutput,
         Constants.ShooterPid.maxShooterPIDOutput);
 
     rotatePIDController.setP(Constants.ShooterPid.proportialPIDConstant);
@@ -94,14 +94,14 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stopMotors() {
-    shooterRightMotor.set(0.0);
-    shooterRotateMotor.set(0.0);
-    shooterHoodMotor.set(0.0);
+    rightFlywheelMotor.set(0.0);
+    rotateMotor.set(0.0);
+    hoodMotor.set(0.0);
   }
 
   public void resetMotorEncoders() {
-    hoodMotorEncoder.setPosition(0.0);
-    rotateMotorEncoder.setPosition(0.0);
+    hoodEncoder.setPosition(0.0);
+    rotateEncoder.setPosition(0.0);
   }
 
   public void autoRotateShooter() {
@@ -187,10 +187,10 @@ public class Shooter extends SubsystemBase {
     // }
 
 
-    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
 
-    rightPIDController.setReference(m_speed, ControlType.kVelocity);
+    rightFlywheelPIDController.setReference(m_speed, ControlType.kVelocity);
   }
 
   private void manualSetHoodPos() {
@@ -207,16 +207,16 @@ public class Shooter extends SubsystemBase {
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
     SmartDashboard.putNumber("Hood Position (setpoint)", hoodPos);
-    SmartDashboard.putNumber("Hood Position (actual)", hoodMotorEncoder.getPosition());
+    SmartDashboard.putNumber("Hood Position (actual)", hoodEncoder.getPosition());
   }
 
   private void manualSetRotate() {
     double val = m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_X_AXIS);
     
     SmartDashboard.putNumber("Rotate Velocity (setpoint)", val);
-    SmartDashboard.putNumber("Rotate Velocity (actual)", rotateMotorEncoder.getVelocity());
+    SmartDashboard.putNumber("Rotate Velocity (actual)", rotateEncoder.getVelocity());
 
-    shooterRotateMotor.set(val/4);
+    rotateMotor.set(val/4);
   }
 
   @Override
