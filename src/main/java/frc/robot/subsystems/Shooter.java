@@ -106,36 +106,6 @@ public class Shooter extends SubsystemBase {
     hoodMotorEncoder.setPosition(0.0);
   }
 
-  private void fernCalculateFlywheelRpm() {
-    tv = tvEntry.getDouble(0.0);
-
-    if (tv <= 0) {
-      SmartDashboard.putBoolean("valid limelight target", false);
-      // rightPIDController.setReference(0, ControlType.kVelocity);
-      return;
-    }
-
-    SmartDashboard.putBoolean("valid limelight target", true);
-
-    tx = tyEntry.getDouble(0);
-    ty = tyEntry.getDouble(0);
-
-    SmartDashboard.putNumber("tx", tx);
-    SmartDashboard.putNumber("ty", ty);
-
-    cameraAndTapeAngleDeltaDegrees = ty;
-    distance = (tapeHeight - cameraHeight)
-        / Math.tan(degToRad(cameraAngleDegrees) + degToRad(cameraAndTapeAngleDeltaDegrees));
-
-    SmartDashboard.putNumber("distance (m)", distance);
-
-    rpm = distance * 350;
-
-    SmartDashboard.putNumber("calc flywheel rpm", rpm);
-    rightPIDController.setReference(rpm, ControlType.kVelocity);
-    SmartDashboard.putNumber("actual flywheel rpm", rightMotorEncoder.getVelocity());
-  }
-
   public void rotateShooter() {
     tx = txEntry.getDouble(0.0);
     shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.ShooterPid.MIN_TURRET_POS),
