@@ -69,6 +69,7 @@ public class Shooter extends SubsystemBase {
 
     rightPIDController = shooterRightMotor.getPIDController();
     rotatePIDController = shooterRotateMotor.getPIDController();
+    hoodPIDController = shooterHoodMotor.getPIDController();
 
     rightPIDController.setP(Constants.ShooterPid.proportialPIDConstant);
     rightPIDController.setI(Constants.ShooterPid.integralPIDConstant);
@@ -91,21 +92,23 @@ public class Shooter extends SubsystemBase {
     hoodPIDController.setD(Constants.HoodPid.derivativePIDConstant);
     hoodPIDController.setIZone(Constants.HoodPid.integralPIDConstant);
     hoodPIDController.setFF(Constants.HoodPid.leftFeedForwardPIDConstant);
-    hoodPIDController.setOutputRange(Constants.HoodPid.minRotatePIDOutput,
-        Constants.HoodPid.maxRotatePIDOutput);
+    hoodPIDController.setOutputRange(Constants.HoodPid.minHoodPIDOutput,
+        Constants.HoodPid.maxHoodPIDOutput);
 
     stopShooterMotors();
 
     // shooterLeftMotor.burnFlash();
     // shooterRightMotor.burnFlash();
     // shooterRotateMotor.burnFlash();
-    // shooterHoodMotor.burnFlash();
+    shooterHoodMotor.burnFlash();
   }
 
   public void stopShooterMotors() {
     shooterRightMotor.set(0.0);
     shooterRotateMotor.set(0.0);
     shooterHoodMotor.set(0.0);
+
+    hoodMotorEncoder.setPosition(0.0);
   }
 
   // public void setVelocity() {
@@ -278,17 +281,28 @@ public class Shooter extends SubsystemBase {
 
   private void setHoodPos() {
     if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
-      hoodPos += 0.25;
+      hoodPos += 0.1;
     }
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
-      hoodPos -= 0.25;
+      hoodPos -= 0.1;
     }
+
+    hoodPos = Math.max(Math.min(hoodPos, Constants.HoodPid.MAX_POS), Constants.HoodPid.MIN_POS);
 
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
     SmartDashboard.putNumber("Hood Position (setpoint)", hoodPos);
     SmartDashboard.putNumber("Hood Position (actual)", hoodMotorEncoder.getPosition());
+  }
+
+  private void setRotate() {
+    double val = m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_X_AXIS);
+    
+    SmartDashboard.putNumber("Rotate Velocity (setpoint)", val);
+    SmartDashboard.putNumber("Rotate Velocity (actual)", rotateMotorEncoder.getVelocity());
+
+    shooterRotateMotor.set(val/4);
   }
 
   @Override
@@ -299,6 +313,7 @@ public class Shooter extends SubsystemBase {
     // move);
     setFlywheelRpm();
     setHoodPos();
+    setRotate();
     calcDistance();
   }
 }
