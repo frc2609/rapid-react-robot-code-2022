@@ -141,28 +141,17 @@ public class Shooter extends SubsystemBase {
   private void manualSetFlywheelRpm() {
     int pov = m_stick.getPOV();
     SmartDashboard.putNumber("Joystick POV", pov);
-    if (!m_pressed) {
-      switch (pov) {
-        case Constants.Xbox.POV_UP_BUTTON:
-          m_pressed = true;
-          m_speed += 10;
-          break;
-        case Constants.Xbox.POV_DOWN_BUTTON:
-          m_pressed = true;
-          m_speed -= 10;
-          break;
-        case Constants.Xbox.POV_LEFT_BUTTON:
-          m_pressed = true;
-          m_speed -= 100;
-          break;
-        case Constants.Xbox.POV_RIGHT_BUTTON:
-          m_pressed = true;
-          m_speed += 100;
-          break;
-      }
+
+    switch (pov) {
+      case Constants.Xbox.POV_LEFT_BUTTON:
+        m_speed -= 100;
+        break;
+      case Constants.Xbox.POV_RIGHT_BUTTON:
+        m_speed += 100;
+        break;
+      default:
+        break;
     }
-    if (pov == -1)
-      m_pressed = false;
 
     if(m_stick.getRawButtonPressed(Constants.Xbox.RIGHT_BUMPER)) {
       m_speed += 200;
@@ -176,16 +165,15 @@ public class Shooter extends SubsystemBase {
       m_speed = 0;
     }
 
-    // if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
-    //   // shooterRightMotor.disable();
-    //   m_speed = 4600;
-    // }
+    if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
+      // shooterRightMotor.disable();
+      m_speed = 4600;
+    }
 
-    // if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
-    //   // shooterRightMotor.disable();
-    //   m_speed = 1600;
-    // }
-
+    if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
+      // shooterRightMotor.disable();
+      m_speed = 1600;
+    }
 
     SmartDashboard.putNumber("Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
@@ -194,12 +182,18 @@ public class Shooter extends SubsystemBase {
   }
 
   private void manualSetHoodPos() {
-    if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
-      hoodPos += 0.1;
-    }
+    int pov = m_stick.getPOV();
+    SmartDashboard.putNumber("Joystick POV", pov);
 
-    if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
-      hoodPos -= 0.1;
+    switch (pov) {
+      case Constants.Xbox.POV_UP_BUTTON:
+        hoodPos += 0.1;
+        break;
+      case Constants.Xbox.POV_DOWN_BUTTON:
+        hoodPos -= 0.1;
+        break;
+      default:
+        break;
     }
 
     hoodPos = Math.max(Math.min(hoodPos, Constants.Hood.MAX_POS), Constants.Hood.MIN_POS);
