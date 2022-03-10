@@ -22,8 +22,8 @@ public final class Constants {
         public static final int JOYSTICK_PORT = 0;
         public static final int LEFT_STICK_X_AXIS = 0;
         public static final int LEFT_STICK_Y_AXIS = 1;
-        public static final int RIGHT_STICK_X_AXIS = 4;
-        public static final int RIGHT_STICK_Y_AXIS = 5;
+        public static final int RIGHT_STICK_X_AXIS = 2; // 4
+        public static final int RIGHT_STICK_Y_AXIS = 3;  // 5
         public static final int LEFT_TRIGGER_AXIS = 2;
         public static final int RIGHT_TRIGGER_AXIS = 3;
         public static final int A_BUTTON = 2;  // 1
@@ -85,18 +85,15 @@ public final class Constants {
     }
 
     public final class HoodPid {
-        public static final double proportialPIDConstant = 0.0002;
+        public static final double proportialPIDConstant = 1;
         public static final double integralPIDConstant = 0.0002;
         public static final double derivativePIDConstant = 0.0;
-        public static final double integralPIDZone = 5.0;
-        public static final double leftFeedForwardPIDConstant = 0.000175;
-        public static final double rightFeedForwardPIDConstant = 0.000183;
-        public static final double maxShooterPIDOutput = 1.0;
-        public static final double minShooterPIDOutput = 0.0;
-        public static final double maxRotatePIDOutput = 1.0;
-        public static final double minRotatePIDOutput = -1.0;
-        public static final double velocityPIDTolerance = 30;
-        public static final int MAX_TURRET_POS = 180;
-        public static final int MIN_TURRET_POS = 0;
+        public static final double integralPIDZone = 0.0;
+        public static final double leftFeedForwardPIDConstant = 0.0;
+        public static final double maxHoodPIDOutput = 1.0;
+        public static final double minHoodPIDOutput = -1.0;
+        public static final double MAX_POS = 3.0;
+        public static final double MIN_POS = 0.0;
+
     }
 }
