@@ -22,8 +22,6 @@ public class Shooter extends SubsystemBase {
       MotorType.kBrushless);
   private final CANSparkMax hoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
       MotorType.kBrushless);
-  private final CANSparkMax shooterHoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
-      MotorType.kBrushless);
   private Joystick m_stick;
   private double flywheelRpm = 0; // double to avoid integer division
   private RelativeEncoder rightFlywheelEncoder;
