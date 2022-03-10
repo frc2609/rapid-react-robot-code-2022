@@ -95,18 +95,22 @@ public class Shooter extends SubsystemBase {
     hoodPIDController.setOutputRange(Constants.HoodPid.minHoodPIDOutput,
         Constants.HoodPid.maxHoodPIDOutput);
 
-    stopShooterMotors();
+    stopMotors();
+    resetMotorEncoders();
   }
 
-  public void stopShooterMotors() {
+  public void stopMotors() {
     shooterRightMotor.set(0.0);
     shooterRotateMotor.set(0.0);
     shooterHoodMotor.set(0.0);
-
-    hoodMotorEncoder.setPosition(0.0);
   }
 
-  public void rotateShooter() {
+  public void resetMotorEncoders() {
+    hoodMotorEncoder.setPosition(0.0);
+    rotateMotorEncoder.setPosition(0.0);
+  }
+
+  public void autoRotateShooter() {
     tx = txEntry.getDouble(0.0);
     shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.ShooterPid.MIN_TURRET_POS),
         Constants.ShooterPid.MAX_TURRET_POS);
