@@ -21,13 +21,17 @@ public class Shooter extends SubsystemBase {
       MotorType.kBrushless);
   private final CANSparkMax shooterRotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
       MotorType.kBrushless);
+    private final CANSparkMax shooterHoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
+      MotorType.kBrushless);
   private Joystick m_stick;
   private boolean m_pressed = false;
   private double m_speed = 0; // double to avoid integer division
   private RelativeEncoder rightMotorEncoder;
   private RelativeEncoder rotateMotorEncoder;
+  private RelativeEncoder hoodMotorEncoder;
   private SparkMaxPIDController rightPIDController;
   private SparkMaxPIDController rotatePIDController;
+  private SparkMaxPIDController hoodPIDController;
 
   double cameraHeight = 0.92; // height of camera in meters (from ground)
   double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
@@ -44,6 +48,7 @@ public class Shooter extends SubsystemBase {
   double tx;
   double tv;
   double shooterPosition;
+  double hoodPos = 0;
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   NetworkTable table = inst.getTable("limelight");
@@ -55,8 +60,13 @@ public class Shooter extends SubsystemBase {
     m_stick = stick;
     SmartDashboard.putNumber("Shooter Set", 0);
     shooterLeftMotor.follow(shooterRightMotor, true);
+
+    shooterRightMotor.setIdleMode(IdleMode.kCoast);
+    shooterLeftMotor.setIdleMode(IdleMode.kCoast);
+
     rightMotorEncoder = shooterRightMotor.getEncoder();
     rotateMotorEncoder = shooterRotateMotor.getEncoder();
+    hoodMotorEncoder = shooterHoodMotor.getEncoder();
 
     rightPIDController = shooterRightMotor.getPIDController();
     rotatePIDController = shooterRotateMotor.getPIDController();
@@ -76,19 +86,27 @@ public class Shooter extends SubsystemBase {
     rotatePIDController.setFF(Constants.ShooterPid.leftFeedForwardPIDConstant);
     rotatePIDController.setOutputRange(Constants.ShooterPid.minRotatePIDOutput,
         Constants.ShooterPid.maxRotatePIDOutput);
-    shooterRightMotor.setIdleMode(IdleMode.kCoast);
-    shooterLeftMotor.setIdleMode(IdleMode.kCoast);
+
+    hoodPIDController.setP(Constants.HoodPid.proportialPIDConstant);
+    hoodPIDController.setI(Constants.HoodPid.integralPIDConstant);
+    hoodPIDController.setD(Constants.HoodPid.derivativePIDConstant);
+    hoodPIDController.setIZone(Constants.HoodPid.integralPIDConstant);
+    hoodPIDController.setFF(Constants.HoodPid.leftFeedForwardPIDConstant);
+    hoodPIDController.setOutputRange(Constants.HoodPid.minRotatePIDOutput,
+        Constants.HoodPid.maxRotatePIDOutput);
 
     stopShooterMotors();
 
     // shooterLeftMotor.burnFlash();
     // shooterRightMotor.burnFlash();
     // shooterRotateMotor.burnFlash();
+    // shooterHoodMotor.burnFlash();
   }
 
   public void stopShooterMotors() {
     shooterRightMotor.set(0.0);
     shooterRotateMotor.set(0.0);
+    shooterHoodMotor.set(0.0);
   }
 
   // public void setVelocity() {
@@ -179,12 +197,7 @@ public class Shooter extends SubsystemBase {
     return degrees * Math.PI / 180;
   }
 
-  @Override
-  public void periodic() {
-    // fernCalculateFlywheelRpm();
-    // double move = m_stick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS);
-    // setMotors(Math.abs(move) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE ? 0 :
-    // move);
+  private void setFlywheelRpm() {
     int pov = m_stick.getPOV();
     SmartDashboard.putNumber("Joystick POV", pov);
     if (!m_pressed) {
@@ -238,6 +251,19 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Set (setpoint rpm)", m_speed);
     // setVelocity();
     rightPIDController.setReference(m_speed, ControlType.kVelocity);
+  }
 
+  private void setHoodPos() {
+    
+  }
+
+  @Override
+  public void periodic() {
+    // fernCalculateFlywheelRpm();
+    // double move = m_stick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS);
+    // setMotors(Math.abs(move) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE ? 0 :
+    // move);
+    setFlywheelRpm();
+    setHoodPos();
   }
 }
