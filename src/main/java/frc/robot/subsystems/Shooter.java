@@ -140,6 +140,8 @@ public class Shooter extends SubsystemBase {
     int pov = m_stick.getPOV();
     SmartDashboard.putNumber("Joystick POV", pov);
 
+    // might be worth using the bottom bumper buttons on the logitech controller instead of the D-pad
+
     switch (pov) {
       case Constants.Xbox.POV_LEFT_BUTTON:
         flywheelRpm -= 100;
