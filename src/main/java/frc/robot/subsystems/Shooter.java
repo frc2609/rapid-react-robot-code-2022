@@ -21,7 +21,7 @@ public class Shooter extends SubsystemBase {
       MotorType.kBrushless);
   private final CANSparkMax shooterRotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
       MotorType.kBrushless);
-    private final CANSparkMax shooterHoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
+  private final CANSparkMax shooterHoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
       MotorType.kBrushless);
   private Joystick m_stick;
   private boolean m_pressed = false;
@@ -33,9 +33,9 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController rotatePIDController;
   private SparkMaxPIDController hoodPIDController;
 
-  double cameraHeight = 0.92; // height of camera in meters (from ground)
+  double cameraHeight = 0.864; // height of camera in meters (from ground)
   double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
-  double cameraAngleDegrees = 35; // angle of camera in degrees
+  double cameraAngleDegrees = 60; // angle of camera in degrees
   double cameraAndTapeAngleDeltaDegrees; // difference in vertical angle between camera and target
   double distance;
   double distanceH;
@@ -197,6 +197,30 @@ public class Shooter extends SubsystemBase {
     return degrees * Math.PI / 180;
   }
 
+  private void calcDistance() {
+    tv = tvEntry.getDouble(0.0);
+
+    if (tv <= 0) {
+      SmartDashboard.putBoolean("valid limelight target", false);
+      // rightPIDController.setReference(0, ControlType.kVelocity);
+      return;
+    }
+
+    SmartDashboard.putBoolean("valid limelight target", true);
+
+    tx = tyEntry.getDouble(0);
+    ty = tyEntry.getDouble(0);
+
+    SmartDashboard.putNumber("tx", tx);
+    SmartDashboard.putNumber("ty", ty);
+
+    cameraAndTapeAngleDeltaDegrees = ty;
+    distance = (tapeHeight - cameraHeight)
+        / Math.tan(degToRad(cameraAngleDegrees) + degToRad(cameraAndTapeAngleDeltaDegrees));
+
+    SmartDashboard.putNumber("distance (m)", distance);
+  }
+
   private void setFlywheelRpm() {
     int pov = m_stick.getPOV();
     SmartDashboard.putNumber("Joystick POV", pov);
@@ -236,15 +260,15 @@ public class Shooter extends SubsystemBase {
       m_speed = 0;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
-      // shooterRightMotor.disable();
-      m_speed = 4600;
-    }
+    // if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
+    //   // shooterRightMotor.disable();
+    //   m_speed = 4600;
+    // }
 
-    if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
-      // shooterRightMotor.disable();
-      m_speed = 1600;
-    }
+    // if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
+    //   // shooterRightMotor.disable();
+    //   m_speed = 1600;
+    // }
 
 
     SmartDashboard.putNumber("Shooter Set (actual rpm)", rightMotorEncoder.getVelocity());
@@ -254,7 +278,18 @@ public class Shooter extends SubsystemBase {
   }
 
   private void setHoodPos() {
-    
+    if(m_stick.getRawButtonPressed(Constants.Xbox.Y_BUTTON)) {
+      hoodPos += 0.25;
+    }
+
+    if(m_stick.getRawButtonPressed(Constants.Xbox.X_BUTTON)) {
+      hoodPos -= 0.25;
+    }
+
+    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
+
+    SmartDashboard.putNumber("Hood Position (setpoint)", hoodPos);
+    SmartDashboard.putNumber("Hood Position (actual)", hoodMotorEncoder.getPosition());
   }
 
   @Override
@@ -265,5 +300,6 @@ public class Shooter extends SubsystemBase {
     // move);
     setFlywheelRpm();
     setHoodPos();
+    calcDistance();
   }
 }
