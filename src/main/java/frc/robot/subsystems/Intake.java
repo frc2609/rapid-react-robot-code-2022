@@ -20,25 +20,24 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*
-     * if (m_stick.getRawButton(Constants.Logitech.BUTTON_3)) {
-     * setBelts(1);
-     * }
-     * else {
-     * //setBelts(0);
-     * upperBeltMotor.set(0);
-     * }
-     * 
-     * if (m_stick.getRawButton(Constants.Logitech.BUTTON_2)) {
-     * setIntake(0.5);
-     * }
-     * else {
-     * setIntake(0);
-     * }
-     * 
-     * intakeLiftMotor.set(m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS)
-     * * 0.25);
-     */}
+
+    if (m_stick.getRawButton(Constants.Logitech.BUTTON_3)) {
+      setBelts(1);
+    }
+    else {
+      setBelts(0);
+    }
+
+    if (m_stick.getRawButton(Constants.Logitech.BUTTON_2)) {
+      setIntake(0.5);
+    }
+    else {
+      setIntake(0);
+    }
+
+    intakeLiftMotor.set(m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS)
+    * 0.25);
+     }
 
   @Override
   public void simulationPeriodic() {
