@@ -113,9 +113,10 @@ public class Shooter extends SubsystemBase {
     tx = txEntry.getDouble(0.0);
     shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.Rotate.MIN_TURRET_POS),
         Constants.Rotate.MAX_TURRET_POS) / 360;
+    
     rotatePIDController.setReference(shooterPosition, ControlType.kPosition);
-    SmartDashboard.putNumber("Shooter Pos (set)", shooterPosition);
-    SmartDashboard.putNumber("Shooter Pos (actual)", rotateEncoder.getPosition());
+    SmartDashboard.putNumber("Rotate Pos (set)", shooterPosition);
+    SmartDashboard.putNumber("Rotate Pos (actual)", rotateEncoder.getPosition());
   }
 
   private double degToRad(double degrees) {
@@ -243,8 +244,8 @@ public class Shooter extends SubsystemBase {
     manualSetFlywheelRpm();
     manualSetHoodPos();
     // manualSetRotateVelocity();
-    // autoRotateShooter();
-    manualSetRotatePosition();
+    autoRotateShooter();
+    // manualSetRotatePosition();
     calcDistance();
   }
 }
