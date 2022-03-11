@@ -59,6 +59,8 @@ public class Shooter extends SubsystemBase {
     rotateEncoder = rotateMotor.getEncoder();
     hoodEncoder = hoodMotor.getEncoder();
 
+    shooterPosition = 0.0;
+
     rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
     rotatePIDController = rotateMotor.getPIDController();
     hoodPIDController = hoodMotor.getPIDController();
@@ -105,8 +107,10 @@ public class Shooter extends SubsystemBase {
   public void autoRotateShooter() {
     tx = txEntry.getDouble(0.0);
     shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.Rotate.MIN_TURRET_POS),
-        Constants.Rotate.MAX_TURRET_POS);
-    rotatePIDController.setReference((shooterPosition / 360), ControlType.kPosition);
+        Constants.Rotate.MAX_TURRET_POS) / 360;
+    rotatePIDController.setReference(shooterPosition, ControlType.kPosition);
+    SmartDashboard.putNumber("Shooter Pos (set)", shooterPosition);
+    SmartDashboard.putNumber("Shooter Pos (actual)", rotateEncoder.getPosition());
   }
 
   private double degToRad(double degrees) {
@@ -140,7 +144,8 @@ public class Shooter extends SubsystemBase {
     int pov = m_stick.getPOV();
     SmartDashboard.putNumber("Joystick POV", pov);
 
-    // might be worth using the bottom bumper buttons on the logitech controller instead of the D-pad
+    // might be worth using the bottom bumper buttons on the logitech controller
+    // instead of the D-pad
 
     switch (pov) {
       case Constants.Logitech.POV_LEFT_BUTTON:
@@ -153,23 +158,23 @@ public class Shooter extends SubsystemBase {
         break;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_BUMPER)) {
+    if (m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_BUMPER)) {
       flywheelRpm += 200;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Logitech.LEFT_BUMPER)) {
+    if (m_stick.getRawButtonPressed(Constants.Logitech.LEFT_BUMPER)) {
       flywheelRpm -= 200;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Logitech.START_BUTTON)) {
+    if (m_stick.getRawButtonPressed(Constants.Logitech.START_BUTTON)) {
       flywheelRpm = 0;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
+    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
       flywheelRpm = 4600;
     }
 
-    if(m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
+    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
       flywheelRpm = 1600;
     }
 
@@ -206,11 +211,11 @@ public class Shooter extends SubsystemBase {
     double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
 
     val = (val < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
-    
+
     SmartDashboard.putNumber("Rotate Velocity (setpoint)", val);
     SmartDashboard.putNumber("Rotate Velocity (actual)", rotateEncoder.getVelocity());
 
-    rotateMotor.set(val/4);
+    rotateMotor.set(val / 4);
   }
 
   public void setHood() {
@@ -223,5 +228,6 @@ public class Shooter extends SubsystemBase {
     manualSetHoodPos();
     manualSetRotate();
     calcDistance();
+    // autoRotateShooter();
   }
 }
