@@ -210,7 +210,7 @@ public class Shooter extends SubsystemBase {
   private void manualSetRotate() {
     double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
 
-    val = (val < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
+    val = (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
 
     SmartDashboard.putNumber("Rotate Velocity (setpoint)", val);
     SmartDashboard.putNumber("Rotate Velocity (actual)", rotateEncoder.getVelocity());
