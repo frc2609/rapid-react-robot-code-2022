@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.SparkMaxPIDController;
+
+import javax.naming.ldap.Control;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -42,6 +45,7 @@ public class Shooter extends SubsystemBase {
   double tv;
   double shooterPosition;
   double hoodPos = 0;
+  double rotatePos = 0;
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   NetworkTable table = inst.getTable("limelight");
@@ -207,7 +211,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Hood Position (actual)", hoodEncoder.getPosition());
   }
 
-  private void manualSetRotate() {
+  private void manualSetRotateVelocity() {
     double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
 
     val = (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
@@ -222,12 +226,25 @@ public class Shooter extends SubsystemBase {
     hoodPIDController.setReference(Math.abs(hoodPos), ControlType.kPosition);
   }
 
+  private void manualSetRotatePosition() {
+    double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
+
+    rotatePos += (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
+
+    rotatePIDController.setReference(rotatePos, ControlType.kPosition);
+
+    SmartDashboard.putNumber("Rotate Position (setpoint)", rotatePos);
+    SmartDashboard.putNumber("Rotate Position (actual)", rotateEncoder.getPosition());
+
+  }
+
   @Override
   public void periodic() {
     manualSetFlywheelRpm();
     manualSetHoodPos();
-    manualSetRotate();
-    calcDistance();
+    // manualSetRotateVelocity();
     // autoRotateShooter();
+    manualSetRotatePosition();
+    calcDistance();
   }
 }
