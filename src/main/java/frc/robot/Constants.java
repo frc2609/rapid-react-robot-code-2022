@@ -71,11 +71,11 @@ public final class Constants {
     }
 
     public final class Rotate {
-        public static final double proportialPIDConstant = 0.0002;
-        public static final double integralPIDConstant = 0.0002;
+        public static final double proportialPIDConstant = 0.2; //0.11
+        public static final double integralPIDConstant = 0.0; //0.0000000005;
         public static final double derivativePIDConstant = 0.0;
-        public static final double integralPIDZone = 5.0;
-        public static final double feedForwardPIDConstant = 0.000175;
+        public static final double integralPIDZone = 1.0;
+        public static final double feedForwardPIDConstant = 0.0025;
         public static final double maxPIDOutput = 1.0;
         public static final double minPIDOutput = -1.0;
         public static final int MAX_TURRET_POS = 180;
@@ -95,11 +95,11 @@ public final class Constants {
     }
 
     public final class Flywheel {
-        public static final double proportialPIDConstant = 0.0002;
-        public static final double integralPIDConstant = 0.0002;
+        public static final double proportialPIDConstant = 0.0; // 0.00004;
+        public static final double integralPIDConstant = 0.0; //0.0002;
         public static final double derivativePIDConstant = 0.0;
         public static final double integralPIDZone = 5.0;
-        public static final double FeedForwardPIDConstant = 0.000183;
+        public static final double FeedForwardPIDConstant = 0.000175; //0.000183;
         public static final double maxPIDOutput = 1.0;
         public static final double minPIDOutput = 0.0;
     }
