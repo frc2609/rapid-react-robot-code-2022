@@ -132,7 +132,7 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putBoolean("valid limelight target", true);
 
-    tx = tyEntry.getDouble(0);
+    tx = txEntry.getDouble(0);
     ty = tyEntry.getDouble(0);
 
     SmartDashboard.putNumber("tx", tx);
