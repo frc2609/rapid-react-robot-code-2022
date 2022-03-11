@@ -236,7 +236,31 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Rotate Position (setpoint)", rotatePos);
     SmartDashboard.putNumber("Rotate Position (actual)", rotateEncoder.getPosition());
+  }
 
+  private void autoRotateShooterV2() {
+    double rotateSetpoint = 0.0;
+    tv = tvEntry.getDouble(0.0);
+
+    if (tv <= 0.0) {
+      rotateMotor.set(rotateSetpoint);
+      return;
+    }
+
+    tx = txEntry.getDouble(0.0);
+
+    // if (tx < 0.0) {
+    //   rotateSetpoint = Math.pow(-tx/30, 0.5) * tx/40;
+    // } else {
+    //   rotateSetpoint = Math.pow(tx/30, 0.5) * tx/40;
+    // }
+
+    rotateSetpoint = tx/75;
+
+    rotateMotor.set(rotateSetpoint);
+
+    SmartDashboard.putNumber("Rotate Velocity (setpoint)", rotateSetpoint);
+    SmartDashboard.putNumber("Rotate Velocity (actual)", rotateEncoder.getVelocity());
   }
 
   @Override
@@ -244,7 +268,7 @@ public class Shooter extends SubsystemBase {
     manualSetFlywheelRpm();
     manualSetHoodPos();
     // manualSetRotateVelocity();
-    autoRotateShooter();
+    autoRotateShooterV2();
     // manualSetRotatePosition();
     calcDistance();
   }
