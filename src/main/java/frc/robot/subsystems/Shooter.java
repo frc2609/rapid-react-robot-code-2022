@@ -142,27 +142,6 @@ public class Shooter extends SubsystemBase {
   }
 
   private void manualSetFlywheelRpm() {
-    int pov = m_stick.getPOV();
-    SmartDashboard.putNumber("Joystick POV", pov);
-
-    // might be worth using the bottom bumper buttons on the logitech controller
-    // instead of the D-pad
-
-    // if (!m_pressed) {
-    //   switch (pov) {
-    //     case Constants.Logitech.POV_LEFT_BUTTON:
-    //       m_pressed = true;
-    //       flywheelRpm -= 100;
-    //       break;
-    //     case Constants.Logitech.POV_RIGHT_BUTTON:
-    //       m_pressed = true;
-    //       flywheelRpm += 100;
-    //       break;
-    //   }
-    // }
-    // if (pov == -1)
-    //   m_pressed = false;
-
     if (m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_TOP_BUMPER)) {
       flywheelRpm += 100;
     }
@@ -201,15 +180,23 @@ public class Shooter extends SubsystemBase {
     int pov = m_stick.getPOV();
     SmartDashboard.putNumber("Joystick POV", pov);
 
-    switch (pov) {
-      case Constants.Logitech.POV_UP_BUTTON:
-        hoodPos += 0.1;
-        break;
-      case Constants.Logitech.POV_DOWN_BUTTON:
-        hoodPos -= 0.1;
-        break;
-      default:
-        break;
+    if (!m_pressed) {
+      switch (pov) {
+        case Constants.Logitech.POV_UP_BUTTON:
+          m_pressed = true;
+          hoodPos += 0.1;
+          break;
+        case Constants.Logitech.POV_DOWN_BUTTON:
+          m_pressed = true;
+          hoodPos -= 0.1;
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (pov == -1) {
+      m_pressed = false;
     }
 
     hoodPos = Math.max(Math.min(hoodPos, Constants.Hood.MAX_POS), Constants.Hood.MIN_POS);
