@@ -30,6 +30,7 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController rightFlywheelPIDController;
   private SparkMaxPIDController rotatePIDController;
   private SparkMaxPIDController hoodPIDController;
+  private boolean m_pressed = false;
 
   double cameraHeight = 0.864; // height of camera in meters (from ground)
   double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
@@ -147,22 +148,34 @@ public class Shooter extends SubsystemBase {
     // might be worth using the bottom bumper buttons on the logitech controller
     // instead of the D-pad
 
-    switch (pov) {
-      case Constants.Logitech.POV_LEFT_BUTTON:
-        flywheelRpm -= 100;
-        break;
-      case Constants.Logitech.POV_RIGHT_BUTTON:
-        flywheelRpm += 100;
-        break;
-      default:
-        break;
+    // if (!m_pressed) {
+    //   switch (pov) {
+    //     case Constants.Logitech.POV_LEFT_BUTTON:
+    //       m_pressed = true;
+    //       flywheelRpm -= 100;
+    //       break;
+    //     case Constants.Logitech.POV_RIGHT_BUTTON:
+    //       m_pressed = true;
+    //       flywheelRpm += 100;
+    //       break;
+    //   }
+    // }
+    // if (pov == -1)
+    //   m_pressed = false;
+
+    if (m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_TOP_BUMPER)) {
+      flywheelRpm += 100;
     }
 
-    if (m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_BUMPER)) {
+    if (m_stick.getRawButtonPressed(Constants.Logitech.LEFT_TOP_BUMPER)) {
+      flywheelRpm -= 100;
+    }
+
+    if (m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_BOTTOM_BUMPER)) {
       flywheelRpm += 200;
     }
 
-    if (m_stick.getRawButtonPressed(Constants.Logitech.LEFT_BUMPER)) {
+    if (m_stick.getRawButtonPressed(Constants.Logitech.LEFT_BOTTOM_BUMPER)) {
       flywheelRpm -= 200;
     }
 
