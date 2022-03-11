@@ -35,8 +35,8 @@ public class Intake extends SubsystemBase {
       setIntake(0);
     }
 
-    intakeLiftMotor.set(m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS)
-    * 0.25);
+    // intakeLiftMotor.set(m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS)
+    // * 0.25);
      }
 
   @Override
