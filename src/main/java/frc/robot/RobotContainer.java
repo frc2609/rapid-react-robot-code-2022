@@ -45,10 +45,14 @@ public class RobotContainer {
   public final JoystickButton traverseButton = new JoystickButton(joystick,
       Constants.A_BUTTON);
   public final JoystickButton ejectBallButton = new JoystickButton(joystick, Constants.Y_BUTTON);
+  
+  AHRS bodyNavx;
+
+  
 
   // subsystems
-  public final Drive m_driveSubsystem = new Drive(joystick);
-  public final Climber m_climbSubsystem = new Climber(joystick);
+  public final Drive m_driveSubsystem;
+  public final Climber m_climbSubsystem;
   // public final ColorSensing m_colorSubsystem = new ColorSensing();
   public final Shooter m_shooterSubsystem = new Shooter(joystick);
   public final Intake m_intakeSubsystem = new Intake(joystick);
@@ -63,6 +67,17 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+
+    try {
+      bodyNavx = new AHRS(SerialPort.Port.kMXP);
+    } catch (RuntimeException ex) {
+      DriverStation.reportError("bodyNavx failed to connect", true);
+  }
+
+  
+  m_driveSubsystem = new Drive(joystick, bodyNavx);
+  m_climbSubsystem = new Climber(joystick, bodyNavx);
 
     enabledLooper = new Looper();
 

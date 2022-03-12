@@ -52,7 +52,7 @@ public class Climber extends SubsystemBase {
   };
 
   /** Creates a new Climber. */
-  public Climber(Joystick stick) {
+  public Climber(Joystick stick, AHRS bodyAhrs) {
     resetEncoder();
     barMotor.setInverted(true);
     barPID = barMotor.getPIDController();
@@ -61,7 +61,7 @@ public class Climber extends SubsystemBase {
     m_stick = stick;
     barMotor.setIdleMode(IdleMode.kBrake);
     hookMotor.setIdleMode(IdleMode.kBrake);
-    armKinematics = new ArmKinematics();
+    armKinematics = new ArmKinematics(bodyAhrs);
     logger = Logger.getInstance();
     logger.setClimber(this);
   }

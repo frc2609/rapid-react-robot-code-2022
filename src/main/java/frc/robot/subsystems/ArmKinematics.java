@@ -18,18 +18,18 @@ public class ArmKinematics {
   private AHRS armNavx, bodyNavx;
   private FiniteDoubleQueue armAvg, bodyAvg;
 
-  public ArmKinematics() {
+  public ArmKinematics(AHRS bodyAhrs) {
     try {
       armNavx = new AHRS(SerialPort.Port.kUSB);
     } catch (RuntimeException ex) {
       DriverStation.reportError("armNavx failed to connect", true);
     }
-
-    try {
-      bodyNavx = new AHRS(SerialPort.Port.kMXP);
-    } catch (RuntimeException ex) {
-      DriverStation.reportError("bodyNavx failed to connect", true);
-    }
+    bodyNavx = bodyAhrs;
+    // try {
+    //   bodyNavx = new AHRS(SerialPort.Port.kMXP);
+    // } catch (RuntimeException ex) {
+    //   DriverStation.reportError("bodyNavx failed to connect", true);
+    // }
     armAvg = new FiniteDoubleQueue(5);
     bodyAvg = new FiniteDoubleQueue(5);
   }
