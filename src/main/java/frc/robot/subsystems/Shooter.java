@@ -343,27 +343,27 @@ public class Shooter extends SubsystemBase {
     // Run testGetFrictionPower() first and set frictionPower accordingly
     testGetFrictionPower();
 
-    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
-      if (isAutoAimMode) {
-        isAutoAimMode = false;
-        turnLimelightOff();
-      } else {
-        isAutoAimMode = true;
-        turnLimelightOn();
-      }
-    }
+    // if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
+    //   if (isAutoAimMode) {
+    //     isAutoAimMode = false;
+    //     turnLimelightOff();
+    //   } else {
+    //     isAutoAimMode = true;
+    //     turnLimelightOn();
+    //   }
+    // }
 
-    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
-      rotateEncoder.setPosition(0.0);
-    }
+    // if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
+    //   rotateEncoder.setPosition(0.0);
+    // }
 
-    autoSetFlywheelAndHood(calcDistance());
-    autoRotateShooter_PowerControl();
+    // autoSetFlywheelAndHood(calcDistance());
+    // autoRotateShooter_PowerControl();
 
-    if (!isAutoAimMode) {
-      manualSetFlywheelRpm();
-      manualSetHoodPos();
-      manualSetRotatePower();
-    }
+    // if (!isAutoAimMode) {
+    //   manualSetFlywheelRpm();
+    //   manualSetHoodPos();
+    //   manualSetRotatePower();
+    // }
   }
 }
