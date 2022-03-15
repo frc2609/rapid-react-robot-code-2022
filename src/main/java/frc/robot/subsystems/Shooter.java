@@ -239,24 +239,25 @@ public class Shooter extends SubsystemBase {
   }
 
   private void autoRotateShooter_PercentOutputControl() {
-    double rotateSetpoint = 0.0;
-    tv = tvEntry.getDouble(0.0);
+    double kP = 0.01333;
+    double frictionPower = 0.0;  // Need to figure out what this would be
+    double rotatePower = 0.0;
+    boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
+    double currTurretPosition = rotateEncoder.getPosition();
+    SmartDashboard.putNumber("Rotate Position (actual)", currTurretPosition);
 
-    double position = rotateEncoder.getPosition();
-    SmartDashboard.putNumber("Rotate Position (actual)", position);
-
-    if (tv <= 0.0) {
-      rotateMotor.set(rotateSetpoint);
+    if (!isValidTarget) {
+      rotateMotor.set(rotatePower);
       return;
     }
 
-    if (position <= Constants.Rotate.MIN_POS) {
+    if (currTurretPosition <= Constants.Rotate.MIN_POS) {
       if (tx < 0.0) {
         return;
       }
     }
 
-    if (position >= Constants.Rotate.MAX_POS) {
+    if (currTurretPosition >= Constants.Rotate.MAX_POS) {
       if (tx > 0.0) {
         return;
       }
@@ -270,11 +271,11 @@ public class Shooter extends SubsystemBase {
     //   rotateSetpoint = Math.pow(tx/30, 0.5) * tx/40;
     // }
 
-    rotateSetpoint = tx/75;
+    rotatePower = tx * kP;
 
-    rotateMotor.set(rotateSetpoint);
+    rotateMotor.set(rotatePower);
 
-    SmartDashboard.putNumber("Rotate Velocity (setpoint)", rotateSetpoint);
+    SmartDashboard.putNumber("Rotate Velocity (setpoint)", rotatePower);
     SmartDashboard.putNumber("Rotate Velocity (actual)", rotateEncoder.getVelocity());
   }
 
