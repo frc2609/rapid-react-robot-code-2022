@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import java.util.HashMap;
 
 import com.revrobotics.SparkMaxPIDController;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -26,20 +25,21 @@ public class Shooter extends SubsystemBase {
   private final CANSparkMax hoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
       MotorType.kBrushless);
   private Joystick m_stick;
-  private double flywheelRpm = 0; // double to avoid integer division
   private RelativeEncoder rightFlywheelEncoder;
   private RelativeEncoder rotateEncoder;
   private RelativeEncoder hoodEncoder;
   private SparkMaxPIDController rightFlywheelPIDController;
   private SparkMaxPIDController rotatePIDController;
   private SparkMaxPIDController hoodPIDController;
-  private boolean m_pressed = false;
+  private boolean pov_pressed = false;
   private boolean isAutoAimMode = false;
 
+  // temporary variables for testing
   double shooterPosition;
   double hoodPos = 0;
   double rotatePos = 0;
   double tempFrictionPower = 0.0;
+  double flywheelRpm = 0; // double to avoid integer division
 
   HashMap<Integer, Double[]> lookupTable = new HashMap<Integer, Double[]>();
 
@@ -205,14 +205,14 @@ public class Shooter extends SubsystemBase {
     int pov = m_stick.getPOV();
     SmartDashboard.putNumber("Joystick POV", pov);
 
-    if (!m_pressed) {
+    if (!pov_pressed) {
       switch (pov) {
         case Constants.Logitech.POV_UP_BUTTON:
-          m_pressed = true;
+          pov_pressed = true;
           hoodPos += 0.1;
           break;
         case Constants.Logitech.POV_DOWN_BUTTON:
-          m_pressed = true;
+          pov_pressed = true;
           hoodPos -= 0.1;
           break;
         default:
@@ -221,7 +221,7 @@ public class Shooter extends SubsystemBase {
     }
 
     if (pov == -1) {
-      m_pressed = false;
+      pov_pressed = false;
     }
 
     hoodPos = Math.max(Math.min(hoodPos, Constants.Hood.MAX_POS), Constants.Hood.MIN_POS);
