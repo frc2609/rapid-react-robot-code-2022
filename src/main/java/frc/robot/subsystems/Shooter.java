@@ -319,6 +319,7 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Auto flywheel RPM", flywheelRpm);
     SmartDashboard.putNumber("Auto hoodPos", hoodPos);
+    SmartDashboard.putNumber("Auto lookupTable index", index);
     SmartDashboard.putNumber("Auto Hood Position (actual)", hoodEncoder.getPosition());
     SmartDashboard.putNumber("Auto Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
   }
