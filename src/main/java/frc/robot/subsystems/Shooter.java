@@ -303,18 +303,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Rotate Power (setpoint)", rotatePower);
   }
 
-  private void testGetFrictionPower() {
-    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
-      tempFrictionPower += 0.01;
-    }
-
-    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
-      tempFrictionPower -= 0.01;
-    }
-
-    SmartDashboard.putNumber("TEST Friction power", tempFrictionPower);
-  }
-
   private void autoSetFlywheelAndHood(double distance) {
     if (distance < 0) {
       return;
@@ -333,6 +321,18 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Auto hoodPos", hoodPos);
     SmartDashboard.putNumber("Auto Hood Position (actual)", hoodEncoder.getPosition());
     SmartDashboard.putNumber("Auto Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
+  }
+
+  private void testGetFrictionPower() {
+    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
+      tempFrictionPower += 0.01;
+    }
+
+    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
+      tempFrictionPower -= 0.01;
+    }
+
+    SmartDashboard.putNumber("TEST Friction power", tempFrictionPower);
   }
 
   @Override
