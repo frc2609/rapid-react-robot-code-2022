@@ -273,6 +273,7 @@ public class Shooter extends SubsystemBase {
     double isNegative = 1.0;
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
     double currTurretPosition = rotateEncoder.getPosition();
+
     SmartDashboard.putNumber("Rotate Position (actual)", currTurretPosition);
 
     if (!isValidTarget) {
@@ -333,6 +334,7 @@ public class Shooter extends SubsystemBase {
       tempFrictionPower -= 0.01;
     }
 
+    rotateMotor.set(tempFrictionPower);
     SmartDashboard.putNumber("TEST Friction power", tempFrictionPower);
   }
 
