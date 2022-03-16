@@ -287,30 +287,35 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Auto Rotate Position (actual)", currTurretPosition);
 
     if (!isValidTarget) {
-      rotateMotor.set(rotatePower);
+      rotateMotor.set(0.0);
       return;
     }
 
     double tx = txEntry.getDouble(0.0);
 
-    if (Math.abs(tx) < Constants.Rotate.TOLERANCE) { return; }
+    if (Math.abs(tx) < Constants.Rotate.TOLERANCE) { 
+      rotateMotor.set(0.0);
+      return;
+    }
 
     if (tx < 0.0) {
       isNegative = -1.0;
-      if (currTurretPosition <= Constants.Rotate.MIN_POS) { return; }
+      if (currTurretPosition <= Constants.Rotate.MIN_POS) {
+        rotateMotor.set(0.0);
+        return;
+      }
     }
 
     if (tx > 0.0) {
       isNegative = 1.0;
-      if (currTurretPosition >= Constants.Rotate.MAX_POS) { return; }
+      if (currTurretPosition >= Constants.Rotate.MAX_POS) {
+        rotateMotor.set(0.0);
+        return;
+      }
     }
 
     rotatePower = tx*kP + frictionPower*isNegative;
-
-    if (isAutoAimMode) {
-      rotateMotor.set(rotatePower);
-    }
-    
+    rotateMotor.set(rotatePower);
     SmartDashboard.putNumber("Auto Rotate Power (setpoint)", rotatePower);
   }
 
@@ -374,14 +379,16 @@ public class Shooter extends SubsystemBase {
     //   }
     // }
 
+    // SmartDashboard.putBoolean("isAutoAimMode", isAutoAimMode);
+    
     // if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
     //   rotateEncoder.setPosition(0.0);
     // }
 
-    // autoSetFlywheelAndHood(calcDistance());
-    // autoRotateShooter_PowerControl();
-
-    // if (!isAutoAimMode) {
+    // if (isAutoAimMode) {
+    //   autoSetFlywheelAndHood(calcDistance());
+    //   autoRotateShooter_PowerControl();
+    // } else {
     //   manualSetFlywheelRpm();
     //   manualSetHoodPos();
     //   manualSetRotatePower();
