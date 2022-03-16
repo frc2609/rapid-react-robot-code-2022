@@ -165,6 +165,7 @@ public class Shooter extends SubsystemBase {
 
     return distance;
   }
+
 //#region Manual Controls
   private void manualSetFlywheelRpm() {
     if (m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_TOP_BUMPER)) {
@@ -274,7 +275,7 @@ public class Shooter extends SubsystemBase {
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
     double currTurretPosition = rotateEncoder.getPosition();
 
-    SmartDashboard.putNumber("Rotate Position (actual)", currTurretPosition);
+    SmartDashboard.putNumber("Auto Rotate Position (actual)", currTurretPosition);
 
     if (!isValidTarget) {
       rotateMotor.set(rotatePower);
@@ -301,7 +302,7 @@ public class Shooter extends SubsystemBase {
       rotateMotor.set(rotatePower);
     }
     
-    SmartDashboard.putNumber("Rotate Power (setpoint)", rotatePower);
+    SmartDashboard.putNumber("Auto Rotate Power (setpoint)", rotatePower);
   }
 
   private void autoSetFlywheelAndHood(double distance) {
