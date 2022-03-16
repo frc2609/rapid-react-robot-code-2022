@@ -100,32 +100,33 @@ public class Shooter extends SubsystemBase {
   private void generateLookupTable() {
     // {key, value} = {distance (ft), [shooter RPM, hood pos]}
     lookupTable.put(0, new Double[] {0.0, 0.0});
-    lookupTable.put(1, new Double[] {3676.923076923077, 0.11538461538461539});
-    lookupTable.put(2, new Double[] {3753.846153846154, 0.23076923076923078});
-    lookupTable.put(3, new Double[] {3830.769230769231, 0.34615384615384615});
-    lookupTable.put(4, new Double[] {3907.6923076923076, 0.46153846153846156});
-    lookupTable.put(5, new Double[] {3984.6153846153848, 0.576923076923077});
-    lookupTable.put(6, new Double[] {4061.5384615384614, 0.6923076923076923});
-    lookupTable.put(7, new Double[] {4138.461538461538, 0.8076923076923077});
-    lookupTable.put(8, new Double[] {4215.384615384615, 0.9230769230769231});
-    lookupTable.put(9, new Double[] {4292.307692307692, 1.0384615384615385});
-    lookupTable.put(10, new Double[] {4369.2307692307695, 1.153846153846154});
-    lookupTable.put(11, new Double[] {4446.153846153846, 1.2692307692307694});
-    lookupTable.put(12, new Double[] {4523.076923076923, 1.3846153846153846});
-    lookupTable.put(13, new Double[] {4600.0, 1.5});
-    lookupTable.put(14, new Double[] {4676.923076923077, 1.6153846153846154});
-    lookupTable.put(15, new Double[] {4753.846153846154, 1.7307692307692308});
-    lookupTable.put(16, new Double[] {4830.7692307692305, 1.8461538461538463});
-    lookupTable.put(17, new Double[] {4907.692307692308, 1.9615384615384617});
-    lookupTable.put(18, new Double[] {4984.615384615385, 2.076923076923077});
-    lookupTable.put(19, new Double[] {5061.538461538461, 2.1923076923076925});
-    lookupTable.put(20, new Double[] {5138.461538461538, 2.307692307692308});
-    lookupTable.put(21, new Double[] {5215.384615384615, 2.4230769230769234});
-    lookupTable.put(22, new Double[] {5292.307692307692, 2.5384615384615388});
-    lookupTable.put(23, new Double[] {5369.2307692307695, 2.653846153846154});
-    lookupTable.put(24, new Double[] {5446.153846153846, 2.769230769230769});
-    lookupTable.put(25, new Double[] {5523.076923076923, 2.8846153846153846});
-    lookupTable.put(26, new Double[] {5600.0, 3.0});    
+    lookupTable.put(1, new Double[] {3676.923076923077, 0.0});
+    lookupTable.put(2, new Double[] {3753.846153846154, 0.0});
+    lookupTable.put(3, new Double[] {3830.769230769231, 0.0});
+    lookupTable.put(4, new Double[] {3907.6923076923076, 0.0});
+    lookupTable.put(5, new Double[] {3984.6153846153848, 0.0923076923076923});
+    lookupTable.put(6, new Double[] {4061.5384615384614, 0.1846153846153846});
+    lookupTable.put(7, new Double[] {4138.461538461538, 0.2769230769230769});
+    lookupTable.put(8, new Double[] {4215.384615384615, 0.3692307692307692});
+    lookupTable.put(9, new Double[] {4292.307692307692, 0.4615384615384615});
+    lookupTable.put(10, new Double[] {4369.2307692307695, 0.5538461538461538});
+    lookupTable.put(11, new Double[] {4446.153846153846, 0.6461538461538461});
+    lookupTable.put(12, new Double[] {4523.076923076923, 0.7384615384615384});
+    lookupTable.put(13, new Double[] {4600.0, 0.8307692307692307});
+    lookupTable.put(14, new Double[] {4676.923076923077, 0.923076923076923});
+    lookupTable.put(15, new Double[] {4753.846153846154, 1.0153846153846153});
+    lookupTable.put(16, new Double[] {4830.7692307692305, 1.1076923076923075});
+    lookupTable.put(17, new Double[] {4907.692307692308, 1.2});
+    lookupTable.put(18, new Double[] {4984.615384615385, 1.2923076923076922});
+    lookupTable.put(19, new Double[] {5061.538461538461, 1.3846153846153846});
+    lookupTable.put(20, new Double[] {5138.461538461538, 1.4769230769230768});
+    lookupTable.put(21, new Double[] {5215.384615384615, 1.569230769230769});
+    lookupTable.put(22, new Double[] {5292.307692307692, 1.6615384615384614});
+    lookupTable.put(23, new Double[] {5369.2307692307695, 1.7538461538461536});
+    lookupTable.put(24, new Double[] {5446.153846153846, 1.846153846153846});
+    lookupTable.put(25, new Double[] {5523.076923076923, 1.9384615384615382});
+    lookupTable.put(26, new Double[] {5600.0, 2.0307692307692307});
+
   }
 
   public void stopAllMotors() {
@@ -277,8 +278,8 @@ public class Shooter extends SubsystemBase {
   }
 
   private void autoRotateShooter_PowerControl() {
-    double kP = 0.01333;
-    double frictionPower = 0.013;  // 0.016 in + direction, -0.013 in - direction
+    double kP = 0.011;
+    double frictionPower = 0; //0.004;  // 0.016 in + direction, -0.013 in - direction
     double rotatePower = 0.0;
     double isNegative = 1.0;
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
@@ -292,6 +293,8 @@ public class Shooter extends SubsystemBase {
     }
 
     double tx = txEntry.getDouble(0.0);
+    SmartDashboard.putNumber("tx", tx);
+
 
     if (Math.abs(tx) < Constants.Rotate.TOLERANCE) { 
       rotateMotor.set(0.0);
@@ -385,8 +388,12 @@ public class Shooter extends SubsystemBase {
     }
 
     if (isAutoAimMode) {
-      // autoSetFlywheelAndHood(calcDistance());
+      autoSetFlywheelAndHood(calcDistance());
       // autoRotateShooter_PowerControl();
+      
+      //TEMP
+      manualSetRotatePower();
+
     } else {
       manualSetFlywheelRpm();
       manualSetHoodPos();

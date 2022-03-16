@@ -80,7 +80,7 @@ public final class Constants {
         public static final double minPIDOutput = -1.0;
         public static final int MAX_POS = 20;
         public static final int MIN_POS = -20;
-        public static final double TOLERANCE = 0.5;  // How much the limelight can be off in x-direction (degrees)
+        public static final double TOLERANCE = 1;  // How much the limelight can be off in x-direction (degrees)
     }
 
     public final class Hood {
@@ -91,7 +91,7 @@ public final class Constants {
         public static final double feedForwardPIDConstant = 0.0;
         public static final double maxPIDOutput = 1.0;
         public static final double minPIDOutput = -1.0;
-        public static final double MAX_POS = 3.0;
+        public static final double MAX_POS = 2.7;
         public static final double MIN_POS = 0.0;
     }
 
