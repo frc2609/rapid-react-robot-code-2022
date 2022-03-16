@@ -361,13 +361,12 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // Run testGetFrictionPower() first and set frictionPower accordingly
-    // testGetFrictionPower();
-
     if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
       if (isAutoAimMode) {
         isAutoAimMode = false;
         turnLimelightOff();
+        hoodPos = hoodEncoder.getPosition();
+        rotatePos = rotateEncoder.getPosition();
       } else {
         isAutoAimMode = true;
         turnLimelightOn();
@@ -387,7 +386,7 @@ public class Shooter extends SubsystemBase {
 
     } else {
       manualSetFlywheelRpm();
-      // manualSetHoodPos();
+      manualSetHoodPos();
       manualSetRotatePower();
     }
   }
