@@ -99,6 +99,7 @@ public class Shooter extends SubsystemBase {
 
   private void generateLookupTable() {
     // {key, value} = {distance (ft), [shooter RPM, hood pos]}
+    lookupTable.put(0, new Double[] {0.0, 0.0});
     lookupTable.put(1, new Double[] {0.0, 0.0});
     lookupTable.put(2, new Double[] {0.0, 0.0});
     lookupTable.put(3, new Double[] {0.0, 0.0});
@@ -117,6 +118,14 @@ public class Shooter extends SubsystemBase {
     lookupTable.put(16, new Double[] {0.0, 0.0});
     lookupTable.put(17, new Double[] {0.0, 0.0});
     lookupTable.put(18, new Double[] {0.0, 0.0});
+    lookupTable.put(19, new Double[] {0.0, 0.0});
+    lookupTable.put(20, new Double[] {0.0, 0.0});
+    lookupTable.put(21, new Double[] {0.0, 0.0});
+    lookupTable.put(22, new Double[] {0.0, 0.0});
+    lookupTable.put(23, new Double[] {0.0, 0.0});
+    lookupTable.put(24, new Double[] {0.0, 0.0});
+    lookupTable.put(25, new Double[] {0.0, 0.0});
+    lookupTable.put(26, new Double[] {0.0, 0.0});
   }
 
   public void stopAllMotors() {
