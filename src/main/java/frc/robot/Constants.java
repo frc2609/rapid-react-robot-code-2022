@@ -78,8 +78,8 @@ public final class Constants {
         public static final double feedForwardPIDConstant = 0.0025;
         public static final double maxPIDOutput = 1.0;
         public static final double minPIDOutput = -1.0;
-        public static final int MAX_TURRET_POS = 180;
-        public static final int MIN_TURRET_POS = -180;
+        public static final int MAX_POS = 20;
+        public static final int MIN_POS = -20;
     }
 
     public final class Hood {
@@ -95,11 +95,11 @@ public final class Constants {
     }
 
     public final class Flywheel {
-        public static final double proportialPIDConstant = 0.0; // 0.00004;
+        public static final double proportialPIDConstant = 0.00006; // 0.00004;
         public static final double integralPIDConstant = 0.0; //0.0002;
         public static final double derivativePIDConstant = 0.0;
         public static final double integralPIDZone = 5.0;
-        public static final double FeedForwardPIDConstant = 0.000175; //0.000183;
+        public static final double FeedForwardPIDConstant = 0.000195; //0.000183;
         public static final double maxPIDOutput = 1.0;
         public static final double minPIDOutput = 0.0;
     }
