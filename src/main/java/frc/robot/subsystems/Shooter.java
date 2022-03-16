@@ -347,7 +347,7 @@ public class Shooter extends SubsystemBase {
     }
 
     double flywheelRpm = 1*distance*distance + 100*distance + 3100;
-    double hoodPos = Math.max(0.003*distance*distance + 0.03*distance - 0.2, Constants.Hood.MIN_POS);
+    double hoodPos = Math.min(Math.max(0.003*distance*distance + 0.03*distance - 0.2, Constants.Hood.MIN_POS), Constants.Hood.MAX_POS);
 
     rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
