@@ -321,7 +321,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Auto Rotate Power (setpoint)", rotatePower);
   }
 
-  private void autoSetFlywheelAndHood(double distance) {
+  private void autoSetFlywheelAndHood_LookupTable(double distance) {
     if (distance < 0) {
       return;
     }
@@ -341,6 +341,24 @@ public class Shooter extends SubsystemBase {
       return;
     }
 
+
+    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
+    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
+
+    SmartDashboard.putNumber("Auto flywheel RPM (setpoint)", flywheelRpm);
+    SmartDashboard.putNumber("Auto hoodPos (setpoint)", hoodPos);
+    
+    SmartDashboard.putNumber("Auto Hood Position (actual)", hoodEncoder.getPosition());
+    SmartDashboard.putNumber("Auto Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
+  }
+
+  private void autoSetFlywheelAndHood_Equation(double distance) {
+    if (distance < 0) {
+      return;
+    }
+
+    double flywheelRpm = 1*distance*distance + 100*distance + 3100;
+    double hoodPos = 1;
 
     rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
@@ -387,7 +405,8 @@ public class Shooter extends SubsystemBase {
     }
 
     if (isAutoAimMode) {
-      autoSetFlywheelAndHood(calcDistance());
+      // autoSetFlywheelAndHood_LookupTable(calcDistance());
+      autoSetFlywheelAndHood_Equation(calcDistance());
       autoRotateShooter_PowerControl();
 
     } else {
