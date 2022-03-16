@@ -383,7 +383,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putBoolean("isAutoAimMode", isAutoAimMode);
     
     if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
-      rotateEncoder.setPosition(0.0);
+      resetMotorEncoders();
     }
 
     if (isAutoAimMode) {
