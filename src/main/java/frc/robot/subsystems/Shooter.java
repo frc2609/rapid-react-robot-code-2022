@@ -152,9 +152,9 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcDistance() {
-    double cameraHeight = 0.864; // height of camera in meters (from ground)  TODO: Find this height
+    double cameraHeight = 0.9144; // height of camera in meters (from ground)  TODO: Find this height
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
-    double cameraAngleDegrees = 60; // angle of camera in degrees (from horizontal plane)  TODO: Find this angle
+    double cameraAngleDegrees = 26; // angle of camera in degrees (from horizontal plane)  TODO: Find this angle
     double tv = tvEntry.getDouble(0.0);
 
     if (tv <= 0) {
@@ -339,10 +339,9 @@ public class Shooter extends SubsystemBase {
       return;
     }
 
-    if (isAutoAimMode) {
-      rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
-      hoodPIDController.setReference(hoodPos, ControlType.kPosition);
-    }
+
+    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
+    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
     SmartDashboard.putNumber("Auto flywheel RPM (setpoint)", flywheelRpm);
     SmartDashboard.putNumber("Auto hoodPos (setpoint)", hoodPos);
