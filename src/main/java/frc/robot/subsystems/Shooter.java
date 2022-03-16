@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
@@ -8,6 +9,8 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import org.ejml.dense.block.linsol.chol.CholeskyOuterSolver_MT_DDRB;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.*;
@@ -33,6 +36,8 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController hoodPIDController;
   private boolean pov_pressed = false;
   private boolean isAutoAimMode = false;
+  private double kD_LastError = 0.0;
+  private long kD_LastTime = 0;
 
   // temporary variables for testing
   double shooterPosition;
@@ -268,6 +273,8 @@ public class Shooter extends SubsystemBase {
     double isNegative = 1.0;
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
     double currTurretPosition = rotateEncoder.getPosition();
+    long currTime = System.nanoTime();
+    double kD = 0.3;
 
     if (!isValidTarget) {
       rotateMotor.set(0.0);
@@ -299,9 +306,16 @@ public class Shooter extends SubsystemBase {
       }
     }
 
-    rotatePower = tx*kP + frictionPower*isNegative;
+    double rateError = (tx - kD_LastError) / (TimeUnit.NANOSECONDS.toMillis(currTime) - TimeUnit.NANOSECONDS.toMillis(kD_LastTime));
+    SmartDashboard.putNumber("rateError", rateError);
+
+    rotatePower = tx*kP + frictionPower*isNegative + rateError*kD;
+
     rotateMotor.set(rotatePower);
     SmartDashboard.putNumber("Auto Rotate Power (setpoint)", rotatePower);
+
+    kD_LastError = tx;
+    kD_LastTime = currTime;
   }
 
   private void autoSetFlywheelAndHood_LookupTable(double distance) {
