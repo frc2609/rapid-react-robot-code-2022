@@ -26,15 +26,15 @@ import frc.robot.subsystems.ColorSensing;
  */
 public class RobotContainer {
   // joysticks and buttons
-  public final Joystick joystick = new Joystick(Constants.JOYSTICK_PORT);
-  public final JoystickButton climbButton = new JoystickButton(joystick, Constants.X_BUTTON);
-  public final JoystickButton traverseButton = new JoystickButton(joystick, Constants.A_BUTTON);
+  public static final Joystick joystick = new Joystick(Constants.JOYSTICK_PORT);
+  public static final JoystickButton climbButton = new JoystickButton(joystick, Constants.X_BUTTON);
+  public static final JoystickButton traverseButton = new JoystickButton(joystick, Constants.A_BUTTON);
   //public final JoystickButton ejectBallButton = new JoystickButton(driveJoystick, );
 
   // subsystems
-  public final Drive m_driveSubsystem = new Drive(joystick);
-  public final Climber m_climbSubsystem = new Climber(joystick);
-  public final ColorSensing m_colorSubsystem = new ColorSensing();
+  public static final Drive m_driveSubsystem = new Drive(joystick);
+  public static final Climber m_climbSubsystem = new Climber(joystick);
+  public static final ColorSensing m_colorSubsystem = new ColorSensing();
 
   // commands
   // commands go here when read
