@@ -111,8 +111,8 @@ public class Shooter extends SubsystemBase {
 
   public void autoRotateShooter() {
     tx = txEntry.getDouble(0.0);
-    shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.Rotate.MIN_TURRET_POS),
-        Constants.Rotate.MAX_TURRET_POS) / 360;
+    shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.Rotate.MIN_POS),
+        Constants.Rotate.MAX_POS) / 360;
     
     rotatePIDController.setReference(shooterPosition, ControlType.kPosition);
     SmartDashboard.putNumber("Rotate Pos (set)", shooterPosition);
@@ -242,9 +242,24 @@ public class Shooter extends SubsystemBase {
     double rotateSetpoint = 0.0;
     tv = tvEntry.getDouble(0.0);
 
+    double position = rotateEncoder.getPosition();
+    SmartDashboard.putNumber("Rotate Position (actual)", position);
+
     if (tv <= 0.0) {
       rotateMotor.set(rotateSetpoint);
       return;
+    }
+
+    if (position <= Constants.Rotate.MIN_POS) {
+      if (tx < 0.0) {
+        return;
+      }
+    }
+
+    if (position >= Constants.Rotate.MAX_POS) {
+      if (tx > 0.0) {
+        return;
+      }
     }
 
     tx = txEntry.getDouble(0.0);
