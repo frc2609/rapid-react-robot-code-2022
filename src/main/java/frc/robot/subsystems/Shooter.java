@@ -310,17 +310,28 @@ public class Shooter extends SubsystemBase {
     }
 
     int index = (int)Math.ceil(distance);
-    double flywheelRpm = lookupTable.get(index)[0];
-    double hoodPos = lookupTable.get(index)[1];
+    SmartDashboard.putNumber("Auto lookupTable index", index);
+
+    double flywheelRpm;
+    double hoodPos;
+
+    if (lookupTable.containsKey(index)) {
+      flywheelRpm = lookupTable.get(index)[0];
+      hoodPos = lookupTable.get(index)[1];
+      SmartDashboard.putBoolean("Auto lookupTable index exists", true);
+    } else {
+      SmartDashboard.putBoolean("Auto lookupTable index exists", false);
+      return;
+    }
 
     if (isAutoAimMode) {
       rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
       hoodPIDController.setReference(hoodPos, ControlType.kPosition);
     }
 
-    SmartDashboard.putNumber("Auto flywheel RPM", flywheelRpm);
-    SmartDashboard.putNumber("Auto hoodPos", hoodPos);
-    SmartDashboard.putNumber("Auto lookupTable index", index);
+    SmartDashboard.putNumber("Auto flywheel RPM (setpoint)", flywheelRpm);
+    SmartDashboard.putNumber("Auto hoodPos (setpoint)", hoodPos);
+    
     SmartDashboard.putNumber("Auto Hood Position (actual)", hoodEncoder.getPosition());
     SmartDashboard.putNumber("Auto Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
   }
