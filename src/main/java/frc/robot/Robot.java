@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
 
   public void printVersion() {
     Date dt = new Date();
-    SmartDashboard.putString("VERSION DATE:", dt.toString());
+    // SmartDashboard.putString("VERSION DATE:", dt.toString());
     File deployDir = Filesystem.getDeployDirectory();
     String pathToFile = deployDir.getPath() + File.separator + "hash.txt";
     File file = new File(pathToFile);
@@ -133,10 +133,10 @@ public class Robot extends TimedRobot {
     try {
       reader = new Scanner(file);
       String versionHash = reader.nextLine();
-      SmartDashboard.putString("VERSION HASH:", versionHash);
+      // SmartDashboard.putString("VERSION HASH:", versionHash);
       reader.close();
     } catch (FileNotFoundException e) {
-      SmartDashboard.putString("VERSION HASH:", "FNF ERROR");
+      // SmartDashboard.putString("VERSION HASH:", "FNF ERROR");
     }
   }
 }

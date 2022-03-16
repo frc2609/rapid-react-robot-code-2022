@@ -205,7 +205,6 @@ public class Shooter extends SubsystemBase {
     //   flywheelRpm = 1600;
     // }
 
-    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter Set (setpoint rpm)", flywheelRpm);
 
     rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
@@ -239,7 +238,6 @@ public class Shooter extends SubsystemBase {
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
     SmartDashboard.putNumber("Hood Position (setpoint)", hoodPos);
-    SmartDashboard.putNumber("Hood Position (actual)", hoodEncoder.getPosition());
   }
 
   private void manualSetRotatePower() {
@@ -247,22 +245,20 @@ public class Shooter extends SubsystemBase {
 
     val = (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
 
-    SmartDashboard.putNumber("Rotate Velocity (setpoint)", val);
-    SmartDashboard.putNumber("Rotate Velocity (actual)", rotateEncoder.getVelocity());
+    SmartDashboard.putNumber("Rotate Power (setpoint)", val);
 
     rotateMotor.set(val / 4);
   }
 
-  private void manualSetRotatePosition() {  // deprecated for now
-    double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
+  // private void manualSetRotatePosition() {  // deprecated for now
+  //   double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
 
-    rotatePos += (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
+  //   rotatePos += (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
 
-    rotatePIDController.setReference(rotatePos, ControlType.kPosition);
+  //   rotatePIDController.setReference(rotatePos, ControlType.kPosition);
 
-    SmartDashboard.putNumber("Rotate Position (setpoint)", rotatePos);
-    SmartDashboard.putNumber("Rotate Position (actual)", rotateEncoder.getPosition());
-  }
+  //   SmartDashboard.putNumber("Rotate Position (setpoint)", rotatePos);
+  // }
 //#endregion
 
   private void autoRotateShooter_PowerControl() {
@@ -272,8 +268,6 @@ public class Shooter extends SubsystemBase {
     double isNegative = 1.0;
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
     double currTurretPosition = rotateEncoder.getPosition();
-
-    SmartDashboard.putNumber("Auto Rotate Position (actual)", currTurretPosition);
 
     if (!isValidTarget) {
       rotateMotor.set(0.0);
@@ -336,9 +330,6 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Auto flywheel RPM (setpoint)", flywheelRpm);
     SmartDashboard.putNumber("Auto hoodPos (setpoint)", hoodPos);
-    
-    SmartDashboard.putNumber("Auto Hood Position (actual)", hoodEncoder.getPosition());
-    SmartDashboard.putNumber("Auto Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
   }
 
   private void autoSetFlywheelAndHood_Equation(double distance) {
@@ -349,14 +340,11 @@ public class Shooter extends SubsystemBase {
     double flywheelRpm = 1*distance*distance + 100*distance + 3100;
     double hoodPos = Math.min(Math.max(0.003*distance*distance + 0.03*distance - 0.2, Constants.Hood.MIN_POS), Constants.Hood.MAX_POS);
 
-    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
-    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
+    // rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
+    // hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
     SmartDashboard.putNumber("Auto flywheel RPM (setpoint)", flywheelRpm);
     SmartDashboard.putNumber("Auto hoodPos (setpoint)", hoodPos);
-    
-    SmartDashboard.putNumber("Auto Hood Position (actual)", hoodEncoder.getPosition());
-    SmartDashboard.putNumber("Auto Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
   }
 
   @Override
@@ -389,5 +377,9 @@ public class Shooter extends SubsystemBase {
       manualSetHoodPos();
       manualSetRotatePower();
     }
+
+    SmartDashboard.putNumber("Hood Position (actual)", hoodEncoder.getPosition());
+    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
+    SmartDashboard.putNumber("Rotate Position (actual)", rotateEncoder.getPosition());
   }
 }
