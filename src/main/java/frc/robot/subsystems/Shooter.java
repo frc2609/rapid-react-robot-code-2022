@@ -94,11 +94,11 @@ public class Shooter extends SubsystemBase {
     hoodPIDController.setOutputRange(Constants.Hood.minPIDOutput,
         Constants.Hood.maxPIDOutput);
 
-    stopMotors();
+    stopAllMotors();
     resetMotorEncoders();
   }
 
-  public void stopMotors() {
+  public void stopAllMotors() {
     rightFlywheelMotor.set(0.0);
     rotateMotor.set(0.0);
     hoodMotor.set(0.0);
@@ -109,7 +109,7 @@ public class Shooter extends SubsystemBase {
     rotateEncoder.setPosition(0.0);
   }
 
-  public void autoRotateShooter() {
+  public void autoRotateShooter_PositionControl() {
     tx = txEntry.getDouble(0.0);
     shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.Rotate.MIN_POS),
         Constants.Rotate.MAX_POS) / 360;
@@ -238,7 +238,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Rotate Position (actual)", rotateEncoder.getPosition());
   }
 
-  private void autoRotateShooterV2() {
+  private void autoRotateShooter_PercentOutputControl() {
     double rotateSetpoint = 0.0;
     tv = tvEntry.getDouble(0.0);
 
@@ -283,7 +283,7 @@ public class Shooter extends SubsystemBase {
     manualSetFlywheelRpm();
     manualSetHoodPos();
     // manualSetRotateVelocity();
-    autoRotateShooterV2();
+    autoRotateShooter_PercentOutputControl();
     // manualSetRotatePosition();
     calcDistance();
   }
