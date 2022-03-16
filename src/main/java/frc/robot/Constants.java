@@ -91,7 +91,7 @@ public final class Constants {
         public static final double feedForwardPIDConstant = 0.0;
         public static final double maxPIDOutput = 1.0;
         public static final double minPIDOutput = -1.0;
-        public static final double MAX_POS = 2.7;
+        public static final double MAX_POS = 2.0;
         public static final double MIN_POS = 0.0;
     }
 
