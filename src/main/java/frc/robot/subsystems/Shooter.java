@@ -278,7 +278,7 @@ public class Shooter extends SubsystemBase {
 
   private void autoRotateShooter_PowerControl() {
     double kP = 0.01333;
-    double frictionPower = 0.0;  // TODO: Need to figure out what this would be
+    double frictionPower = 0.013;  // 0.016 in + direction, -0.013 in - direction
     double rotatePower = 0.0;
     double isNegative = 1.0;
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
@@ -353,11 +353,11 @@ public class Shooter extends SubsystemBase {
 
   private void testGetFrictionPower() {
     if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
-      tempFrictionPower += 0.01;
+      tempFrictionPower += 0.001;
     }
 
     if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
-      tempFrictionPower -= 0.01;
+      tempFrictionPower -= 0.001;
     }
 
     rotateMotor.set(tempFrictionPower);
@@ -367,31 +367,31 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // Run testGetFrictionPower() first and set frictionPower accordingly
-    testGetFrictionPower();
+    // testGetFrictionPower();
 
-    // if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
-    //   if (isAutoAimMode) {
-    //     isAutoAimMode = false;
-    //     turnLimelightOff();
-    //   } else {
-    //     isAutoAimMode = true;
-    //     turnLimelightOn();
-    //   }
-    // }
+    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
+      if (isAutoAimMode) {
+        isAutoAimMode = false;
+        turnLimelightOff();
+      } else {
+        isAutoAimMode = true;
+        turnLimelightOn();
+      }
+    }
 
-    // SmartDashboard.putBoolean("isAutoAimMode", isAutoAimMode);
+    SmartDashboard.putBoolean("isAutoAimMode", isAutoAimMode);
     
-    // if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
-    //   rotateEncoder.setPosition(0.0);
-    // }
+    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
+      rotateEncoder.setPosition(0.0);
+    }
 
-    // if (isAutoAimMode) {
-    //   autoSetFlywheelAndHood(calcDistance());
-    //   autoRotateShooter_PowerControl();
-    // } else {
-    //   manualSetFlywheelRpm();
-    //   manualSetHoodPos();
-    //   manualSetRotatePower();
-    // }
+    if (isAutoAimMode) {
+      // autoSetFlywheelAndHood(calcDistance());
+      // autoRotateShooter_PowerControl();
+    } else {
+      manualSetFlywheelRpm();
+      manualSetHoodPos();
+      manualSetRotatePower();
+    }
   }
 }
