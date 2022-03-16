@@ -126,9 +126,6 @@ public class Shooter extends SubsystemBase {
     lookupTable.put(24, new Double[] {5076.923076923077, 1.3846153846153846});
     lookupTable.put(25, new Double[] {5138.461538461539, 1.453846153846154});
     lookupTable.put(26, new Double[] {5200.0, 1.5230769230769232});
-    
-    
-
   }
 
   public void stopAllMotors() {
@@ -155,9 +152,9 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcDistance() {
-    double cameraHeight = 0.9144; // height of camera in meters (from ground)  TODO: Find this height
+    double cameraHeight = 0.9017; // height of camera in meters (from ground)  TODO: Find this height
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
-    double cameraAngleDegrees = 26; // angle of camera in degrees (from horizontal plane)  TODO: Find this angle
+    double cameraAngleDegrees = 24.25; // angle of camera in degrees (from horizontal plane)  TODO: Find this angle
     double tv = tvEntry.getDouble(0.0);
 
     if (tv <= 0) {
