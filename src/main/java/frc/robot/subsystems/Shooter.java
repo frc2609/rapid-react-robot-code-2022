@@ -264,17 +264,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Rotate Position (actual)", rotateEncoder.getPosition());
   }
 //#endregion
-  
-  public void autoRotateShooter_PositionControl() {
-    // This code is untested
-    double tx = txEntry.getDouble(0.0);
-    shooterPosition = Math.min(Math.max(shooterPosition + tx, Constants.Rotate.MIN_POS),
-        Constants.Rotate.MAX_POS) / 360;
-    
-    rotatePIDController.setReference(shooterPosition, ControlType.kPosition);
-    SmartDashboard.putNumber("Rotate Pos (set)", shooterPosition);
-    SmartDashboard.putNumber("Rotate Pos (actual)", rotateEncoder.getPosition());
-  }
 
   private void autoRotateShooter_PowerControl() {
     double kP = 0.011;
@@ -368,19 +357,6 @@ public class Shooter extends SubsystemBase {
     
     SmartDashboard.putNumber("Auto Hood Position (actual)", hoodEncoder.getPosition());
     SmartDashboard.putNumber("Auto Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
-  }
-
-  private void testGetFrictionPower() {
-    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
-      tempFrictionPower += 0.001;
-    }
-
-    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
-      tempFrictionPower -= 0.001;
-    }
-
-    rotateMotor.set(tempFrictionPower);
-    SmartDashboard.putNumber("TEST Friction power", tempFrictionPower);
   }
 
   @Override
