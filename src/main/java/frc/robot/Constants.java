@@ -100,7 +100,7 @@ public final class Constants {
         public static final double integralPIDConstant = 0.0; //0.0002;
         public static final double derivativePIDConstant = 0.0;
         public static final double integralPIDZone = 5.0;
-        public static final double FeedForwardPIDConstant = 0.000195; //0.000183;
+        public static final double FeedForwardPIDConstant = 0.000186; //0.000195; //0.000183;
         public static final double maxPIDOutput = 1.0;
         public static final double minPIDOutput = 0.0;
     }
