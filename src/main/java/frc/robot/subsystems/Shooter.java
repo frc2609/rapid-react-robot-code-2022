@@ -267,8 +267,8 @@ public class Shooter extends SubsystemBase {
 //#endregion
 
   private void autoRotateShooter_PowerControl() {
-    double kP = 0.011;
-    double frictionPower = 0; //0.004;  // 0.016 in + direction, -0.013 in - direction
+    double kP = 0.02; // 0.017
+    double frictionPower = 0.004; //0.004;  // 0.016 in + direction, -0.013 in - direction
     double rotatePower = 0.0;
     double isNegative = 1.0;
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
