@@ -25,10 +25,10 @@ public class Drive extends SubsystemBase {
 
   public Drive(Joystick driveJoystick) {
     m_driveJoystick = driveJoystick;
-    m_leftFrontMotor.setIdleMode(IdleMode.kCoast);
-    m_leftRearMotor.setIdleMode(IdleMode.kCoast);
-    m_rightFrontMotor.setIdleMode(IdleMode.kCoast);
-    m_rightRearMotor.setIdleMode(IdleMode.kCoast);
+    // m_leftFrontMotor.setIdleMode(IdleMode.kCoast);
+    // m_leftRearMotor.setIdleMode(IdleMode.kCoast);
+    // m_rightFrontMotor.setIdleMode(IdleMode.kCoast);
+    // m_rightRearMotor.setIdleMode(IdleMode.kCoast);
   }
 
   @Override
