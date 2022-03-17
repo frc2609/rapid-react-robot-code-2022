@@ -54,6 +54,15 @@ Directional Pad (Manual Shooter Control):
 
 - Right: Increase shooter speed by 10
 
-ABXY (TODO)
+Face Buttons (ABXY):
+
+- A: Spin intake and lower belt (Intake Ball)
+
+- B: Spin lower and upper belt (Shoot Ball)
+
+- X:
+
+- Y:
+
 - one zeros encoders
 - one enables/disables auto shooting
