@@ -60,29 +60,29 @@ public class Shooter extends SubsystemBase {
   }
 
   private void setPidValues() {
-    rightFlywheelPIDController.setP(Constants.Flywheel.proportialPIDConstant);
-    rightFlywheelPIDController.setI(Constants.Flywheel.integralPIDConstant);
-    rightFlywheelPIDController.setD(Constants.Flywheel.derivativePIDConstant);
-    rightFlywheelPIDController.setIZone(Constants.Flywheel.integralPIDZone);
-    rightFlywheelPIDController.setFF(Constants.Flywheel.FeedForwardPIDConstant);
-    rightFlywheelPIDController.setOutputRange(Constants.Flywheel.minPIDOutput,
-        Constants.Flywheel.maxPIDOutput);
+    rightFlywheelPIDController.setP(Constants.Flywheel.PROPORTIONAL);
+    rightFlywheelPIDController.setI(Constants.Flywheel.INTEGRAL);
+    rightFlywheelPIDController.setD(Constants.Flywheel.DERIVATIVE);
+    rightFlywheelPIDController.setIZone(Constants.Flywheel.INTEGRAL_ZONE);
+    rightFlywheelPIDController.setFF(Constants.Flywheel.FEED_FORWARD);
+    rightFlywheelPIDController.setOutputRange(Constants.Flywheel.MIN_OUTPUT,
+        Constants.Flywheel.MAX_OUTPUT);
 
-    rotatePIDController.setP(Constants.Rotate.proportialPIDConstant);
-    rotatePIDController.setI(Constants.Rotate.integralPIDConstant);
-    rotatePIDController.setD(Constants.Rotate.derivativePIDConstant);
-    rotatePIDController.setIZone(Constants.Rotate.integralPIDConstant);
-    rotatePIDController.setFF(Constants.Rotate.feedForwardPIDConstant);
-    rotatePIDController.setOutputRange(Constants.Rotate.minPIDOutput,
-        Constants.Rotate.maxPIDOutput);
+    rotatePIDController.setP(Constants.Rotate.PROPORTIONAL);
+    rotatePIDController.setI(Constants.Rotate.INTEGRAL);
+    rotatePIDController.setD(Constants.Rotate.DERIVATIVE);
+    rotatePIDController.setIZone(Constants.Rotate.INTEGRAL);
+    rotatePIDController.setFF(Constants.Rotate.FEED_FORWARD);
+    rotatePIDController.setOutputRange(Constants.Rotate.MIN_OUTPUT,
+        Constants.Rotate.MAX_OUTPUT);
 
-    hoodPIDController.setP(Constants.Hood.proportialPIDConstant);
-    hoodPIDController.setI(Constants.Hood.integralPIDConstant);
-    hoodPIDController.setD(Constants.Hood.derivativePIDConstant);
-    hoodPIDController.setIZone(Constants.Hood.integralPIDConstant);
-    hoodPIDController.setFF(Constants.Hood.feedForwardPIDConstant);
-    hoodPIDController.setOutputRange(Constants.Hood.minPIDOutput,
-        Constants.Hood.maxPIDOutput);
+    hoodPIDController.setP(Constants.Hood.PROPORTIONAL);
+    hoodPIDController.setI(Constants.Hood.INTEGRAL);
+    hoodPIDController.setD(Constants.Hood.DERIVATIVE);
+    hoodPIDController.setIZone(Constants.Hood.INTEGRAL);
+    hoodPIDController.setFF(Constants.Hood.FEED_FORWARD);
+    hoodPIDController.setOutputRange(Constants.Hood.MIN_OUTPUT,
+        Constants.Hood.MAX_OUTPUT);
   }
 
   public void stopAllMotors() {
@@ -249,7 +249,9 @@ public class Shooter extends SubsystemBase {
     kD_LastTime = currTime;
   }
 
-  private void autoSetFlywheelAndHood_Equation(double distance) {
+  private void autoSetFlywheelAndHood_Equation() {
+    double distance = calcDistance();
+
     if (distance < 0) {
       return;
     }
@@ -265,38 +267,43 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Auto hoodPos (setpoint)", hoodPos);
   }
 
+  public void autoAim() {
+    autoRotateShooter_PowerControl();
+    autoSetFlywheelAndHood_Equation();
+  }
+
   @Override
   public void periodic() {
-    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
-      if (isAutoAimMode) {
-        isAutoAimMode = false;
-        turnLimelightOff();
-        hoodPos = hoodMotor.getEncoder().getPosition();
-        rotatePos = rotateMotor.getEncoder().getPosition();
-      } else {
-        isAutoAimMode = true;
-        turnLimelightOn();
-      }
-    }
+  //   if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
+  //     if (isAutoAimMode) {
+  //       isAutoAimMode = false;
+  //       turnLimelightOff();
+  //       hoodPos = hoodMotor.getEncoder().getPosition();
+  //       rotatePos = rotateMotor.getEncoder().getPosition();
+  //     } else {
+  //       isAutoAimMode = true;
+  //       turnLimelightOn();
+  //     }
+  //   }
 
-    SmartDashboard.putBoolean("isAutoAimMode", isAutoAimMode);
+  //   SmartDashboard.putBoolean("isAutoAimMode", isAutoAimMode);
     
-    if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
-      resetMotorEncoders();
-    }
+  //   if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
+  //     resetMotorEncoders();
+  //   }
 
-    if (isAutoAimMode) {
-      autoSetFlywheelAndHood_Equation(calcDistance());
-      autoRotateShooter_PowerControl();
+  //   if (isAutoAimMode) {
+  //     autoSetFlywheelAndHood_Equation();
+  //     autoRotateShooter_PowerControl();
 
-    } else {
-      manualSetFlywheelRpm();
-      manualSetHoodPos();
-      manualSetRotatePower();
-    }
+  //   } else {
+  //     manualSetFlywheelRpm();
+  //     manualSetHoodPos();
+  //     manualSetRotatePower();
+  //   }
 
-    SmartDashboard.putNumber("Hood Position (actual)", hoodMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("Flywheel RPM (actual)", rightFlywheelMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Rotate Position (actual)", rotateMotor.getEncoder().getPosition());
+  //   SmartDashboard.putNumber("Hood Position (actual)", hoodMotor.getEncoder().getPosition());
+  //   SmartDashboard.putNumber("Flywheel RPM (actual)", rightFlywheelMotor.getEncoder().getVelocity());
+  //   SmartDashboard.putNumber("Rotate Position (actual)", rotateMotor.getEncoder().getPosition());
   }
 }

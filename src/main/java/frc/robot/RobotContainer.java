@@ -8,17 +8,19 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
-//import frc.robot.commands.Traverse;
-//import frc.robot.commands.TraverseBack;
 import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.Logitech;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants;
 
 //import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
-//import frc.robot.subsystems.ColorSensing;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
+
+import frc.robot.commands.AutoAim;
+import frc.robot.commands.FeedBall;
+import frc.robot.commands.IntakeBall;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -31,20 +33,20 @@ import frc.robot.subsystems.Intake;
  */
 public class RobotContainer {
   // joysticks and buttons
-  public final Joystick joystick = new Joystick(Logitech.JOYSTICK_PORT);
+  // TODO: Change to Xbox and add in Operator control of intake and shooter
+  public final Joystick joystick = new Joystick(Constants.Logitech.JOYSTICK_PORT);
+  public final JoystickButton intakeButton = new JoystickButton(joystick, Constants.Logitech.BUTTON_1);
+  public final JoystickButton feedButton = new JoystickButton(joystick, Constants.Logitech.BUTTON_2);
   // public final JoystickButton climbButton = new JoystickButton(joystick,
   // Constants.X_BUTTON);
   // public final JoystickButton traverseButton = new JoystickButton(joystick,
   // Constants.A_BUTTON);
-  // public final JoystickButton ejectBallButton = new
-  // JoystickButton(driveJoystick, );
 
   // subsystems
-  public final Drive m_driveSubsystem = new Drive(joystick);
+  private final Drive m_driveSubsystem = new Drive(joystick);
   // public final Climber m_climbSubsystem = new Climber(joystick);
-  // public final ColorSensing m_colorSubsystem = new ColorSensing();
-  public final Shooter m_shooterSubsystem = new Shooter(joystick);
-  public final Intake m_intakeSubsystem = new Intake(joystick);
+  private final Shooter m_shooterSubsystem = new Shooter(joystick);
+  private final Intake m_intakeSubsystem = new Intake(joystick);
 
   // commands
   // commands go here when read
@@ -55,6 +57,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(joystick.getRawAxis(Constants.Logitech.RIGHT_STICK_Y_AXIS))));
   }
 
   /**
@@ -66,6 +69,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    intakeButton.whenHeld(new IntakeBall(m_intakeSubsystem));
+    feedButton.whenHeld(new FeedBall(m_intakeSubsystem));
     // climbButton.whenPressed(new Traverse(m_climbSubsystem, driveJoystick));
     // traverseButton.whenPressed(new TraverseBack(m_climbSubsystem,
     // driveJoystick));

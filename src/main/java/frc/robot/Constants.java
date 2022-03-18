@@ -71,37 +71,44 @@ public final class Constants {
     }
 
     public final class Rotate {
-        public static final double proportialPIDConstant = 0.2; //0.11
-        public static final double integralPIDConstant = 0.0; //0.0000000005;
-        public static final double derivativePIDConstant = 0.0;
-        public static final double integralPIDZone = 1.0;
-        public static final double feedForwardPIDConstant = 0.0025;
-        public static final double maxPIDOutput = 1.0;
-        public static final double minPIDOutput = -1.0;
+        public static final double PROPORTIONAL = 0.2; //0.11
+        public static final double INTEGRAL = 0.0; //0.0000000005;
+        public static final double DERIVATIVE = 0.0;
+        public static final double INTEGRAL_ZONE = 1.0;
+        public static final double FEED_FORWARD = 0.0025;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = -1.0;
         public static final int MAX_POS = 20;
         public static final int MIN_POS = -20;
         public static final double TOLERANCE = 1;  // How much the limelight can be off in x-direction (degrees)
     }
 
     public final class Hood {
-        public static final double proportialPIDConstant = 1;
-        public static final double integralPIDConstant = 0.0002;
-        public static final double derivativePIDConstant = 0.0;
-        public static final double integralPIDZone = 0.0;
-        public static final double feedForwardPIDConstant = 0.0;
-        public static final double maxPIDOutput = 1.0;
-        public static final double minPIDOutput = -1.0;
+        public static final double PROPORTIONAL = 1;
+        public static final double INTEGRAL = 0.0002;
+        public static final double DERIVATIVE = 0.0;
+        public static final double INTEGRAL_ZONE = 0.0;
+        public static final double FEED_FORWARD = 0.0;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = -1.0;
         public static final double MAX_POS = 2.0;
         public static final double MIN_POS = 0.0;
     }
 
     public final class Flywheel {
-        public static final double proportialPIDConstant = 0.00006; // 0.00004;
-        public static final double integralPIDConstant = 0.0; //0.0002;
-        public static final double derivativePIDConstant = 0.0;
-        public static final double integralPIDZone = 5.0;
-        public static final double FeedForwardPIDConstant = 0.000186; //0.000195; //0.000183;
-        public static final double maxPIDOutput = 1.0;
-        public static final double minPIDOutput = 0.0;
+        public static final double PROPORTIONAL = 0.00006; // 0.00004;
+        public static final double INTEGRAL = 0.0; //0.0002;
+        public static final double DERIVATIVE = 0.0;
+        public static final double INTEGRAL_ZONE = 5.0;
+        public static final double FEED_FORWARD = 0.000186; //0.000195; //0.000183;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = 0.0;
+    }
+
+    public final class Motors {
+        public static final double INTAKE_SPEED = 0.5;
+        public static final double INTAKE_LIFT_SPEED = 0.25;
+        public static final double BELT_SPEED = 1;
+        public static final double STOP = 0;
     }
 }
