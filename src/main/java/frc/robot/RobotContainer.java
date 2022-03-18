@@ -57,9 +57,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem.manualDrive(joystick.getRawAxis(Constants.Logitech.LEFT_STICK_X_AXIS), joystick.getRawAxis(Constants.Logitech.LEFT_STICK_Y_AXIS))));
-    m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(joystick.getRawAxis(Constants.Logitech.RIGHT_STICK_Y_AXIS))));
-    m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(joystick)));
+    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem.manualDrive(joystick.getRawAxis(Constants.Logitech.LEFT_STICK_X_AXIS), joystick.getRawAxis(Constants.Logitech.LEFT_STICK_Y_AXIS)), m_driveSubsystem));
+    m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(joystick.getRawAxis(Constants.Logitech.RIGHT_STICK_Y_AXIS)), m_intakeSubsystem));
+    m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(joystick), m_shooterSubsystem));
   }
 
   /**
