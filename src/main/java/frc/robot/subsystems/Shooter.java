@@ -162,19 +162,19 @@ public class Shooter extends SubsystemBase {
 
     if (!pov_pressed) {
       switch (pov) {
-        case Constants.Logitech.POV_UP_BUTTON:
+        case Constants.Xbox.POV_UP_BUTTON:
           pov_pressed = true;
           autoHoodPosTrim += 0.1;
           break;
-        case Constants.Logitech.POV_DOWN_BUTTON:
+        case Constants.Xbox.POV_DOWN_BUTTON:
           pov_pressed = true;
           autoHoodPosTrim -= 0.1;
           break;
-        case Constants.Logitech.POV_LEFT_BUTTON:
+        case Constants.Xbox.POV_LEFT_BUTTON:
           pov_pressed = true;
           autoFlywheelRpmTrim -= 100;
           break;
-        case Constants.Logitech.POV_RIGHT_BUTTON:
+        case Constants.Xbox.POV_RIGHT_BUTTON:
           pov_pressed = true;
           autoFlywheelRpmTrim += 100;
           break;
@@ -264,11 +264,11 @@ public class Shooter extends SubsystemBase {
 
     if (!pov_pressed) {
       switch (pov) {
-        case Constants.Logitech.POV_RIGHT_BUTTON:
+        case Constants.Xbox.POV_RIGHT_BUTTON:
           pov_pressed = true;
           manualFlywheelRpm += 200;
           break;
-        case Constants.Logitech.POV_LEFT_BUTTON:
+        case Constants.Xbox.POV_LEFT_BUTTON:
           pov_pressed = true;
           manualFlywheelRpm -= 200;
           break;
@@ -291,11 +291,11 @@ public class Shooter extends SubsystemBase {
 
     if (!pov_pressed) {
       switch (pov) {
-        case Constants.Logitech.POV_UP_BUTTON:
+        case Constants.Xbox.POV_UP_BUTTON:
           pov_pressed = true;
           manualHoodPos += 0.1;
           break;
-        case Constants.Logitech.POV_DOWN_BUTTON:
+        case Constants.Xbox.POV_DOWN_BUTTON:
           pov_pressed = true;
           manualHoodPos -= 0.1;
           break;
@@ -313,8 +313,8 @@ public class Shooter extends SubsystemBase {
   }
 
   private void manualSetRotatePower(Joystick stick) {
-    double val = stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
-    val = (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
+    double val = stick.getRawAxis(Constants.Xbox.RIGHT_STICK_X_AXIS);
+    val = (Math.abs(val) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
 
     SmartDashboard.putNumber("Manual Rotate Power", val);
 

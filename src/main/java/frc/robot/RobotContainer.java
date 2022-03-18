@@ -32,16 +32,11 @@ import frc.robot.commands.IntakeBall;
  */
 public class RobotContainer {
   // joysticks and buttons
-  // TODO: Change to Xbox and add in Operator control of intake and shooter
-  public final Joystick joystick = new Joystick(Constants.Logitech.JOYSTICK_PORT);
-  public final JoystickButton intakeButton = new JoystickButton(joystick, Constants.Logitech.BUTTON_1);
-  public final JoystickButton feedButton = new JoystickButton(joystick, Constants.Logitech.BUTTON_2);
-  public final JoystickButton autoAimButton = new JoystickButton(joystick, Constants.Logitech.BUTTON_4);
-  // public final JoystickButton climbButton = new JoystickButton(joystick,
-  // Constants.X_BUTTON);
-  // public final JoystickButton traverseButton = new JoystickButton(joystick,
-  // Constants.A_BUTTON);
-
+  public final Joystick driveJoystick = new Joystick(Constants.Xbox.DRIVER_PORT);
+  public final Joystick operatorJoystick = new Joystick(Constants.Xbox.OPERATOR_PORT);
+  public final JoystickButton intakeButton = new JoystickButton(driveJoystick, Constants.Xbox.A_BUTTON);
+  public final JoystickButton feedButton = new JoystickButton(operatorJoystick, Constants.Xbox.B_BUTTON);
+  public final JoystickButton autoAimButton = new JoystickButton(operatorJoystick, Constants.Xbox.A_BUTTON);
   // subsystems
   private final Drive m_driveSubsystem = new Drive();
   // public final Climber m_climbSubsystem = new Climber(joystick);
@@ -57,9 +52,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem.manualDrive(joystick.getRawAxis(Constants.Logitech.LEFT_STICK_X_AXIS), joystick.getRawAxis(Constants.Logitech.LEFT_STICK_Y_AXIS)), m_driveSubsystem));
-    m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(-joystick.getRawAxis(Constants.Logitech.RIGHT_STICK_Y_AXIS)), m_intakeSubsystem));
-    m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(joystick), m_shooterSubsystem));
+    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem.manualDrive(driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS)), m_driveSubsystem));
+    m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(-driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS)), m_intakeSubsystem));
+    m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(operatorJoystick), m_shooterSubsystem));
   }
 
   /**
@@ -73,10 +68,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     intakeButton.whenHeld(new IntakeBall(m_intakeSubsystem));
     feedButton.whenHeld(new FeedBall(m_intakeSubsystem));
-    autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem, joystick));
-    // climbButton.whenPressed(new Traverse(m_climbSubsystem, driveJoystick));
-    // traverseButton.whenPressed(new TraverseBack(m_climbSubsystem,
-    // driveJoystick));
+    autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem, operatorJoystick));
   }
 
   /**
