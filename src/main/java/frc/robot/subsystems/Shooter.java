@@ -60,6 +60,44 @@ public class Shooter extends SubsystemBase {
     resetMotorEncoders();
   }
 
+  public void autoAim(Joystick stick) {
+    trimAdjust(stick);
+    autoRotate();
+    autoFlywheelAndHood();
+  }
+
+  public void manualAim(Joystick stick) {
+    manualSetFlywheelRpm(stick);
+    manualSetHoodPos(stick);
+    manualSetRotatePower(stick);
+  }
+
+  public void toggleAutoAimMode() {
+    if (isAutoAimMode) {
+      isAutoAimMode = false;
+      turnLimelightOff();
+      manualHoodPos = hoodMotor.getEncoder().getPosition();
+    } else {
+      isAutoAimMode = true;
+      turnLimelightOn();
+    }
+  }
+
+  public boolean isAutoAim() {
+    return isAutoAimMode;
+  }
+
+  public void stopAllMotors() {
+    rightFlywheelMotor.set(0.0);
+    rotateMotor.set(0.0);
+    hoodMotor.set(0.0);
+  }
+
+  public void resetMotorEncoders() {
+    hoodMotor.getEncoder().setPosition(0.0);
+    rotateMotor.getEncoder().setPosition(0.0);
+  }
+
   private void setPidValues() {
     rightFlywheelPIDController.setP(Constants.Flywheel.PROPORTIONAL);
     rightFlywheelPIDController.setI(Constants.Flywheel.INTEGRAL);
@@ -86,17 +124,6 @@ public class Shooter extends SubsystemBase {
         Constants.Hood.MAX_OUTPUT);
   }
 
-  public void stopAllMotors() {
-    rightFlywheelMotor.set(0.0);
-    rotateMotor.set(0.0);
-    hoodMotor.set(0.0);
-  }
-
-  public void resetMotorEncoders() {
-    hoodMotor.getEncoder().setPosition(0.0);
-    rotateMotor.getEncoder().setPosition(0.0);
-  }
-
   private void turnLimelightOff() {
     table.getEntry("ledMode").setNumber(1); // force LEDs off
   }
@@ -112,94 +139,25 @@ public class Shooter extends SubsystemBase {
     double tv = tvEntry.getDouble(0.0);
 
     if (tv <= 0) {
-      SmartDashboard.putBoolean("valid limelight target", false);
+      SmartDashboard.putBoolean("Valid Limelight Target", false);
       return -1.0;
     }
 
-    SmartDashboard.putBoolean("valid limelight target", true);
+    SmartDashboard.putBoolean("Valid Limelight Target", true);
 
     double ty = tyEntry.getDouble(0.0);
-    SmartDashboard.putNumber("ty", ty);
 
     double distance = 3.281 * (tapeHeight - cameraHeight)  // 3.281 feet per meter
         / Math.tan(Utils.degToRad(cameraAngleDegrees) + Utils.degToRad(ty));
 
-    SmartDashboard.putNumber("limelight distance (ft)", distance);
+    SmartDashboard.putNumber("Limelight Distance (ft)", distance);
 
     return distance;
   }
 
-  private void autoRotateShooter_PowerControl() {
-    double kP = 0.02; // 0.017
-    double frictionPower = 0.004; //0.004;  // 0.016 in + direction, -0.013 in - direction
-    double rotatePower = 0.0;
-    double isNegative = 1.0;
-    boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
-    double currTurretPosition = rotateMotor.getEncoder().getPosition();
-    long currTime = System.nanoTime();
-    double kD = 0.3;
+  // automatic shooter control methods
 
-    if (!isValidTarget) {
-      rotateMotor.set(0.0);
-      return;
-    }
-
-    double tx = txEntry.getDouble(0.0);
-    SmartDashboard.putNumber("tx", tx);
-
-
-    if (Math.abs(tx) < Constants.Rotate.TOLERANCE) { 
-      rotateMotor.set(0.0);
-      return;
-    }
-
-    if (tx < 0.0) {
-      isNegative = -1.0;
-      if (currTurretPosition <= Constants.Rotate.MIN_POS) {
-        rotateMotor.set(0.0);
-        return;
-      }
-    }
-
-    if (tx > 0.0) {
-      isNegative = 1.0;
-      if (currTurretPosition >= Constants.Rotate.MAX_POS) {
-        rotateMotor.set(0.0);
-        return;
-      }
-    }
-
-    double rateError = (tx - kD_LastError) / (TimeUnit.NANOSECONDS.toMillis(currTime) - TimeUnit.NANOSECONDS.toMillis(kD_LastTime));
-    SmartDashboard.putNumber("rateError", rateError);
-
-    rotatePower = tx*kP + frictionPower*isNegative + rateError*kD;
-
-    rotateMotor.set(rotatePower);
-    SmartDashboard.putNumber("Auto Rotate Power (setpoint)", rotatePower);
-
-    kD_LastError = tx;
-    kD_LastTime = currTime;
-  }
-
-  private void autoSetFlywheelAndHood_Equation() {
-    double distance = calcDistance();
-
-    if (distance < 0) {
-      return;
-    }
-    distance = Math.round(distance);
-
-    double flywheelRpm = 1*distance*distance + 100*distance + 3000 + autoFlywheelRpmTrim;
-    double hoodPos = Utils.clamp(0.003*distance*distance + 0.03*distance - 0.2 + autoHoodPosTrim, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
-
-    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
-    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
-
-    SmartDashboard.putNumber("Auto flywheel RPM (setpoint)", flywheelRpm);
-    SmartDashboard.putNumber("Auto hoodPos (setpoint)", hoodPos);
-  }
-
-  private void trim(Joystick stick) {
+  private void trimAdjust(Joystick stick) {
     int pov = stick.getPOV();
 
     if (!pov_pressed) {
@@ -230,26 +188,76 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public void autoAim(Joystick stick) {
-    trim(stick);
-    autoRotateShooter_PowerControl();
-    autoSetFlywheelAndHood_Equation();
-  }
+  private void autoRotate() {
+    double kP = 0.02; // 0.017
+    double frictionPower = 0.004; //0.004;  // 0.016 in + direction, -0.013 in - direction
+    double rotatePower = 0.0;
+    double isNegative = 1.0;
+    boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
+    double currTurretPosition = rotateMotor.getEncoder().getPosition();
+    long currTime = System.nanoTime();
+    double kD = 0.3;
 
-  public boolean isAutoAim() {
-    return isAutoAimMode;
-  }
-
-  public void toggleAutoAimMode() {
-    if (isAutoAimMode) {
-      isAutoAimMode = false;
-      turnLimelightOff();
-      manualHoodPos = hoodMotor.getEncoder().getPosition();
-    } else {
-      isAutoAimMode = true;
-      turnLimelightOn();
+    if (!isValidTarget) {
+      rotateMotor.set(0.0);
+      return;
     }
+
+    double tx = txEntry.getDouble(0.0);
+    SmartDashboard.putNumber("tx", tx);
+
+    if (Math.abs(tx) < Constants.Rotate.TOLERANCE) { 
+      rotateMotor.set(0.0);
+      return;
+    }
+
+    if (tx < 0.0) {
+      isNegative = -1.0;
+      if (currTurretPosition <= Constants.Rotate.MIN_POS) {
+        rotateMotor.set(0.0);
+        return;
+      }
+    }
+
+    if (tx > 0.0) {
+      isNegative = 1.0;
+      if (currTurretPosition >= Constants.Rotate.MAX_POS) {
+        rotateMotor.set(0.0);
+        return;
+      }
+    }
+
+    double rateError = (tx - kD_LastError) / (TimeUnit.NANOSECONDS.toMillis(currTime) - TimeUnit.NANOSECONDS.toMillis(kD_LastTime));
+    //SmartDashboard.putNumber("rateError", rateError);
+
+    rotatePower = tx*kP + frictionPower*isNegative + rateError*kD;
+
+    rotateMotor.set(rotatePower);
+    SmartDashboard.putNumber("Auto Rotate Power", rotatePower);
+
+    kD_LastError = tx;
+    kD_LastTime = currTime;
   }
+
+  private void autoFlywheelAndHood() {
+    double distance = calcDistance();
+
+    if (distance < 0) {
+      return;
+    }
+    distance = Math.round(distance);
+
+    double flywheelRpm = 1*distance*distance + 100*distance + 3000 + autoFlywheelRpmTrim;
+    double hoodPos = Utils.clamp(0.003*distance*distance + 0.03*distance - 0.2 + autoHoodPosTrim, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
+
+    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
+    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
+
+    SmartDashboard.putNumber("Auto Flywheel RPM", flywheelRpm);
+    SmartDashboard.putNumber("Auto Hood Position", hoodPos);
+  }
+
+  // manual shooter control methods
 
   private void manualSetFlywheelRpm(Joystick stick) {
     int pov = stick.getPOV();
@@ -273,7 +281,7 @@ public class Shooter extends SubsystemBase {
       pov_pressed = false;
     }
 
-    SmartDashboard.putNumber("Manual Shooter Set (setpoint rpm)", manualFlywheelRpm);
+    SmartDashboard.putNumber("Manual Flywheel RPM", manualFlywheelRpm);
 
     rightFlywheelPIDController.setReference(manualFlywheelRpm, ControlType.kVelocity);
   }
@@ -301,9 +309,6 @@ public class Shooter extends SubsystemBase {
     }
 
     manualHoodPos = Utils.clamp(manualHoodPos, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
-    
-    SmartDashboard.putNumber("Manual Hood Position (setpoint)", manualHoodPos);
-
     hoodPIDController.setReference(manualHoodPos, ControlType.kPosition);
   }
 
@@ -311,49 +316,19 @@ public class Shooter extends SubsystemBase {
     double val = stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
     val = (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
 
-    SmartDashboard.putNumber("Manual Rotate Power (setpoint)", val);
+    SmartDashboard.putNumber("Manual Rotate Power", val);
 
     rotateMotor.set(val / 4);
   }
 
-  public void manualAim(Joystick stick) {
-    manualSetFlywheelRpm(stick);
-    manualSetHoodPos(stick);
-    manualSetRotatePower(stick);
-  }
-
   @Override
   public void periodic() {
-  //   if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
-  //     if (isAutoAimMode) {
-  //       isAutoAimMode = false;
-  //       turnLimelightOff();
-  //       hoodPos = hoodMotor.getEncoder().getPosition();
-  //       rotatePos = rotateMotor.getEncoder().getPosition();
-  //     } else {
-  //       isAutoAimMode = true;
-  //       turnLimelightOn();
-  //     }
-  //   }
-
-  //   SmartDashboard.putBoolean("isAutoAimMode", isAutoAimMode);
-    
-  //   if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
-  //     resetMotorEncoders();
-  //   }
-
-  //   if (isAutoAimMode) {
-  //     autoSetFlywheelAndHood_Equation();
-  //     autoRotateShooter_PowerControl();
-
-  //   } else {
-  //     manualSetFlywheelRpm();
-  //     manualSetHoodPos();
-  //     manualSetRotatePower();
-  //   }
-
-  //   SmartDashboard.putNumber("Hood Position (actual)", hoodMotor.getEncoder().getPosition());
-  //   SmartDashboard.putNumber("Flywheel RPM (actual)", rightFlywheelMotor.getEncoder().getVelocity());
-  //   SmartDashboard.putNumber("Rotate Position (actual)", rotateMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Actual Hood Position", hoodMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Actual Flywheel RPM", rightFlywheelMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Actual Rotate Position", rotateMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Flywheel RPM Trim", autoFlywheelRpmTrim);
+    SmartDashboard.putNumber("Hood Position Trim", autoHoodPosTrim);
+    SmartDashboard.putNumber("Manual Hood Position", manualHoodPos);
+    SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
   }
 }
