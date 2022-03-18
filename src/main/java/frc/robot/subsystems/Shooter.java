@@ -102,37 +102,6 @@ public class Shooter extends SubsystemBase {
     resetMotorEncoders();
   }
 
-  private void generateLookupTable() {
-    // {key, value} = {distance (ft), [shooter RPM, hood pos]}
-    lookupTable.put(0, new Double[] {0.0, 0.0});
-    lookupTable.put(1, new Double[] {3373.076923076923, 0.0});
-    lookupTable.put(2, new Double[] {3446.153846153846, 0.0});
-    lookupTable.put(3, new Double[] {3519.230769230769, 0.0});
-    lookupTable.put(4, new Double[] {3592.3076923076924, 0.0});
-    lookupTable.put(5, new Double[] {3665.3846153846152, 0.0});
-    lookupTable.put(6, new Double[] {3738.4615384615386, 0.0});
-    lookupTable.put(7, new Double[] {3811.5384615384614, 0.10384615384615385});
-    lookupTable.put(8, new Double[] {3884.6153846153848, 0.2076923076923077});
-    lookupTable.put(9, new Double[] {3957.6923076923076, 0.31153846153846154});
-    lookupTable.put(10, new Double[] {4030.769230769231, 0.4153846153846154});
-    lookupTable.put(11, new Double[] {4103.846153846154, 0.5192307692307693});
-    lookupTable.put(12, new Double[] {4376.923076923077, 0.7230769230769231});
-    lookupTable.put(13, new Double[] {4450.0, 0.826923076923077});
-    lookupTable.put(14, new Double[] {4523.076923076923, 0.9307692307692308});
-    lookupTable.put(15, new Double[] {4596.153846153846, 1.0346153846153847});
-    lookupTable.put(16, new Double[] {4869.2307692307695, 1.2384615384615385});
-    lookupTable.put(17, new Double[] {4942.307692307692, 1.3423076923076924});
-    lookupTable.put(18, new Double[] {5015.384615384615, 1.4461538461538461});
-    lookupTable.put(19, new Double[] {5088.461538461539, 1.55});
-    lookupTable.put(20, new Double[] {5161.538461538462, 1.653846153846154});
-    lookupTable.put(21, new Double[] {5334.615384615385, 1.9576923076923078});
-    lookupTable.put(22, new Double[] {5407.692307692308, 2.0615384615384618});
-    lookupTable.put(23, new Double[] {5480.7692307692305, 2.1653846153846157});
-    lookupTable.put(24, new Double[] {5553.846153846154, 2.269230769230769});
-    lookupTable.put(25, new Double[] {5626.923076923077, 2.373076923076923});
-    lookupTable.put(26, new Double[] {5700.0, 2.476923076923077}); 
-  }
-
   public void stopAllMotors() {
     rightFlywheelMotor.set(0.0);
     rotateMotor.set(0.0);
@@ -180,7 +149,6 @@ public class Shooter extends SubsystemBase {
     return distance;
   }
 
-//#region Manual Controls
   private void manualSetFlywheelRpm() {
     if (m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_TOP_BUMPER)) {
       flywheelRpm += 100;
@@ -201,14 +169,6 @@ public class Shooter extends SubsystemBase {
     if (m_stick.getRawButtonPressed(Constants.Logitech.START_BUTTON)) {
       flywheelRpm = 0;
     }
-
-    // if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_4)) {
-    //   flywheelRpm = 4600;
-    // }
-
-    // if (m_stick.getRawButtonPressed(Constants.Logitech.BUTTON_1)) {
-    //   flywheelRpm = 1600;
-    // }
 
     SmartDashboard.putNumber("Shooter Set (setpoint rpm)", flywheelRpm);
 
@@ -255,15 +215,6 @@ public class Shooter extends SubsystemBase {
     rotateMotor.set(val / 4);
   }
 
-  // private void manualSetRotatePosition() {  // deprecated for now
-  //   double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
-
-  //   rotatePos += (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
-
-  //   rotatePIDController.setReference(rotatePos, ControlType.kPosition);
-
-  //   SmartDashboard.putNumber("Rotate Position (setpoint)", rotatePos);
-  // }
 //#endregion
 
   private void autoRotateShooter_PowerControl() {
@@ -316,34 +267,6 @@ public class Shooter extends SubsystemBase {
 
     kD_LastError = tx;
     kD_LastTime = currTime;
-  }
-
-  private void autoSetFlywheelAndHood_LookupTable(double distance) {
-    if (distance < 0) {
-      return;
-    }
-
-    int index = (int)Math.ceil(distance);
-    SmartDashboard.putNumber("Auto lookupTable index", index);
-
-    double flywheelRpm;
-    double hoodPos;
-
-    if (lookupTable.containsKey(index)) {
-      flywheelRpm = lookupTable.get(index)[0];
-      hoodPos = lookupTable.get(index)[1];
-      SmartDashboard.putBoolean("Auto lookupTable index exists", true);
-    } else {
-      SmartDashboard.putBoolean("Auto lookupTable index exists", false);
-      return;
-    }
-
-
-    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
-    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
-
-    SmartDashboard.putNumber("Auto flywheel RPM (setpoint)", flywheelRpm);
-    SmartDashboard.putNumber("Auto hoodPos (setpoint)", hoodPos);
   }
 
   private void autoSetFlywheelAndHood_Equation(double distance) {
