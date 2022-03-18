@@ -6,7 +6,6 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -154,14 +153,13 @@ public class Shooter extends SubsystemBase {
       flywheelRpm = 0;
     }
 
-    SmartDashboard.putNumber("Shooter Set (setpoint rpm)", flywheelRpm);
+    SmartDashboard.putNumber("Manual Shooter Set (setpoint rpm)", flywheelRpm);
 
     rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
   }
 
   private void manualSetHoodPos() {
     int pov = m_stick.getPOV();
-    SmartDashboard.putNumber("Joystick POV", pov);
 
     if (!pov_pressed) {
       switch (pov) {
@@ -186,7 +184,7 @@ public class Shooter extends SubsystemBase {
 
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
-    SmartDashboard.putNumber("Hood Position (setpoint)", hoodPos);
+    SmartDashboard.putNumber("Manual Hood Position (setpoint)", hoodPos);
   }
 
   private void manualSetRotatePower() {
@@ -194,7 +192,7 @@ public class Shooter extends SubsystemBase {
 
     val = (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
 
-    SmartDashboard.putNumber("Rotate Power (setpoint)", val);
+    SmartDashboard.putNumber("Manual Rotate Power (setpoint)", val);
 
     rotateMotor.set(val / 4);
   }
@@ -298,7 +296,7 @@ public class Shooter extends SubsystemBase {
     }
 
     SmartDashboard.putNumber("Hood Position (actual)", hoodMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightFlywheelMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Flywheel RPM (actual)", rightFlywheelMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Rotate Position (actual)", rotateMotor.getEncoder().getPosition());
   }
 }
