@@ -19,20 +19,22 @@ public class Drive extends SubsystemBase {
   public Drive() {}
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    
+  }
 
   public void manualDrive(double xAxisSpeed, double yAxisSpeed) {
     double driveX = Math.pow(xAxisSpeed, 3);
     double driveY = Math.pow(yAxisSpeed, 3);
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
-    setMotors(leftMotors, rightMotors);
+    setMotors(leftMotors*0.7, rightMotors*0.7);
   }
 
   private void setMotors(double left, double right){
-    m_leftFrontMotor.set(-left * 0.7);
-    m_leftRearMotor.set(-left * 0.7);
-    m_rightFrontMotor.set(right * 0.7);
-    m_rightRearMotor.set(right * 0.7);
+    m_leftFrontMotor.set(-left);
+    m_leftRearMotor.set(-left);
+    m_rightFrontMotor.set(right);
+    m_rightRearMotor.set(right);
   }
 }
