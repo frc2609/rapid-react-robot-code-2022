@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import com.revrobotics.SparkMaxPIDController;
@@ -9,8 +8,6 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import org.ejml.dense.block.linsol.chol.CholeskyOuterSolver_MT_DDRB;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.*;
@@ -28,9 +25,6 @@ public class Shooter extends SubsystemBase {
   private final CANSparkMax hoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
       MotorType.kBrushless);
   private Joystick m_stick;
-  private RelativeEncoder rightFlywheelEncoder;
-  private RelativeEncoder rotateEncoder;
-  private RelativeEncoder hoodEncoder;
   private SparkMaxPIDController rightFlywheelPIDController;
   private SparkMaxPIDController rotatePIDController;
   private SparkMaxPIDController hoodPIDController;
@@ -40,13 +34,9 @@ public class Shooter extends SubsystemBase {
   private long kD_LastTime = 0;
 
   // temporary variables for testing
-  double shooterPosition;
   double hoodPos = 0;
   double rotatePos = 0;
-  double tempFrictionPower = 0.0;
-  double flywheelRpm = 0; // double to avoid integer division
-
-  HashMap<Integer, Double[]> lookupTable = new HashMap<Integer, Double[]>();
+  double flywheelRpm = 0;
 
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   NetworkTable table = inst.getTable("limelight");
@@ -61,17 +51,16 @@ public class Shooter extends SubsystemBase {
     rightFlywheelMotor.setIdleMode(IdleMode.kCoast);
     leftFlywheelMotor.setIdleMode(IdleMode.kCoast);
 
-    rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
-    rotateEncoder = rotateMotor.getEncoder();
-    hoodEncoder = hoodMotor.getEncoder();
-
-    shooterPosition = 0.0;
-
     rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
     rotatePIDController = rotateMotor.getPIDController();
     hoodPIDController = hoodMotor.getPIDController();
 
-//#region Setting PID values
+    setPidValues();
+    stopAllMotors();
+    resetMotorEncoders();
+  }
+
+  private void setPidValues() {
     rightFlywheelPIDController.setP(Constants.Flywheel.proportialPIDConstant);
     rightFlywheelPIDController.setI(Constants.Flywheel.integralPIDConstant);
     rightFlywheelPIDController.setD(Constants.Flywheel.derivativePIDConstant);
@@ -95,11 +84,6 @@ public class Shooter extends SubsystemBase {
     hoodPIDController.setFF(Constants.Hood.feedForwardPIDConstant);
     hoodPIDController.setOutputRange(Constants.Hood.minPIDOutput,
         Constants.Hood.maxPIDOutput);
-//#endregion
-    
-    generateLookupTable();
-    stopAllMotors();
-    resetMotorEncoders();
   }
 
   public void stopAllMotors() {
@@ -109,8 +93,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void resetMotorEncoders() {
-    hoodEncoder.setPosition(0.0);
-    rotateEncoder.setPosition(0.0);
+    hoodMotor.getEncoder().setPosition(0.0);
+    rotateMotor.getEncoder().setPosition(0.0);
   }
 
   private double degToRad(double degrees) {
@@ -215,15 +199,13 @@ public class Shooter extends SubsystemBase {
     rotateMotor.set(val / 4);
   }
 
-//#endregion
-
   private void autoRotateShooter_PowerControl() {
     double kP = 0.02; // 0.017
     double frictionPower = 0.004; //0.004;  // 0.016 in + direction, -0.013 in - direction
     double rotatePower = 0.0;
     double isNegative = 1.0;
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
-    double currTurretPosition = rotateEncoder.getPosition();
+    double currTurretPosition = rotateMotor.getEncoder().getPosition();
     long currTime = System.nanoTime();
     double kD = 0.3;
 
@@ -291,8 +273,8 @@ public class Shooter extends SubsystemBase {
       if (isAutoAimMode) {
         isAutoAimMode = false;
         turnLimelightOff();
-        hoodPos = hoodEncoder.getPosition();
-        rotatePos = rotateEncoder.getPosition();
+        hoodPos = hoodMotor.getEncoder().getPosition();
+        rotatePos = rotateMotor.getEncoder().getPosition();
       } else {
         isAutoAimMode = true;
         turnLimelightOn();
@@ -306,7 +288,6 @@ public class Shooter extends SubsystemBase {
     }
 
     if (isAutoAimMode) {
-      // autoSetFlywheelAndHood_LookupTable(calcDistance());
       autoSetFlywheelAndHood_Equation(calcDistance());
       autoRotateShooter_PowerControl();
 
@@ -316,8 +297,8 @@ public class Shooter extends SubsystemBase {
       manualSetRotatePower();
     }
 
-    SmartDashboard.putNumber("Hood Position (actual)", hoodEncoder.getPosition());
-    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightFlywheelEncoder.getVelocity());
-    SmartDashboard.putNumber("Rotate Position (actual)", rotateEncoder.getPosition());
+    SmartDashboard.putNumber("Hood Position (actual)", hoodMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Shooter Set (actual rpm)", rightFlywheelMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Rotate Position (actual)", rotateMotor.getEncoder().getPosition());
   }
 }
