@@ -72,15 +72,15 @@ public class Shooter extends SubsystemBase {
     manualSetRotatePower(stick);
   }
 
-  public void toggleAutoAimMode() {
-    if (isAutoAimMode) {
-      isAutoAimMode = false;
-      turnLimelightOff();
-      manualHoodPos = hoodMotor.getEncoder().getPosition();
-    } else {
-      isAutoAimMode = true;
-      turnLimelightOn();
-    }
+  public void enableAutoAim() {
+    isAutoAimMode = true;
+    turnLimelightOn();
+  }
+
+  public void disableAutoAim() {
+    isAutoAimMode = false;
+    turnLimelightOff();
+    manualHoodPos = hoodMotor.getEncoder().getPosition();
   }
 
   public boolean isAutoAim() {
