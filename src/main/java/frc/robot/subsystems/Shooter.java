@@ -28,13 +28,12 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController rightFlywheelPIDController;
   private SparkMaxPIDController rotatePIDController;
   private SparkMaxPIDController hoodPIDController;
-  private boolean pov_pressed = false;
   private boolean isAutoAimMode = false;
+  private boolean pov_pressed = false;
   private double kD_LastError = 0.0;
   private long kD_LastTime = 0;
 
   private double manualHoodPos = 0;
-  private double manualRotatePos = 0;
   private double manualFlywheelRpm = 0;
 
   private double autoHoodPosTrim = 0;
@@ -99,11 +98,11 @@ public class Shooter extends SubsystemBase {
   }
 
   private void turnLimelightOff() {
-    table.getEntry("ledMode").setNumber(1);
+    table.getEntry("ledMode").setNumber(1); // force LEDs off
   }
 
   private void turnLimelightOn() {
-    table.getEntry("ledMode").setNumber(3);
+    table.getEntry("ledMode").setNumber(3); // force LEDs on
   }
 
   private double calcDistance() {
@@ -128,70 +127,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("limelight distance (ft)", distance);
 
     return distance;
-  }
-
-  private void manualSetFlywheelRpm(Joystick stick) {
-    int pov = stick.getPOV();
-
-    if (!pov_pressed) {
-      switch (pov) {
-        case Constants.Logitech.POV_RIGHT_BUTTON:
-          pov_pressed = true;
-          manualFlywheelRpm += 200;
-          break;
-        case Constants.Logitech.POV_LEFT_BUTTON:
-          pov_pressed = true;
-          manualFlywheelRpm -= 200;
-          break;
-        default:
-          break;
-      }
-    }
-
-    if (pov == -1) {
-      pov_pressed = false;
-    }
-
-    SmartDashboard.putNumber("Manual Shooter Set (setpoint rpm)", manualFlywheelRpm);
-
-    rightFlywheelPIDController.setReference(manualFlywheelRpm, ControlType.kVelocity);
-  }
-
-  private void manualSetHoodPos(Joystick stick) {
-    int pov = stick.getPOV();
-
-    if (!pov_pressed) {
-      switch (pov) {
-        case Constants.Logitech.POV_UP_BUTTON:
-          pov_pressed = true;
-          manualHoodPos += 0.1;
-          break;
-        case Constants.Logitech.POV_DOWN_BUTTON:
-          pov_pressed = true;
-          manualHoodPos -= 0.1;
-          break;
-        default:
-          break;
-      }
-    }
-
-    if (pov == -1) {
-      pov_pressed = false;
-    }
-
-    manualHoodPos = Utils.clamp(manualHoodPos, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
-    hoodPIDController.setReference(manualHoodPos, ControlType.kPosition);
-    
-    SmartDashboard.putNumber("Manual Hood Position (setpoint)", manualHoodPos);
-  }
-
-  private void manualSetRotatePower(Joystick stick) {
-    double val = stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
-    val = (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
-
-    SmartDashboard.putNumber("Manual Rotate Power (setpoint)", val);
-
-    rotateMotor.set(val / 4);
   }
 
   private void autoRotateShooter_PowerControl() {
@@ -254,8 +189,8 @@ public class Shooter extends SubsystemBase {
     }
     distance = Math.round(distance);
 
-    double flywheelRpm = 1*distance*distance + 100*distance + 3000;
-    double hoodPos = Utils.clamp(0.003*distance*distance + 0.03*distance - 0.2, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
+    double flywheelRpm = 1*distance*distance + 100*distance + 3000 + autoFlywheelRpmTrim;
+    double hoodPos = Utils.clamp(0.003*distance*distance + 0.03*distance - 0.2 + autoHoodPosTrim, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
 
     rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
@@ -264,7 +199,39 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Auto hoodPos (setpoint)", hoodPos);
   }
 
-  public void autoAim() {
+  private void trim(Joystick stick) {
+    int pov = stick.getPOV();
+
+    if (!pov_pressed) {
+      switch (pov) {
+        case Constants.Logitech.POV_UP_BUTTON:
+          pov_pressed = true;
+          autoHoodPosTrim += 0.1;
+          break;
+        case Constants.Logitech.POV_DOWN_BUTTON:
+          pov_pressed = true;
+          autoHoodPosTrim -= 0.1;
+          break;
+        case Constants.Logitech.POV_LEFT_BUTTON:
+          pov_pressed = true;
+          autoFlywheelRpmTrim -= 100;
+          break;
+        case Constants.Logitech.POV_RIGHT_BUTTON:
+          pov_pressed = true;
+          autoFlywheelRpmTrim += 100;
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (pov == -1) {
+      pov_pressed = false;
+    }
+  }
+
+  public void autoAim(Joystick stick) {
+    trim(stick);
     autoRotateShooter_PowerControl();
     autoSetFlywheelAndHood_Equation();
   }
@@ -278,11 +245,75 @@ public class Shooter extends SubsystemBase {
       isAutoAimMode = false;
       turnLimelightOff();
       manualHoodPos = hoodMotor.getEncoder().getPosition();
-      manualRotatePos = rotateMotor.getEncoder().getPosition();
     } else {
       isAutoAimMode = true;
       turnLimelightOn();
     }
+  }
+
+  private void manualSetFlywheelRpm(Joystick stick) {
+    int pov = stick.getPOV();
+
+    if (!pov_pressed) {
+      switch (pov) {
+        case Constants.Logitech.POV_RIGHT_BUTTON:
+          pov_pressed = true;
+          manualFlywheelRpm += 200;
+          break;
+        case Constants.Logitech.POV_LEFT_BUTTON:
+          pov_pressed = true;
+          manualFlywheelRpm -= 200;
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (pov == -1) {
+      pov_pressed = false;
+    }
+
+    SmartDashboard.putNumber("Manual Shooter Set (setpoint rpm)", manualFlywheelRpm);
+
+    rightFlywheelPIDController.setReference(manualFlywheelRpm, ControlType.kVelocity);
+  }
+
+  private void manualSetHoodPos(Joystick stick) {
+    int pov = stick.getPOV();
+
+    if (!pov_pressed) {
+      switch (pov) {
+        case Constants.Logitech.POV_UP_BUTTON:
+          pov_pressed = true;
+          manualHoodPos += 0.1;
+          break;
+        case Constants.Logitech.POV_DOWN_BUTTON:
+          pov_pressed = true;
+          manualHoodPos -= 0.1;
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (pov == -1) {
+      pov_pressed = false;
+    }
+
+    manualHoodPos = Utils.clamp(manualHoodPos, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
+    
+    SmartDashboard.putNumber("Manual Hood Position (setpoint)", manualHoodPos);
+
+    hoodPIDController.setReference(manualHoodPos, ControlType.kPosition);
+  }
+
+  private void manualSetRotatePower(Joystick stick) {
+    double val = stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
+    val = (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
+
+    SmartDashboard.putNumber("Manual Rotate Power (setpoint)", val);
+
+    rotateMotor.set(val / 4);
   }
 
   public void manualAim(Joystick stick) {

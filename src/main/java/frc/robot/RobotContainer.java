@@ -74,7 +74,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     intakeButton.whenHeld(new IntakeBall(m_intakeSubsystem));
     feedButton.whenHeld(new FeedBall(m_intakeSubsystem));
-    autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem));
+    autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem, joystick));
     // climbButton.whenPressed(new Traverse(m_climbSubsystem, driveJoystick));
     // traverseButton.whenPressed(new TraverseBack(m_climbSubsystem,
     // driveJoystick));

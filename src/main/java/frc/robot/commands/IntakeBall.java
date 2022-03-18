@@ -29,8 +29,8 @@ public class IntakeBall extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intake.setIntake(Constants.Motors.STOP);
-    m_intake.setLowerBelt(Constants.Motors.STOP);
+    m_intake.setIntake(0.0);
+    m_intake.setLowerBelt(0.0);
   }
 
   // Returns true when the command should end.

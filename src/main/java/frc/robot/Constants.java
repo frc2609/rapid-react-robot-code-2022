@@ -109,6 +109,5 @@ public final class Constants {
         public static final double INTAKE_SPEED = 0.5;
         public static final double INTAKE_LIFT_SPEED = 0.25;
         public static final double BELT_SPEED = 1;
-        public static final double STOP = 0;
     }
 }

@@ -24,6 +24,6 @@
 
 - autoAimButton
 
-When toggling from auto to manual mode, hood position and rotate position are stored and set in manual mode (so turret/hood maintains the current state).
+When toggling from auto to manual mode, hood position is stored and set in manual mode (sohood maintains the current state). The rotate should also be maintained since we are not using the encoder for position (just for soft limits)
 
 Last set flywheel speed in manual mode is stored and reapplied when switching back to manual mode. (For example, manual mode RPM at 2000 then switching to auto then back to manual would set the flywheel to 2000 again.)
