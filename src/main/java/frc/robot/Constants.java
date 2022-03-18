@@ -47,8 +47,8 @@ public final class Constants {
     public final class PwmMotorId {
         public static final int LOWER_BELT_MOTOR = 0;
         public static final int UPPER_BELT_MOTOR = 1;
-        public static final int INTAKE_BALL_MOTOR = 2;
-        public static final int INTAKE_LIFT_MOTOR = 3;
+        public static final int INTAKE_BALL_MOTOR = 3;
+        public static final int INTAKE_LIFT_MOTOR = 2;
     }
 
     public final class CanMotorId {
