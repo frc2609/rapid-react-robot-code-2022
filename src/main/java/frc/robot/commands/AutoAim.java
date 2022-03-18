@@ -5,11 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Shooter;
 
 public class AutoAim extends CommandBase {
   /** Creates a new AutoAim. */
-  public AutoAim() {
+  private Shooter m_shooter;
+
+  public AutoAim(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_shooter = shooter;
   }
 
   // Called when the command is initially scheduled.
@@ -18,7 +22,9 @@ public class AutoAim extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_shooter.autoAim();
+  }
 
   // Called once the command ends or is interrupted.
   @Override

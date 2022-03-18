@@ -13,6 +13,7 @@ import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Utils;
 
 public class Shooter extends SubsystemBase {
   private final CANSparkMax leftFlywheelMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_LEFT_MOTOR,
@@ -23,7 +24,7 @@ public class Shooter extends SubsystemBase {
       MotorType.kBrushless);
   private final CANSparkMax hoodMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_HOOD_MOTOR,
       MotorType.kBrushless);
-  private Joystick m_stick;
+
   private SparkMaxPIDController rightFlywheelPIDController;
   private SparkMaxPIDController rotatePIDController;
   private SparkMaxPIDController hoodPIDController;
@@ -32,19 +33,20 @@ public class Shooter extends SubsystemBase {
   private double kD_LastError = 0.0;
   private long kD_LastTime = 0;
 
-  // temporary variables for testing
-  double hoodPos = 0;
-  double rotatePos = 0;
-  double flywheelRpm = 0;
+  private double manualHoodPos = 0;
+  private double manualRotatePos = 0;
+  private double manualFlywheelRpm = 0;
 
-  NetworkTableInstance inst = NetworkTableInstance.getDefault();
-  NetworkTable table = inst.getTable("limelight");
-  NetworkTableEntry txEntry = table.getEntry("tx");
-  NetworkTableEntry tyEntry = table.getEntry("ty");
-  NetworkTableEntry tvEntry = table.getEntry("tv");
+  private double autoHoodPosTrim = 0;
+  private double autoFlywheelRpmTrim = 0;
 
-  public Shooter(Joystick stick) {
-    m_stick = stick;
+  private NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  private NetworkTable table = inst.getTable("limelight");
+  private NetworkTableEntry txEntry = table.getEntry("tx");
+  private NetworkTableEntry tyEntry = table.getEntry("ty");
+  private NetworkTableEntry tvEntry = table.getEntry("tv");
+
+  public Shooter() {
     leftFlywheelMotor.follow(rightFlywheelMotor, true);
 
     rightFlywheelMotor.setIdleMode(IdleMode.kCoast);
@@ -96,10 +98,6 @@ public class Shooter extends SubsystemBase {
     rotateMotor.getEncoder().setPosition(0.0);
   }
 
-  private double degToRad(double degrees) {
-    return degrees * Math.PI / 180;
-  }
-
   private void turnLimelightOff() {
     table.getEntry("ledMode").setNumber(1);
   }
@@ -109,9 +107,9 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcDistance() {
-    double cameraHeight = 0.9017; // height of camera in meters (from ground)  TODO: Find this height
+    double cameraHeight = 0.9017; // height of camera in meters (from ground)
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
-    double cameraAngleDegrees = 27.8; // angle of camera in degrees (from horizontal plane)  TODO: Find this angle
+    double cameraAngleDegrees = 27.8; // angle of camera in degrees (from horizontal plane)
     double tv = tvEntry.getDouble(0.0);
 
     if (tv <= 0) {
@@ -125,51 +123,25 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("ty", ty);
 
     double distance = 3.281 * (tapeHeight - cameraHeight)  // 3.281 feet per meter
-        / Math.tan(degToRad(cameraAngleDegrees) + degToRad(ty));
+        / Math.tan(Utils.degToRad(cameraAngleDegrees) + Utils.degToRad(ty));
 
     SmartDashboard.putNumber("limelight distance (ft)", distance);
 
     return distance;
   }
 
-  private void manualSetFlywheelRpm() {
-    if (m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_TOP_BUMPER)) {
-      flywheelRpm += 100;
-    }
-
-    if (m_stick.getRawButtonPressed(Constants.Logitech.LEFT_TOP_BUMPER)) {
-      flywheelRpm -= 100;
-    }
-
-    if (m_stick.getRawButtonPressed(Constants.Logitech.RIGHT_BOTTOM_BUMPER)) {
-      flywheelRpm += 200;
-    }
-
-    if (m_stick.getRawButtonPressed(Constants.Logitech.LEFT_BOTTOM_BUMPER)) {
-      flywheelRpm -= 200;
-    }
-
-    if (m_stick.getRawButtonPressed(Constants.Logitech.START_BUTTON)) {
-      flywheelRpm = 0;
-    }
-
-    SmartDashboard.putNumber("Manual Shooter Set (setpoint rpm)", flywheelRpm);
-
-    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
-  }
-
-  private void manualSetHoodPos() {
-    int pov = m_stick.getPOV();
+  private void manualSetFlywheelRpm(Joystick stick) {
+    int pov = stick.getPOV();
 
     if (!pov_pressed) {
       switch (pov) {
-        case Constants.Logitech.POV_UP_BUTTON:
+        case Constants.Logitech.POV_RIGHT_BUTTON:
           pov_pressed = true;
-          hoodPos += 0.1;
+          manualFlywheelRpm += 200;
           break;
-        case Constants.Logitech.POV_DOWN_BUTTON:
+        case Constants.Logitech.POV_LEFT_BUTTON:
           pov_pressed = true;
-          hoodPos -= 0.1;
+          manualFlywheelRpm -= 200;
           break;
         default:
           break;
@@ -180,16 +152,41 @@ public class Shooter extends SubsystemBase {
       pov_pressed = false;
     }
 
-    hoodPos = Math.max(Math.min(hoodPos, Constants.Hood.MAX_POS), Constants.Hood.MIN_POS);
+    SmartDashboard.putNumber("Manual Shooter Set (setpoint rpm)", manualFlywheelRpm);
 
-    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
-
-    SmartDashboard.putNumber("Manual Hood Position (setpoint)", hoodPos);
+    rightFlywheelPIDController.setReference(manualFlywheelRpm, ControlType.kVelocity);
   }
 
-  private void manualSetRotatePower() {
-    double val = m_stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
+  private void manualSetHoodPos(Joystick stick) {
+    int pov = stick.getPOV();
 
+    if (!pov_pressed) {
+      switch (pov) {
+        case Constants.Logitech.POV_UP_BUTTON:
+          pov_pressed = true;
+          manualHoodPos += 0.1;
+          break;
+        case Constants.Logitech.POV_DOWN_BUTTON:
+          pov_pressed = true;
+          manualHoodPos -= 0.1;
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (pov == -1) {
+      pov_pressed = false;
+    }
+
+    manualHoodPos = Utils.clamp(manualHoodPos, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
+    hoodPIDController.setReference(manualHoodPos, ControlType.kPosition);
+    
+    SmartDashboard.putNumber("Manual Hood Position (setpoint)", manualHoodPos);
+  }
+
+  private void manualSetRotatePower(Joystick stick) {
+    double val = stick.getRawAxis(Constants.Logitech.RIGHT_STICK_X_AXIS);
     val = (Math.abs(val) < Constants.Logitech.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
 
     SmartDashboard.putNumber("Manual Rotate Power (setpoint)", val);
@@ -258,7 +255,7 @@ public class Shooter extends SubsystemBase {
     distance = Math.round(distance);
 
     double flywheelRpm = 1*distance*distance + 100*distance + 3000;
-    double hoodPos = Math.min(Math.max(0.003*distance*distance + 0.03*distance - 0.2, Constants.Hood.MIN_POS), Constants.Hood.MAX_POS);
+    double hoodPos = Utils.clamp(0.003*distance*distance + 0.03*distance - 0.2, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
 
     rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
@@ -270,6 +267,28 @@ public class Shooter extends SubsystemBase {
   public void autoAim() {
     autoRotateShooter_PowerControl();
     autoSetFlywheelAndHood_Equation();
+  }
+
+  public boolean isAutoAim() {
+    return isAutoAimMode;
+  }
+
+  public void toggleAutoAimMode() {
+    if (isAutoAimMode) {
+      isAutoAimMode = false;
+      turnLimelightOff();
+      manualHoodPos = hoodMotor.getEncoder().getPosition();
+      manualRotatePos = rotateMotor.getEncoder().getPosition();
+    } else {
+      isAutoAimMode = true;
+      turnLimelightOn();
+    }
+  }
+
+  public void manualAim(Joystick stick) {
+    manualSetFlywheelRpm(stick);
+    manualSetHoodPos(stick);
+    manualSetRotatePower(stick);
   }
 
   @Override

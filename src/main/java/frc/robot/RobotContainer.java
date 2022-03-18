@@ -37,16 +37,17 @@ public class RobotContainer {
   public final Joystick joystick = new Joystick(Constants.Logitech.JOYSTICK_PORT);
   public final JoystickButton intakeButton = new JoystickButton(joystick, Constants.Logitech.BUTTON_1);
   public final JoystickButton feedButton = new JoystickButton(joystick, Constants.Logitech.BUTTON_2);
+  public final JoystickButton autoAimButton = new JoystickButton(joystick, Constants.Logitech.BUTTON_4);
   // public final JoystickButton climbButton = new JoystickButton(joystick,
   // Constants.X_BUTTON);
   // public final JoystickButton traverseButton = new JoystickButton(joystick,
   // Constants.A_BUTTON);
 
   // subsystems
-  private final Drive m_driveSubsystem = new Drive(joystick);
+  private final Drive m_driveSubsystem = new Drive();
   // public final Climber m_climbSubsystem = new Climber(joystick);
-  private final Shooter m_shooterSubsystem = new Shooter(joystick);
-  private final Intake m_intakeSubsystem = new Intake(joystick);
+  private final Shooter m_shooterSubsystem = new Shooter();
+  private final Intake m_intakeSubsystem = new Intake();
 
   // commands
   // commands go here when read
@@ -57,7 +58,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem.manualDrive(joystick.getRawAxis(Constants.Logitech.LEFT_STICK_X_AXIS), joystick.getRawAxis(Constants.Logitech.LEFT_STICK_Y_AXIS))));
     m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(joystick.getRawAxis(Constants.Logitech.RIGHT_STICK_Y_AXIS))));
+    m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(joystick)));
   }
 
   /**
@@ -71,6 +74,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     intakeButton.whenHeld(new IntakeBall(m_intakeSubsystem));
     feedButton.whenHeld(new FeedBall(m_intakeSubsystem));
+    autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem));
     // climbButton.whenPressed(new Traverse(m_climbSubsystem, driveJoystick));
     // traverseButton.whenPressed(new TraverseBack(m_climbSubsystem,
     // driveJoystick));
