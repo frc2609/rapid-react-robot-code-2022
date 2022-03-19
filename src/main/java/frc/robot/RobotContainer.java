@@ -4,19 +4,23 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import frc.robot.subsystems.Climber;
 //import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
-
+import frc.robot.MP.Looper;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.FeedBall;
 import frc.robot.commands.IntakeBall;
@@ -32,16 +36,19 @@ import frc.robot.commands.IntakeBall;
  */
 public class RobotContainer {
   // joysticks and buttons
-  public final Joystick driveJoystick = new Joystick(Constants.Xbox.DRIVER_PORT);
-  public final Joystick operatorJoystick = new Joystick(Constants.Xbox.OPERATOR_PORT);
-  public final JoystickButton intakeButton = new JoystickButton(driveJoystick, Constants.Xbox.A_BUTTON);
-  public final JoystickButton feedButton = new JoystickButton(operatorJoystick, Constants.Xbox.B_BUTTON);
-  public final JoystickButton autoAimButton = new JoystickButton(operatorJoystick, Constants.Xbox.A_BUTTON);
+  public static Joystick driveJoystick = new Joystick(Constants.Xbox.DRIVER_PORT);
+  public static Joystick operatorJoystick = new Joystick(Constants.Xbox.OPERATOR_PORT);
+  public static JoystickButton intakeButton = new JoystickButton(driveJoystick, Constants.Xbox.A_BUTTON);
+  public static JoystickButton feedButton = new JoystickButton(operatorJoystick, Constants.Xbox.B_BUTTON);
+  public static JoystickButton autoAimButton = new JoystickButton(operatorJoystick, Constants.Xbox.A_BUTTON);
   // subsystems
-  private final Drive m_driveSubsystem = new Drive();
-  // public final Climber m_climbSubsystem = new Climber(joystick);
-  private final Shooter m_shooterSubsystem = new Shooter();
-  private final Intake m_intakeSubsystem = new Intake();
+  public static Drive m_driveSubsystem;
+  public static Climber m_climbSubsystem;
+  public static Shooter m_shooterSubsystem;
+  public static Intake m_intakeSubsystem;
+  public static AHRS bodyNavx;
+  
+  public Looper enabledLooper;
 
   // commands
   // commands go here when read
@@ -51,10 +58,29 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
-    configureButtonBindings();
+    try {
+      bodyNavx = new AHRS(SerialPort.Port.kMXP);
+    }catch(RuntimeException e){
+      DriverStation.reportError("BodyNavx failed to initialize", false);
+    }
+    m_driveSubsystem = new Drive();
+    m_climbSubsystem = new Climber();
+    m_intakeSubsystem = new Intake();
+    m_shooterSubsystem = new Shooter();
+
     m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem.manualDrive(driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS)), m_driveSubsystem));
     m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(-driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS)), m_intakeSubsystem));
     m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(operatorJoystick), m_shooterSubsystem));
+
+    enabledLooper = new Looper();
+
+    configureButtonBindings();
+    // try {
+    //   enabledLooper.register(m_driveSubsystem.getLooper());
+    // } catch (Throwable t) {
+    //   System.out.println(t.getMessage());
+    //   System.out.println(t.getStackTrace());
+    // }
   }
 
   /**

@@ -17,7 +17,8 @@ public class Intake extends SubsystemBase {
   public void periodic() {}
 
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 
   public void setBelts(double speed) {
     setLowerBelt(speed);
@@ -33,7 +34,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void setIntake(double speed) {
-    intakeBallMotor.set(speed);
+    // intakeBallMotor.set(speed);
   }
 
   public void setIntakeLift(double speed) {

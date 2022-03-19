@@ -1,0 +1,11 @@
+{
+  "SysId": {
+    "Analysis Type": "Drivetrain",
+    "AnalyzerJSONLocation": "C:\\Users\\student\\Documents\\aimbotdrivetrainsysid\\sysid_data20220311-214549.json",
+    "NetworkTables Settings": {
+      "serverTeam": "2609"
+    },
+    "mode": "Client",
+    "serverTeam": "2609"
+  }
+}
