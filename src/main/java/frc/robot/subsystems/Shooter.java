@@ -288,6 +288,8 @@ public class Shooter extends SubsystemBase {
       pov_pressed = false;
     }
 
+    manualFlywheelRpm = Math.max(manualFlywheelRpm, 0);
+
     SmartDashboard.putNumber("Manual Flywheel RPM", manualFlywheelRpm);
     rightFlywheelPIDController.setReference(manualFlywheelRpm, ControlType.kVelocity);
   }
