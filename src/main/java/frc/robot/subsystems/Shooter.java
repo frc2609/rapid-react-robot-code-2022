@@ -46,7 +46,9 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry tvEntry = table.getEntry("tv");
 
   public Shooter() {
+    hoodMotor.setInverted(true);
     rotateMotor.setInverted(true);
+    rightFlywheelMotor.setInverted(false);
     leftFlywheelMotor.follow(rightFlywheelMotor, true);
 
     rightFlywheelMotor.setIdleMode(IdleMode.kCoast);
