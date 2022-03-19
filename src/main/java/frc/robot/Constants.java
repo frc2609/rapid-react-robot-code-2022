@@ -55,10 +55,10 @@ public final class Constants {
     }
 
     public final class CanMotorId {
-        public static final int SHOOTER_HOOD_MOTOR = 11;
+        public static final int SHOOTER_HOOD_MOTOR = 8;
         public static final int SHOOTER_ROTATE_MOTOR = 10;
-        public static final int SHOOTER_RIGHT_MOTOR = 9;
-        public static final int SHOOTER_LEFT_MOTOR = 8;
+        public static final int SHOOTER_RIGHT_MOTOR = 11;
+        public static final int SHOOTER_LEFT_MOTOR = 9;
         public static final int HOOK_MOTOR = 7;
         public static final int BAR_MOTOR = 6;
         public static final int LEFT_FRONT_MOTOR = 2;

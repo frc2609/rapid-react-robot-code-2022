@@ -46,15 +46,20 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry tvEntry = table.getEntry("tv");
 
   public Shooter() {
+    rotateMotor.setInverted(true);
     leftFlywheelMotor.follow(rightFlywheelMotor, true);
 
     rightFlywheelMotor.setIdleMode(IdleMode.kCoast);
     leftFlywheelMotor.setIdleMode(IdleMode.kCoast);
+    hoodMotor.setIdleMode(IdleMode.kBrake);
+    System.out.println(hoodMotor.isFollower());
+    rotateMotor.setIdleMode(IdleMode.kBrake);
 
     rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
     rotatePIDController = rotateMotor.getPIDController();
     hoodPIDController = hoodMotor.getPIDController();
 
+    turnLimelightOff();
     setPidValues();
     stopAllMotors();
     resetMotorEncoders();
@@ -282,7 +287,6 @@ public class Shooter extends SubsystemBase {
     }
 
     SmartDashboard.putNumber("Manual Flywheel RPM", manualFlywheelRpm);
-
     rightFlywheelPIDController.setReference(manualFlywheelRpm, ControlType.kVelocity);
   }
 
@@ -309,6 +313,7 @@ public class Shooter extends SubsystemBase {
     }
 
     manualHoodPos = Utils.clamp(manualHoodPos, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
+    SmartDashboard.putNumber("manual hood pos", manualHoodPos);
     hoodPIDController.setReference(manualHoodPos, ControlType.kPosition);
   }
 
