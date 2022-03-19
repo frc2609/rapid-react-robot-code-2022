@@ -6,9 +6,14 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +28,8 @@ public class Drive extends SubsystemBase {
   private final CANSparkMax m_leftRearMotor = new CANSparkMax(Constants.CanMotorId.LEFT_REAR_MOTOR, MotorType.kBrushless);
   private final CANSparkMax m_rightFrontMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_FRONT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax m_rightRearMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_REAR_MOTOR, MotorType.kBrushless);
+  private RelativeEncoder leftEncoder = m_leftFrontMotor.getEncoder();
+  private RelativeEncoder rightEncoder = m_rightFrontMotor.getEncoder();
   private Joystick m_driveJoystick;
   AHRS bodyNavx;
   private final DifferentialDriveOdometry m_odometry;
@@ -51,6 +58,11 @@ public class Drive extends SubsystemBase {
     m_driveJoystick = RobotContainer.driveJoystick;
     this.bodyNavx = RobotContainer.bodyNavx;
     m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
+    leftEncoder.setPositionConversionFactor(0.4780/10.71);
+    rightEncoder.setPositionConversionFactor(0.4780/10.71);
+    // leftEncoder.setPositionConversionFactor(1);
+    // rightEncoder.setPositionConversionFactor(1);
+    // 10.71*0.4780
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
   }
@@ -58,16 +70,21 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), 3);
-    double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS), 3);
-    double leftMotors = driveY - driveX;
-    double rightMotors = driveY + driveX;
+    // double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), 3);
+    // double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS), 3);
+    // double leftMotors = driveY - driveX;
+    // double rightMotors = driveY + driveX;
 
-    m_odometry.update(bodyNavx.getRotation2d(), m_leftFrontMotor.getEncoder().getPosition(), m_rightFrontMotor.getEncoder().getPosition());
+    m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
 
     SmartDashboard.putNumber("posex", m_odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("posey", m_odometry.getPoseMeters().getY());
     SmartDashboard.putNumber("deg", m_odometry.getPoseMeters().getRotation().getDegrees());
+    SmartDashboard.putNumber("velleft", getWheelSpeeds().leftMetersPerSecond);
+
+    
+    SmartDashboard.putNumber("getpos", leftEncoder.getPosition());
+    tankDriveVolts(3, 3);
     // setMotors(leftMotors, rightMotors);
   }
 
@@ -84,5 +101,42 @@ public class Drive extends SubsystemBase {
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
     setMotors(leftMotors*0.7, rightMotors*0.7);
+  }
+
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+  }
+
+  public void resetEncoders(){
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
+  }
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(RobotContainer.bodyNavx.getYaw()));
+  }
+  
+  public void setBreak(boolean isBreak){
+    if (isBreak){
+      m_rightFrontMotor.setIdleMode(IdleMode.kBrake);
+      m_rightRearMotor.setIdleMode(IdleMode.kBrake);
+      m_leftRearMotor.setIdleMode(IdleMode.kBrake);
+      m_leftFrontMotor.setIdleMode(IdleMode.kBrake);
+    }else{
+      m_rightFrontMotor.setIdleMode(IdleMode.kCoast);
+      m_rightRearMotor.setIdleMode(IdleMode.kCoast);
+      m_leftRearMotor.setIdleMode(IdleMode.kCoast);
+      m_leftFrontMotor.setIdleMode(IdleMode.kCoast);
+
+    }
+  }
+  public void tankDriveVolts(double left, double right){
+    m_leftFrontMotor.setVoltage(left);
+    m_leftRearMotor.setVoltage(left);
+    m_rightFrontMotor.setVoltage(right);
+    m_rightRearMotor.setVoltage(right);
   }
 }

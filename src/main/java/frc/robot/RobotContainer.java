@@ -21,6 +21,8 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.MP.Looper;
+import frc.robot.MP.RamseteFactory;
+import frc.robot.auto.ThreeBallAuto;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.FeedBall;
 import frc.robot.commands.IntakeBall;
@@ -68,9 +70,9 @@ public class RobotContainer {
     m_intakeSubsystem = new Intake();
     m_shooterSubsystem = new Shooter();
 
-    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem.manualDrive(driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS)), m_driveSubsystem));
-    m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(-driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS)), m_intakeSubsystem));
-    m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(operatorJoystick), m_shooterSubsystem));
+    // m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem.manualDrive(driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS)), m_driveSubsystem));
+    // m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(-driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS)), m_intakeSubsystem));
+    // m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(operatorJoystick), m_shooterSubsystem));
 
     enabledLooper = new Looper();
 
@@ -104,6 +106,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Put autonomous command here when ready
-    return null;
+    return new ThreeBallAuto();
   }
 }

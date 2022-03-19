@@ -70,13 +70,13 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("HookPositionEncoder", getHookPosition());
-    SmartDashboard.putNumber("BarPositionAngle", getArmPosition());
-    if (isManualControl) {
-      manualBarMotorControl();
-      manualHookMotorControl();
-    }
-    armKinematics.update();
+    // SmartDashboard.putNumber("HookPositionEncoder", getHookPosition());
+    // SmartDashboard.putNumber("BarPositionAngle", getArmPosition());
+    // if (isManualControl) {
+    //   manualBarMotorControl();
+    //   manualHookMotorControl();
+    // }
+    // armKinematics.update();
   }
 
   public void setArmVolt(double percent) {

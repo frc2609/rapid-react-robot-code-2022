@@ -23,7 +23,7 @@ public class IntakeBall extends CommandBase {
   @Override
   public void execute() {
     m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
-    m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    // m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
   }
 
   // Called once the command ends or is interrupted.

@@ -8,6 +8,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -114,4 +116,31 @@ public final class Constants {
         public static final double INTAKE_LIFT_SPEED = 0.25;
         public static final double BELT_SPEED = 1;
     }
+
+    public static final class DriveKin {
+        
+        public static final double ksVolts = 0.28005;
+        public static final double kvVoltSecondsPerMeter = 1/0.024537;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.0036601;
+
+        // Example value only - as above, this must be tuned for your drive!
+        public static final double kPDriveVel = 1/0.05923; // one over the constant given by sysid
+        public static final double kTrackwidthMeters = 0.56;
+        public static final DifferentialDriveKinematics kDriveKinematics =
+            new DifferentialDriveKinematics(kTrackwidthMeters);
+
+                // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
+    }
+
+    public static final class AutoConstants {
+        public static final double kMaxSpeedMetersPerSecond = 1;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 2;
+    
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
+    
+        public static boolean isReversed = false;
+      }
 }
