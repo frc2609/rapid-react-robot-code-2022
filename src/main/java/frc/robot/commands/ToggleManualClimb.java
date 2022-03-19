@@ -7,40 +7,34 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 
-public class SetArm extends CommandBase {
-  /** Creates a new SetArm. */
-  private final Climber m_climber;
-  private final double m_desiredPosition;
+public class ToggleManualClimb extends CommandBase {
+  /** Creates a new ToggleManualClimb. */
+  Climber climber;
 
-  public SetArm(Climber climber, double angle) {
-    m_climber = climber;
-    //addRequirements(climber); // TODO: Figure out how this works
-    m_desiredPosition = angle;
+  public ToggleManualClimb(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.climber = climber;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("Setting arm to " + m_desiredPosition);
+    climber.toggleManClimb();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("position " + m_desiredPosition);
-    m_climber.setArmPosition(m_desiredPosition);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("ended setarm at " + m_desiredPosition + " degrees");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_climber.isArmInPosition(m_desiredPosition);
+    return true;
   }
 }

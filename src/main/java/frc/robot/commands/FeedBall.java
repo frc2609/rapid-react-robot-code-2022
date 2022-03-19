@@ -4,17 +4,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.Intake;
 
-public class WaitForButtonPress extends CommandBase {
-  /** Creates a new WaitForButtonPress. */
-  private Joystick stick;
-  private int buttonNum;
-  public WaitForButtonPress(Joystick stick, int buttonNum ) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.stick= stick;
-    this.buttonNum = buttonNum;
+public class FeedBall extends CommandBase {
+  private Intake m_intake;
+  /** Creates a new Feed. */
+  public FeedBall(Intake intake) {
+    m_intake = intake;
   }
 
   // Called when the command is initially scheduled.
@@ -24,16 +22,18 @@ public class WaitForButtonPress extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Waiting for button number " + buttonNum);
+    m_intake.setBelts(Constants.Motors.BELT_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_intake.setBelts(0.0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return stick.getRawButton(buttonNum);
+    return false;
   }
 }

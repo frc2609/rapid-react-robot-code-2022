@@ -2,48 +2,116 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    // XBox controller
-    public static final double JOYSTICK_DRIFT_TOLERANCE = 0.1;
-    public static final int JOYSTICK_PORT = 0;
-    public static final int LEFT_STICK_X_AXIS = 0;
-    public static final int LEFT_STICK_Y_AXIS = 1;
-    public static final int RIGHT_STICK_X_AXIS = 4;
-    public static final int RIGHT_STICK_Y_AXIS = 5;
-    public static final int LEFT_TRIGGER_AXIS = 2;
-    public static final int RIGHT_TRIGGER_AXIS = 3;
-    public static final int A_BUTTON = 1;
-    public static final int B_BUTTON = 2;
-    public static final int X_BUTTON = 3;
-    public static final int Y_BUTTON = 4;
-    public static final int START_BUTTON = 8;
-    public static final int BACK_BUTTON = 7;
-    public static final int LEFT_BUMPER = 5;
-    public static final int RIGHT_BUMPER = 6;
-    public static final int LEFT_STICK_BUTTON = 9;
-    public static final int RIGHT_STICK_BUTTON = 10;
+    public final class Xbox {
+        public static final double JOYSTICK_DRIFT_TOLERANCE = 0.1;
+        public static final int DRIVER_PORT = 0;
+        public static final int OPERATOR_PORT = 1;
+        public static final int LEFT_STICK_X_AXIS = 0;
+        public static final int LEFT_STICK_Y_AXIS = 1;
+        public static final int RIGHT_STICK_X_AXIS = 4;
+        public static final int RIGHT_STICK_Y_AXIS = 5;
+        public static final int LEFT_TRIGGER_AXIS = 2;
+        public static final int RIGHT_TRIGGER_AXIS = 3;
+        public static final int A_BUTTON = 1;
+        public static final int B_BUTTON = 2;
+        public static final int X_BUTTON = 3;
+        public static final int Y_BUTTON = 4;
+        public static final int START_BUTTON = 8;
+        public static final int BACK_BUTTON = 7;
+        public static final int LEFT_BUMPER = 5;
+        public static final int RIGHT_BUMPER = 6;
+        public static final int LEFT_STICK_BUTTON = 9;
+        public static final int RIGHT_STICK_BUTTON = 10;
+        public static final int POV_UP_BUTTON = 0;
+        public static final int POV_DOWN_BUTTON = 180;
+        public static final int POV_RIGHT_BUTTON = 90;
+        public static final int POV_LEFT_BUTTON = 270;
+    }
 
-    // Motors
-    public static final int HOOK_MOTOR = 7;
-    public static final int BAR_MOTOR = 6;
-    public static final int LEFT_FRONT_MOTOR = 4;
-    public static final int LEFT_REAR_MOTOR = 5;
-    public static final int RIGHT_FRONT_MOTOR = 3;
-    public static final int RIGHT_REAR_MOTOR = 2;
+    public final class PwmMotorId {
+        public static final int LOWER_BELT_MOTOR = 1;
+        public static final int UPPER_BELT_MOTOR = 0;
+        public static final int INTAKE_BALL_MOTOR = 3;
+        public static final int INTAKE_LIFT_MOTOR = 2;
+    }
 
-    // Positions
-    public static final int MAX_ARM_POS = 98;
-    public static final int MIN_ARM_POS = 0;
-    public static final double ARM_SPEED_MULTIPLIER = -2.0;
-    public static final double DRIVE_SPEED_MULTIPLIER = 0.5;
+    public final class CanMotorId {
+        public static final int SHOOTER_HOOD_MOTOR = 8;
+        public static final int SHOOTER_ROTATE_MOTOR = 10;
+        public static final int SHOOTER_RIGHT_MOTOR = 11;
+        public static final int SHOOTER_LEFT_MOTOR = 9;
+        public static final int HOOK_MOTOR = 7;
+        public static final int BAR_MOTOR = 6;
+        public static final int LEFT_FRONT_MOTOR = 2;
+        public static final int LEFT_REAR_MOTOR = 3;
+        public static final int RIGHT_FRONT_MOTOR = 5;
+        public static final int RIGHT_REAR_MOTOR = 4;
+    }
+
+    public final class ArmValue {
+        public static final int MAX_ARM_POS = 98;
+        public static final int MIN_ARM_POS = 0;
+        public static final double ARM_SPEED_MULTIPLIER = -2.0;
+        public static final double HOOK_SPEED_MULTIPLIER = 0.75;
+    }
+
+    public final class Rotate {
+        public static final double PROPORTIONAL = 0.2; //0.11
+        public static final double INTEGRAL = 0.0; //0.0000000005;
+        public static final double DERIVATIVE = 0.0;
+        public static final double INTEGRAL_ZONE = 1.0;
+        public static final double FEED_FORWARD = 0.0025;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = -1.0;
+        public static final int MAX_POS = 20;
+        public static final int MIN_POS = -20;
+        public static final double TOLERANCE = 1;  // How much the limelight can be off in x-direction (degrees)
+    }
+
+    public final class Hood {
+        public static final double PROPORTIONAL = 1;
+        public static final double INTEGRAL = 0.0002;
+        public static final double DERIVATIVE = 0.0;
+        public static final double INTEGRAL_ZONE = 0.0;
+        public static final double FEED_FORWARD = 0.0;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = -1.0;
+        public static final double MAX_POS = 2.0;
+        public static final double MIN_POS = 0.0;
+    }
+
+    public final class Flywheel {
+        public static final double PROPORTIONAL = 0.00006; // 0.00004;
+        public static final double INTEGRAL = 0.0; //0.0002;
+        public static final double DERIVATIVE = 0.0;
+        public static final double INTEGRAL_ZONE = 5.0;
+        public static final double FEED_FORWARD = 0.000186; //0.000195; //0.000183;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = 0.0;
+    }
+
+    public final class Motors {
+        public static final double INTAKE_SPEED = 0.5;
+        public static final double INTAKE_LIFT_SPEED = 0.25;
+        public static final double BELT_SPEED = 1;
+    }
 }
