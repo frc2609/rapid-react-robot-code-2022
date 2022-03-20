@@ -84,7 +84,7 @@ public class Drive extends SubsystemBase {
 
     
     SmartDashboard.putNumber("getpos", leftEncoder.getPosition());
-    tankDriveVolts(3, 3);
+    // tankDriveVolts(3, 3);
     // setMotors(leftMotors, rightMotors);
   }
 
@@ -138,5 +138,7 @@ public class Drive extends SubsystemBase {
     m_leftRearMotor.setVoltage(left);
     m_rightFrontMotor.setVoltage(right);
     m_rightRearMotor.setVoltage(right);
+    System.out.println(left);
+    System.out.println(right);
   }
 }

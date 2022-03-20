@@ -121,7 +121,7 @@ public final class Constants {
         
         public static final double ksVolts = 0.28005;
         public static final double kvVoltSecondsPerMeter = 1/0.024537;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.0036601;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.493;//0.0036601
 
         // Example value only - as above, this must be tuned for your drive!
         public static final double kPDriveVel = 1/0.05923; // one over the constant given by sysid
@@ -135,7 +135,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 1;
+        public static final double kMaxSpeedMetersPerSecond = 2;
         public static final double kMaxAccelerationMetersPerSecondSquared = 2;
     
         public static final double kRamseteB = 2;

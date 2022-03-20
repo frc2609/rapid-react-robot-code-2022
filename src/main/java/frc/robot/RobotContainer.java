@@ -106,6 +106,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Put autonomous command here when ready
-    return new ThreeBallAuto();
+    return RamseteFactory.getInstance().startToBallCommand;
   }
 }
