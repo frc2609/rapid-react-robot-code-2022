@@ -79,11 +79,44 @@ Trajectory startToBall = TrajectoryGenerator.generateTrajectory(
 
     
 
+// ball at 2.6, 1.6
+
+Trajectory firstBallToSecondSetup = TrajectoryGenerator.generateTrajectory(
+    // Start at the origin facing the +X direction
+    new Pose2d(0.0, 0.0, new Rotation2d(0)),
+    // Pass through these two interior waypoints, making an 's' curve path
+    List.of(
+      // new Translation2d(1, 1),
+      // new Translation2d(2, 0.5)
+    ),
+    // End 3 meters straight ahead of where we started, facing forward
+    new Pose2d(2.6, -1.6, new Rotation2d(-0)),
+    // Pass config
+    config);
+
+// 1.2, 0.4, 3deg
+
+Trajectory secondSetupToBall = TrajectoryGenerator.generateTrajectory(
+    // Start at the origin facing the +X direction
+    new Pose2d(0.0, 0.0, new Rotation2d(0)),
+    // Pass through these two interior waypoints, making an 's' curve path
+    List.of(
+      // new Translation2d(1, 1),
+      // new Translation2d(2, 0.5)
+    ),
+    // End 3 meters straight ahead of where we started, facing forward
+    new Pose2d(-1.5, -0.4, new Rotation2d(-30)),
+    // Pass config
+    config_back);
     
 private RamseteFactory() {
     trajectoryMap.put("startToBall", startToBall);
+    trajectoryMap.put("firstBallToSecondSetup", firstBallToSecondSetup);
+    trajectoryMap.put("secondSetupToBall", secondSetupToBall);
 }
-
+public Trajectory getTrajectory(String pathName){
+    return trajectoryMap.get(pathName);
+}
 public void printPath(){
     
     System.out.println(startToBall.toString());
@@ -100,7 +133,7 @@ public static RamseteFactory getInstance() {
 
 
 public RamseteCommand constructRamseteCommand(String pathName){
-    return new RamseteCommand(trajectoryMap.get("pathName"), 
+    return new RamseteCommand(getTrajectory(pathName), 
     RobotContainer.m_driveSubsystem::getPose, 
     new RamseteController(Constants.DriveKin.kRamseteB, Constants.DriveKin.kRamseteZeta),
     new SimpleMotorFeedforward(

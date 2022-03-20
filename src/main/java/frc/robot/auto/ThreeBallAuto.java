@@ -12,6 +12,7 @@ import frc.robot.commands.AutoaimShoot3s;
 import frc.robot.commands.DriveAndExtendIntake;
 import frc.robot.commands.DriveStopCommand;
 import frc.robot.commands.FeedBall;
+import frc.robot.commands.ResetPose;
 import frc.robot.commands.TimerDelay;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -23,6 +24,11 @@ public class ThreeBallAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     RamseteFactory factory = RamseteFactory.getInstance();
-    addCommands(new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")), new DriveStopCommand(), new AutoaimShoot3s());
+    // addCommands(new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")), new DriveStopCommand(), new AutoaimShoot3s());
+    addCommands(factory.constructRamseteCommand("startToBall"), new DriveStopCommand(), new ResetPose(factory.getTrajectory("firstBallToSecondSetup").getInitialPose()),
+     new TimerDelay(0.5),
+      factory.constructRamseteCommand("firstBallToSecondSetup"),new DriveStopCommand(),new ResetPose(factory.getTrajectory("secondSetupToBall").getInitialPose()),
+      new TimerDelay(0.5),
+      factory.constructRamseteCommand("secondSetupToBall"), new DriveStopCommand());
   }
 }
