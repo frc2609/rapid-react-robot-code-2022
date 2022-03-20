@@ -5,37 +5,33 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.Intake;
 
-public class FeedBall extends CommandBase {
-  private Intake m_intake;
-  /** Creates a new Feed. */
-  public FeedBall() {
-    m_intake = RobotContainer.m_intakeSubsystem;
+public class Print extends CommandBase {
+  /** Creates a new Print. */
+  String message;
+  public Print(String message) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.message = message;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);}
+    System.out.println(message);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-  }
+    System.out.println(message);}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    // m_intake.setBelts(0.0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !RobotContainer.m_shooterSubsystem.stagingSensor.get();
+    return true;
   }
 }

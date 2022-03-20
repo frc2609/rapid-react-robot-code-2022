@@ -23,20 +23,26 @@ public class IntakeBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
-    m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    if(RobotContainer.m_shooterSubsystem.intakeSensor.getProximity() > 90){
+      m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
+      m_intake.setLowerBelt(Constants.Motors.BELT_SPEED*0.5);
+    }else{
+      m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
+      m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_intake.setIntake(0.0);
-    // m_intake.setLowerBelt(0.0);
+    m_intake.setIntake(0.0);
+    m_intake.setLowerBelt(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return RobotContainer.m_shooterSubsystem.getIntakeSensor();
   }
 }

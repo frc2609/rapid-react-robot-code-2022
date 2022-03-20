@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -65,6 +66,9 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    SmartDashboard.putBoolean("intakeSensor", RobotContainer.m_shooterSubsystem.getIntakeSensor());
+    SmartDashboard.putBoolean("stagingSensor", RobotContainer.m_shooterSubsystem.stagingSensor.get());
+    
     // RamseteFactory.getInstance().printPath();
   }
 
@@ -75,6 +79,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.enabledLooper.stop();
     logger.close();
     m_robotContainer.m_driveSubsystem.setBreak(false);
+    m_robotContainer.m_shooterSubsystem.disableAutoAim();
   }
 
   @Override
