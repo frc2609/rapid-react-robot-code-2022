@@ -7,12 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class IntakeBall extends CommandBase {
   private Intake m_intake;
 
-  public IntakeBall(Intake intake) {
-    m_intake = intake;
+  public IntakeBall() {
+    m_intake = RobotContainer.m_intakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -23,14 +24,14 @@ public class IntakeBall extends CommandBase {
   @Override
   public void execute() {
     m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
-    // m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intake.setIntake(0.0);
-    m_intake.setLowerBelt(0.0);
+    // m_intake.setIntake(0.0);
+    // m_intake.setLowerBelt(0.0);
   }
 
   // Returns true when the command should end.

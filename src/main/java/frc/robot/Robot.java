@@ -8,6 +8,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.MP.RamseteFactory;
+import frc.robot.auto.ThreeBallAuto;
 import frc.utils.Logger;
 
 /**
@@ -23,7 +26,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   Logger logger = Logger.getInstance();
-
+  Command x;
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -38,6 +41,7 @@ public class Robot extends TimedRobot {
     // printVersion();
     logger.openFile();
     logger.setClimber(m_robotContainer.m_climbSubsystem);
+    x = new ThreeBallAuto();
   }
 
   /**
@@ -61,6 +65,7 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    // RamseteFactory.getInstance().printPath();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -82,7 +87,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = x;
     RobotContainer.m_driveSubsystem.resetEncoders();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

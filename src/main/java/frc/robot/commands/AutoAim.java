@@ -34,7 +34,7 @@ public class AutoAim extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooter.disableAutoAim();
+    // m_shooter.disableAutoAim();
   }
 
   // Returns true when the command should end.

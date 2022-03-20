@@ -140,9 +140,9 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcDistance() {
-    double cameraHeight = 0.9017; // height of camera in meters (from ground)
+    double cameraHeight = 0.885; // height of camera in meters (from ground)
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
-    double cameraAngleDegrees = 27.8; // angle of camera in degrees (from horizontal plane)
+    double cameraAngleDegrees = 26.61; // angle of camera in degrees (from horizontal plane)
     double tv = tvEntry.getDouble(0.0);
 
     if (tv <= 0) {

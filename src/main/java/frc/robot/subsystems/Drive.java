@@ -33,6 +33,7 @@ public class Drive extends SubsystemBase {
   private Joystick m_driveJoystick;
   AHRS bodyNavx;
   private final DifferentialDriveOdometry m_odometry;
+  public boolean isReverse = false;
 
   private final Loop mLoop = new Loop() {
     @Override
@@ -61,10 +62,24 @@ public class Drive extends SubsystemBase {
     leftEncoder.setPositionConversionFactor(0.4780/10.71);
     rightEncoder.setPositionConversionFactor(0.4780/10.71);
     // leftEncoder.setPositionConversionFactor(1);
+    leftEncoder.setVelocityConversionFactor(0.4780/10.71);
+    rightEncoder.setVelocityConversionFactor(0.4780/10.71);
     // rightEncoder.setPositionConversionFactor(1);
     // 10.71*0.4780
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
+  }
+
+  public void updateOdometry(){
+    if(isReverse){
+    m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    }else{
+    m_odometry.update(bodyNavx.getRotation2d().unaryMinus(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    }
+    SmartDashboard.putNumber("posex", m_odometry.getPoseMeters().getX());
+    SmartDashboard.putNumber("posey", m_odometry.getPoseMeters().getY());
+    SmartDashboard.putNumber("deg", m_odometry.getPoseMeters().getRotation().getDegrees());
+    SmartDashboard.putNumber("velleft", getWheelSpeeds().leftMetersPerSecond);
   }
 
   @Override
@@ -75,7 +90,8 @@ public class Drive extends SubsystemBase {
     // double leftMotors = driveY - driveX;
     // double rightMotors = driveY + driveX;
 
-    m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    updateOdometry();
+    
 
     SmartDashboard.putNumber("posex", m_odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("posey", m_odometry.getPoseMeters().getY());
@@ -88,7 +104,7 @@ public class Drive extends SubsystemBase {
     // setMotors(leftMotors, rightMotors);
   }
 
-  private void setMotors(double left, double right) {
+  public void setMotors(double left, double right) {
     m_leftFrontMotor.set(left);
     m_leftRearMotor.set(left);
     m_rightFrontMotor.set(right);
@@ -107,7 +123,10 @@ public class Drive extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+    if(isReverse){
+    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity()/60, rightEncoder.getVelocity()/60);
+    }
+    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity()/60, rightEncoder.getVelocity()/60);
   }
 
   public void resetEncoders(){
@@ -116,7 +135,7 @@ public class Drive extends SubsystemBase {
   }
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(RobotContainer.bodyNavx.getYaw()));
+    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(-RobotContainer.bodyNavx.getYaw()));
   }
   
   public void setBreak(boolean isBreak){
@@ -138,7 +157,12 @@ public class Drive extends SubsystemBase {
     m_leftRearMotor.setVoltage(left);
     m_rightFrontMotor.setVoltage(right);
     m_rightRearMotor.setVoltage(right);
-    System.out.println(left);
-    System.out.println(right);
+  }
+
+  public void tankDriveVoltsReverse(double left, double right){
+    m_leftFrontMotor.setVoltage(-right);
+    m_leftRearMotor.setVoltage(-right);
+    m_rightFrontMotor.setVoltage(-left);
+    m_rightRearMotor.setVoltage(-left);
   }
 }

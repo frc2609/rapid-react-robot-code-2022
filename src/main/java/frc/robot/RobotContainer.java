@@ -24,6 +24,7 @@ import frc.robot.MP.Looper;
 import frc.robot.MP.RamseteFactory;
 import frc.robot.auto.ThreeBallAuto;
 import frc.robot.commands.AutoAim;
+import frc.robot.commands.ExtendIntake;
 import frc.robot.commands.FeedBall;
 import frc.robot.commands.IntakeBall;
 
@@ -94,9 +95,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    intakeButton.whenHeld(new IntakeBall(m_intakeSubsystem));
-    feedButton.whenHeld(new FeedBall(m_intakeSubsystem));
-    autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem, operatorJoystick));
+    intakeButton.whenHeld(new IntakeBall());
+    feedButton.whenHeld(new FeedBall());
+    // autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem, operatorJoystick));
+    autoAimButton.toggleWhenPressed(new FeedBall());
   }
 
   /**

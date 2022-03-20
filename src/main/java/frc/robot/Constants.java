@@ -97,7 +97,7 @@ public final class Constants {
         public static final double FEED_FORWARD = 0.0;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_POS = 2.0;
+        public static final double MAX_POS = 2.7;
         public static final double MIN_POS = 0.0;
     }
 
@@ -119,12 +119,13 @@ public final class Constants {
 
     public static final class DriveKin {
         
-        public static final double ksVolts = 0.28005;
-        public static final double kvVoltSecondsPerMeter = 1/0.024537;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.493;//0.0036601
+        public static final double ksVolts = 0.24364;
+        public static final double kvVoltSecondsPerMeter = 2.8238;
+        // public static final double kaVoltSecondsSquaredPerMeter = 0.493;//0.0036601
+        public static final double kaVoltSecondsSquaredPerMeter = 0.46022;
 
         // Example value only - as above, this must be tuned for your drive!
-        public static final double kPDriveVel = 1/0.05923; // one over the constant given by sysid
+        public static final double kPDriveVel = 5.7579; 
         public static final double kTrackwidthMeters = 0.56;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
@@ -136,7 +137,7 @@ public final class Constants {
 
     public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = 2;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 2;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1;
     
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = 0.7;

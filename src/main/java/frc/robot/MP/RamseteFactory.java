@@ -19,6 +19,8 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryParameterizer.TrajectoryGenerationException;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -71,13 +73,21 @@ Trajectory startToBall = TrajectoryGenerator.generateTrajectory(
       // new Translation2d(2, 0.5)
     ),
     // End 3 meters straight ahead of where we started, facing forward
-    new Pose2d(1, 0, new Rotation2d(-0)),
+    new Pose2d(-0.8, 0, new Rotation2d(-0)),
     // Pass config
-    config);
+    config_back);
+
+    
+
     
 private RamseteFactory() {
 }
 
+public void printPath(){
+    
+    System.out.println(startToBall.toString());
+    System.out.println(startToBall.getTotalTimeSeconds());
+}
     
 public static RamseteFactory getInstance() {
     if (m_instance == null) {
@@ -102,3 +112,5 @@ new SimpleMotorFeedforward(
       RobotContainer.m_driveSubsystem);
 
 }
+
+

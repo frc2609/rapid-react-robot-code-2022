@@ -5,8 +5,13 @@
 package frc.robot.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.RobotContainer;
 import frc.robot.MP.RamseteFactory;
+import frc.robot.commands.AutoAim;
+import frc.robot.commands.AutoaimShoot2s;
+import frc.robot.commands.DriveAndExtendIntake;
 import frc.robot.commands.DriveStopCommand;
+import frc.robot.commands.FeedBall;
 import frc.robot.commands.TimerDelay;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,6 +23,6 @@ public class ThreeBallAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     RamseteFactory factory = RamseteFactory.getInstance();
-    addCommands(factory.startToBallCommand, new DriveStopCommand(), new TimerDelay(3));
+    addCommands(new DriveAndExtendIntake(factory.startToBallCommand), new DriveStopCommand(), new AutoaimShoot2s());
   }
 }
