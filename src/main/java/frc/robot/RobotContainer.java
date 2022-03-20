@@ -27,6 +27,11 @@ import frc.robot.commands.AutoAim;
 import frc.robot.commands.ExtendIntake;
 import frc.robot.commands.FeedBall;
 import frc.robot.commands.IntakeBall;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.MjpegServer;
+import edu.wpi.first.cscore.UsbCamera;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -53,6 +58,9 @@ public class RobotContainer {
   
   public Looper enabledLooper;
 
+  public CvSink m_cvSink;
+  public CvSource m_outputStream;
+
   // commands
   // commands go here when read
 
@@ -76,6 +84,10 @@ public class RobotContainer {
     // m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(operatorJoystick), m_shooterSubsystem));
 
     enabledLooper = new Looper();
+
+    UsbCamera usbCamera = new UsbCamera("USB Camera", 0);
+    MjpegServer mjpegServer1 = new MjpegServer("USB Camera Server", 1181);
+    mjpegServer1.setSource(usbCamera);
 
     configureButtonBindings();
     // try {
