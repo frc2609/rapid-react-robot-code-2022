@@ -61,7 +61,7 @@ TrajectoryConfig config =
 
 private static RamseteFactory m_instance;
 
-public Map<String, RamseteCommand> trajectoryMap = new HashMap<String, RamseteCommand>();
+public Map<String, Trajectory> trajectoryMap = new HashMap<String, Trajectory>();
 
 
 Trajectory startToBall = TrajectoryGenerator.generateTrajectory(
@@ -81,6 +81,7 @@ Trajectory startToBall = TrajectoryGenerator.generateTrajectory(
 
     
 private RamseteFactory() {
+    trajectoryMap.put("startToBall", startToBall);
 }
 
 public void printPath(){
@@ -97,20 +98,22 @@ public static RamseteFactory getInstance() {
     return m_instance;
 }
 
-public RamseteCommand startToBallCommand = new RamseteCommand(startToBall, 
-RobotContainer.m_driveSubsystem::getPose, 
-new RamseteController(Constants.DriveKin.kRamseteB, Constants.DriveKin.kRamseteZeta),
-new SimpleMotorFeedforward(
-   Constants.DriveKin.ksVolts,
-   Constants.DriveKin.kvVoltSecondsPerMeter,
-   Constants.DriveKin.kaVoltSecondsSquaredPerMeter),
-    Constants.DriveKin.kDriveKinematics, 
-    RobotContainer.m_driveSubsystem::getWheelSpeeds,
-   new PIDController(Constants.DriveKin.kPDriveVel, 0, 0) ,
-    new PIDController(Constants.DriveKin.kPDriveVel, 0, 0),
-     RobotContainer.m_driveSubsystem::tankDriveVolts,
-      RobotContainer.m_driveSubsystem);
 
+public RamseteCommand constructRamseteCommand(String pathName){
+    return new RamseteCommand(trajectoryMap.get("pathName"), 
+    RobotContainer.m_driveSubsystem::getPose, 
+    new RamseteController(Constants.DriveKin.kRamseteB, Constants.DriveKin.kRamseteZeta),
+    new SimpleMotorFeedforward(
+       Constants.DriveKin.ksVolts,
+       Constants.DriveKin.kvVoltSecondsPerMeter,
+       Constants.DriveKin.kaVoltSecondsSquaredPerMeter),
+        Constants.DriveKin.kDriveKinematics, 
+        RobotContainer.m_driveSubsystem::getWheelSpeeds,
+       new PIDController(Constants.DriveKin.kPDriveVel, 0, 0) ,
+        new PIDController(Constants.DriveKin.kPDriveVel, 0, 0),
+         RobotContainer.m_driveSubsystem::tankDriveVolts,
+          RobotContainer.m_driveSubsystem);
+}
 }
 
 

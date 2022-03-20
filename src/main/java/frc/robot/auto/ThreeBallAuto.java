@@ -23,6 +23,6 @@ public class ThreeBallAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     RamseteFactory factory = RamseteFactory.getInstance();
-    addCommands(new DriveAndExtendIntake(factory.startToBallCommand), new DriveStopCommand(), new AutoaimShoot3s());
+    addCommands(new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")), new DriveStopCommand(), new AutoaimShoot3s());
   }
 }
