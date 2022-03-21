@@ -48,6 +48,8 @@ public class Drive extends SubsystemBase {
   };
 
   public Drive() {
+    m_leftFrontMotor.setInverted(true);
+    m_leftRearMotor.setInverted(true);
     m_driveJoystick = RobotContainer.driveJoystick;
     this.bodyNavx = RobotContainer.bodyNavx;
     m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
