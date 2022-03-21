@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   Logger logger = Logger.getInstance();
   Command x;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -68,7 +69,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putBoolean("intakeSensor", RobotContainer.m_shooterSubsystem.getIntakeSensor());
     SmartDashboard.putBoolean("stagingSensor", RobotContainer.m_shooterSubsystem.stagingSensor.get());
-    
+
     // RamseteFactory.getInstance().printPath();
   }
 
@@ -112,8 +113,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_robotContainer.m_driveSubsystem.setBreak(true);
-    m_robotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
+    RobotContainer.m_driveSubsystem.setBreak(true);
+    RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
