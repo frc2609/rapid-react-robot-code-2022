@@ -7,19 +7,19 @@ package frc.robot.auto;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.MP.RamseteFactory;
-import frc.robot.commands.AutoAim;
-import frc.robot.commands.AutoaimShoot3s;
-import frc.robot.commands.DisableAutoAim;
-import frc.robot.commands.DriveAndExtendIntake;
-import frc.robot.commands.DriveStopCommand;
-import frc.robot.commands.FeedBall;
-import frc.robot.commands.IntakeBall;
 import frc.robot.commands.Print;
-import frc.robot.commands.ResetPose;
-import frc.robot.commands.StageBall;
-import frc.robot.commands.DisableFlywheel;
-import frc.robot.commands.StopIntakeAndBelt;
-import frc.robot.commands.TimerDelay;
+import frc.robot.commands.autoaim.AutoAim;
+import frc.robot.commands.autoaim.AutoaimShoot3s;
+import frc.robot.commands.autoaim.DisableAutoAim;
+import frc.robot.commands.autoaim.DisableFlywheel;
+import frc.robot.commands.autonomous.DriveAndExtendIntake;
+import frc.robot.commands.autonomous.DriveStopCommand;
+import frc.robot.commands.autonomous.ResetPose;
+import frc.robot.commands.autonomous.TimerDelay;
+import frc.robot.commands.intake.FeedBall;
+import frc.robot.commands.intake.IntakeBall;
+import frc.robot.commands.intake.StageBall;
+import frc.robot.commands.intake.StopIntakeAndBelt;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
