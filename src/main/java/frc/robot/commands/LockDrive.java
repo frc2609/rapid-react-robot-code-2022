@@ -25,15 +25,15 @@ public class LockDrive extends CommandBase {
     leftDrivePID = new SimPID(0.01, 0.0005, 0);
     headingPID = new SimPID(0.01, 0.0005, 0);
 
-    rightDrivePID.setDesiredValue(RobotContainer.m_driveSubsystem.getRightMotorPosition());
-    leftDrivePID.setDesiredValue(RobotContainer.m_driveSubsystem.getLeftMotorPosition());
-    headingPID.setDesiredValue(RobotContainer.bodyNavx.getAngle());
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     RobotContainer.m_driveSubsystem.isDriveLocked = true;
+    rightDrivePID.setDesiredValue(RobotContainer.m_driveSubsystem.getRightMotorPosition());
+    leftDrivePID.setDesiredValue(RobotContainer.m_driveSubsystem.getLeftMotorPosition());
+    headingPID.setDesiredValue(RobotContainer.bodyNavx.getAngle());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

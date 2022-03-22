@@ -24,6 +24,7 @@ import frc.robot.MP.Looper;
 import frc.robot.MP.RamseteFactory;
 import frc.robot.auto.ThreeBallAuto;
 import frc.robot.commands.AutoAim;
+import frc.robot.commands.AutoAimAndLock;
 import frc.robot.commands.ExtendIntake;
 import frc.robot.commands.FeedBall;
 import frc.robot.commands.IntakeBall;
@@ -110,11 +111,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // intakeButton.whenHeld(new IntakeBall());
-    intakeButton.whenHeld(new LockDrive());
-
+    autoAimButton.whenHeld(new AutoAimAndLock());
     feedButton.whenHeld(new FeedBall());
     // autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem, operatorJoystick));
-    autoAimButton.toggleWhenPressed(new StageBall());
+    intakeButton.whenPressed(new IntakeBall());
   }
 
   /**

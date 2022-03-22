@@ -73,7 +73,7 @@ public class Shooter extends SubsystemBase {
     rotatePIDController = rotateMotor.getPIDController();
     hoodPIDController = hoodMotor.getPIDController();
 
-    SmartDashboard.putNumber("Limelight camera angle (deg)", 20.9);
+    SmartDashboard.putNumber("Limelight camera angle (deg)", 27.2);
 
     turnLimelightOff();
     setPidValues();
@@ -163,7 +163,7 @@ public class Shooter extends SubsystemBase {
     double cameraHeight = 0.885; // height of camera in meters (from ground)
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
     double tv = tvEntry.getDouble(0.0);
-    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 20.9);
+    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 27.2);
 
 
     if (tv <= 0) {
@@ -291,8 +291,8 @@ public class Shooter extends SubsystemBase {
     double flywheelRpm = calcFlywheelRpm(distance);
     double hoodPos = Utils.clamp(calcHoodPos(distance), Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
 
-    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
-    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
+    // rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
+    // hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
     SmartDashboard.putNumber("Auto Flywheel RPM", flywheelRpm);
     SmartDashboard.putNumber("Auto Hood Position", hoodPos);
