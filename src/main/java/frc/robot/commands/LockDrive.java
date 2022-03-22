@@ -45,7 +45,7 @@ public class LockDrive extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.m_driveSubsystem.isDriveLocked = false;
+    //RobotContainer.m_driveSubsystem.isDriveLocked = false;
   }
 
   // Returns true when the command should end.

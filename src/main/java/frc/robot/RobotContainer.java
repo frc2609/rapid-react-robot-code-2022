@@ -27,7 +27,6 @@ import frc.robot.commands.intake.ExtendIntake;
 import frc.robot.commands.intake.FeedBall;
 import frc.robot.commands.intake.IntakeBall;
 import frc.robot.commands.intake.StageBall;
-import frc.robot.commands.LockDrive;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
@@ -109,7 +108,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     intakeButton.whenPressed(new IntakeBall());
-    autoAimButton.whenHeld(new AutoAimAndLock());
+    autoAimButton.toggleWhenPressed(new AutoAimAndLock());
     feedButton.whenHeld(new FeedBall());
   }
 

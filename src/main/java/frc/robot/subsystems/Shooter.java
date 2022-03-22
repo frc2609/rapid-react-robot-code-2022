@@ -87,10 +87,10 @@ public class Shooter extends SubsystemBase {
     autoFlywheelAndHood();
   }
 
-  public void manualAim(Joystick stick) {
-    manualSetFlywheelRpm(stick);
-    manualSetHoodPos(stick);
-    manualSetRotatePower(stick);
+  public void manualAim() {
+    manualSetFlywheelRpm(RobotContainer.operatorJoystick);
+    manualSetHoodPos(RobotContainer.operatorJoystick);
+    manualSetRotatePower(RobotContainer.operatorJoystick);
   }
 
   public void enableAutoAim() {
@@ -394,6 +394,10 @@ public class Shooter extends SubsystemBase {
     }else if(isAutoAimMode && isFlywheelDisabled){
       rightFlywheelMotor.set(0);
       autoRotate();
+    }else if(isFlywheelDisabled){
+      rightFlywheelMotor.set(0);
+    }else if(!isAutoAimMode) {
+      manualAim();
     }
   }
 }
