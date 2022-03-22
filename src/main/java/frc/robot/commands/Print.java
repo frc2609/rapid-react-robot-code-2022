@@ -6,6 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+// who did this?
+// put in utilities
+// why not just use system.out.println()????
 public class Print extends CommandBase {
   /** Creates a new Print. */
   String message;

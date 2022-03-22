@@ -17,6 +17,5 @@ public class AutoaimShoot3s extends ParallelDeadlineGroup {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
     super(new TimerDelay(3), new AutoAim(),new FeedBall());
-    // addCommands(new FooCommand(), new BarCommand());
   }
 }

@@ -124,6 +124,7 @@ public class Robot extends TimedRobot {
     }
     logger.openFile();
     m_robotContainer.enabledLooper.start();
+    RobotContainer.m_shooterSubsystem.disableAutoAim(); // auto will leave it running, disables at start of teleop
   }
 
   /** This function is called periodically during operator control. */

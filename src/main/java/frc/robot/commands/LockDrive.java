@@ -22,7 +22,6 @@ public class LockDrive extends CommandBase {
     rightDrivePID = new SimPID(0.01, 0.0005, 0);
     leftDrivePID = new SimPID(0.01, 0.0005, 0);
     headingPID = new SimPID(0.01, 0.0005, 0);
-
   }
 
   // Called when the command is initially scheduled.

@@ -74,6 +74,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void updateOdometry(){
+    // I assume this code is for updating the location info of the robot
     if(isReverse){
     m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
     }else{

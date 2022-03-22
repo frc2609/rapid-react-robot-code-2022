@@ -17,6 +17,5 @@ public class DriveAndExtendIntake extends ParallelDeadlineGroup {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
     super(driveCommand, new ExtendIntake(),new AutoAim(), new IntakeBall());
-    // addCommands(new FooCommand(), new BarCommand());
   }
 }

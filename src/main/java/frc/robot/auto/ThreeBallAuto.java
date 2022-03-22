@@ -17,7 +17,7 @@ import frc.robot.commands.IntakeBall;
 import frc.robot.commands.Print;
 import frc.robot.commands.ResetPose;
 import frc.robot.commands.StageBall;
-import frc.robot.commands.StopFlywheel;
+import frc.robot.commands.DisableFlywheel;
 import frc.robot.commands.StopIntakeAndBelt;
 import frc.robot.commands.TimerDelay;
 
@@ -35,7 +35,7 @@ public class ThreeBallAuto extends SequentialCommandGroup {
      new TimerDelay(0.2),
       new IntakeBall(),
       new AutoAim(),
-      new FeedBall(),new AutoAim(),new StageBall(),  new FeedBall(),  new TimerDelay(0.5), new StopFlywheel(), new StopIntakeAndBelt(),
+      new FeedBall(),new AutoAim(),new StageBall(),  new FeedBall(),  new TimerDelay(0.5), new DisableFlywheel(), new StopIntakeAndBelt(),
       factory.constructRamseteCommand("firstBallToSecondSetup"),new DriveStopCommand(),new ResetPose(factory.getTrajectory("secondSetupToBall").getInitialPose()),
       new TimerDelay(0.2),
       new DriveAndExtendIntake(factory.constructRamseteCommand("secondSetupToBall")), new DriveStopCommand(), new IntakeBall(), new AutoAim(), new FeedBall());

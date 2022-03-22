@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -19,6 +18,7 @@ import frc.robot.RobotContainer;
 import frc.robot.MP.Loop;
 import frc.utils.Logger;
 
+@Deprecated
 public class Climber extends SubsystemBase {
 
   public final CANSparkMax hookMotor = new CANSparkMax(Constants.CanMotorId.HOOK_MOTOR, MotorType.kBrushless);
@@ -33,6 +33,7 @@ public class Climber extends SubsystemBase {
   private boolean isManualControl = true;
 
   private final Loop mLoop = new Loop() {
+    // Why is this here when we're not logging anything?
     @Override
     public void onStart() {
       System.out.println("Starting Climber loop");

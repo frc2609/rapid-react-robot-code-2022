@@ -12,8 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 public class AutoAimAndLock extends ParallelCommandGroup {
   /** Creates a new AutoAimAndLock. */
   public AutoAimAndLock() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AutoAim(), new LockDrive());
+    // this will be used for teleop right? if not, change TeleopAutoAim for AutoAim
+    addCommands(new TeleopAutoAim(), new LockDrive());
   }
 }

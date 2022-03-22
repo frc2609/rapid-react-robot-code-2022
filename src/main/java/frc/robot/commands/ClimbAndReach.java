@@ -31,7 +31,6 @@ public class ClimbAndReach extends CommandBase {
     armPID.setDesiredValue(climber.getArmKinematics().getArmAngle() - 15); // 96-81
     // deg up
     armPID.setDoneRange(0.5);
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.

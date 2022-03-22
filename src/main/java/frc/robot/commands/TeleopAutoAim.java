@@ -8,17 +8,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 
-/* Use with AUTONOMOUS MODE!
-* Enables autoaim and the flywheel.
-* Ends when autoaim aims at the target and doesn't disable the flywheel.
-* The flywheel stays running so that auto can shoot the ball (FeedBall), and
-* must be manually disabled with DisableFlywheel.
+/* USE THIS FOR TELEOP ONLY! DON'T USE IT FOR AUTO!
+*  Command will never end by itself, so trigger it with "togglewhenpressed".
+*  Enables autoaim when initialized, and disables it when ended.
+*  By using "togglewhenpressed", you can press one button to toggle autoaim
+*  instead of holding the button down to use autoaim.
 */
-public class AutoAim extends CommandBase {
+public class TeleopAutoAim extends CommandBase {
   /** Creates a new AutoAim. */
   private Shooter m_shooter;
 
-  public AutoAim() {
+  public TeleopAutoAim() {
     m_shooter = RobotContainer.m_shooterSubsystem;
   }
 
@@ -36,12 +36,14 @@ public class AutoAim extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_shooter.disableAutoAim();
+    m_shooter.disableFlywheel();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // end the command when the target is locked so auto can continue sequence
-    return RobotContainer.m_shooterSubsystem.isTargetLocked();
+    return false;
   }
 }
