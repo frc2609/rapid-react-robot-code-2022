@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import frc.robot.MP.RamseteFactory;
 import frc.robot.auto.ThreeBallAuto;
 import frc.utils.Logger;
 
@@ -42,7 +40,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     // printVersion();
     logger.openFile();
-    logger.setClimber(m_robotContainer.m_climbSubsystem);
+    logger.setClimber(RobotContainer.m_climbSubsystem);
     x = new ThreeBallAuto();
   }
 
@@ -79,8 +77,8 @@ public class Robot extends TimedRobot {
     // m_robotContainer.m_climbSubsystem.setArmToZero();
     m_robotContainer.enabledLooper.stop();
     logger.close();
-    m_robotContainer.m_driveSubsystem.setBrake(false);
-    m_robotContainer.m_shooterSubsystem.disableAutoAim();
+    RobotContainer.m_driveSubsystem.setBrake(false);
+    RobotContainer.m_shooterSubsystem.disableAutoAim();
   }
 
   @Override
@@ -100,10 +98,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    m_robotContainer.m_driveSubsystem.setBrake(true);
-    m_robotContainer.bodyNavx.zeroYaw();
+    RobotContainer.m_driveSubsystem.setBrake(true);
+    RobotContainer.bodyNavx.zeroYaw();
     m_robotContainer.enabledLooper.start();
-    m_robotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
+    RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
   }
 
   /** This function is called periodically during autonomous. */
