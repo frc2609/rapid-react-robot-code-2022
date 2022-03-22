@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
     // m_robotContainer.m_climbSubsystem.setArmToZero();
     m_robotContainer.enabledLooper.stop();
     logger.close();
-    m_robotContainer.m_driveSubsystem.setBreak(false);
+    m_robotContainer.m_driveSubsystem.setBrake(false);
     m_robotContainer.m_shooterSubsystem.disableAutoAim();
   }
 
@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    m_robotContainer.m_driveSubsystem.setBreak(true);
+    m_robotContainer.m_driveSubsystem.setBrake(true);
     m_robotContainer.bodyNavx.zeroYaw();
     m_robotContainer.enabledLooper.start();
     m_robotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
@@ -113,7 +113,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    RobotContainer.m_driveSubsystem.setBreak(true);
+    RobotContainer.m_driveSubsystem.setBrake(true);
     RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -132,7 +132,7 @@ public class Robot extends TimedRobot {
     logger.logTele();
     RobotContainer.m_driveSubsystem.manualDrive(RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS));
     RobotContainer.m_intakeSubsystem.setIntakeLift(-RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS));
-    RobotContainer.m_shooterSubsystem.manualAim(RobotContainer.operatorJoystick);
+    //RobotContainer.m_shooterSubsystem.manualAim(RobotContainer.operatorJoystick);
   }
 
   @Override

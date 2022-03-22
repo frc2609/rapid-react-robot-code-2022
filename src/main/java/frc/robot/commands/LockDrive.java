@@ -7,8 +7,6 @@ package frc.robot.commands;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.SerialPort;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.utils.SimPID;
 

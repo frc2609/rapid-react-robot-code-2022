@@ -382,6 +382,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Manual Hood Position", manualHoodPos);
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
 
+    // keeps autoAim enabled for rotate in auto mode so the robot doesn't lose track of the target
     if(isAutoAimMode && !isFlywheelDisabled){
       autoAim();
     }else if(isAutoAimMode && isFlywheelDisabled){

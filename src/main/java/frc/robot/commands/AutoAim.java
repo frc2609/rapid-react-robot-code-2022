@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
@@ -12,7 +13,6 @@ import frc.robot.subsystems.Shooter;
 public class AutoAim extends CommandBase {
   /** Creates a new AutoAim. */
   private Shooter m_shooter;
-  private Joystick m_stick;
 
   public AutoAim() {
     m_shooter = RobotContainer.m_shooterSubsystem;
@@ -33,12 +33,21 @@ public class AutoAim extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_shooter.disableAutoAim();
+    // only disableAutoAim when teleop is running
+    if(DriverStation.isTeleop()) {
+      m_shooter.disableAutoAim();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.m_shooterSubsystem.isTargetLocked();
+    if (DriverStation.isAutonomous()) {
+      return RobotContainer.m_shooterSubsystem.isTargetLocked();
+    } 
+    // cancelled automatically when autoAimButton is pressed again in teleop
+    else {
+      return false; 
+    }
   }
 }

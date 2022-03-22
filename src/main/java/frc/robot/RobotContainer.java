@@ -111,9 +111,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // intakeButton.whenHeld(new IntakeBall());
-    autoAimButton.whenHeld(new AutoAimAndLock());
+    // autoAimButton.whenHeld(new AutoAimAndLock());
+    //autoAimButton.whenHeld(new AutoAim());
     feedButton.whenHeld(new FeedBall());
-    // autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem, operatorJoystick));
+    autoAimButton.toggleWhenPressed(new AutoAim());
     intakeButton.whenPressed(new IntakeBall());
   }
 

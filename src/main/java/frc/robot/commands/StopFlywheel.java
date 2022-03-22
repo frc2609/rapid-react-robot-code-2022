@@ -18,6 +18,6 @@ public class StopFlywheel extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.m_shooterSubsystem.isFlywheelDisabled = true;
+    // RobotContainer.m_shooterSubsystem.isFlywheelDisabled = true;
   }
 }

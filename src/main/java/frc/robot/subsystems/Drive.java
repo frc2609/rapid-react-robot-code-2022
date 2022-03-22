@@ -143,8 +143,8 @@ public class Drive extends SubsystemBase {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(-RobotContainer.bodyNavx.getYaw()));
   }
   
-  public void setBreak(boolean isBreak){
-    if (isBreak){
+  public void setBrake(boolean isBrake){
+    if (isBrake){
       m_rightFrontMotor.setIdleMode(IdleMode.kBrake);
       m_rightRearMotor.setIdleMode(IdleMode.kBrake);
       m_leftRearMotor.setIdleMode(IdleMode.kBrake);
