@@ -7,10 +7,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class IntakeBall extends CommandBase {
   private Intake m_intake;
+  private int whereToIntake = -1; // 1 - stage, 2 - intake, 0 - intake needs staging
 
   public IntakeBall() {
     m_intake = RobotContainer.m_intakeSubsystem;
@@ -18,17 +20,39 @@ public class IntakeBall extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    if (RobotContainer.m_shooterSubsystem.stagingSensor.get()){
+      whereToIntake = 2; // staging sensor populated
+    }else if(RobotContainer.m_shooterSubsystem.getIntakeSensor()){
+      whereToIntake = 0; // staging sensor free, intake taken
+    } else if(!RobotContainer.m_shooterSubsystem.stagingSensor.get() && !RobotContainer.m_shooterSubsystem.getIntakeSensor()){
+      whereToIntake = 1;
+    }
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RobotContainer.m_shooterSubsystem.intakeSensor.getProximity() > 90){
+    if (whereToIntake == 0 && !RobotContainer.m_shooterSubsystem.stagingSensor.get()){
+      m_intake.setIntake(0);
+      m_intake.setBelts(Constants.Motors.BELT_SPEED*0.5);
+    }else if(whereToIntake == 0 && RobotContainer.m_shooterSubsystem.stagingSensor.get()){
+      m_intake.setBelts(0);
+      whereToIntake = 2;
+    }
+
+    if(whereToIntake == 1 && !RobotContainer.m_shooterSubsystem.stagingSensor.get()){
+      m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
+      m_intake.setBelts(Constants.Motors.BELT_SPEED*0.5);
+    }else if(whereToIntake == 1 && RobotContainer.m_shooterSubsystem.stagingSensor.get()){
+      m_intake.setBelts(0);
+    }
+
+    if(whereToIntake == 2 && !RobotContainer.m_shooterSubsystem.getIntakeSensor()){
       m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
       m_intake.setLowerBelt(Constants.Motors.BELT_SPEED*0.5);
-    }else{
-      m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
-      m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    }else if(whereToIntake == 2 && RobotContainer.m_shooterSubsystem.getIntakeSensor()){
+      m_intake.setBelts(0);
     }
 
   }
@@ -37,12 +61,19 @@ public class IntakeBall extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_intake.setIntake(0.0);
-    m_intake.setLowerBelt(0.0);
+    m_intake.setBelts(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.m_shooterSubsystem.getIntakeSensor();
+    if(whereToIntake == 1){
+      return RobotContainer.m_shooterSubsystem.stagingSensor.get();
+    }else if(whereToIntake == 2){
+      return RobotContainer.m_shooterSubsystem.getIntakeSensor();
+    }else{
+      return false;
+    }
+
   }
 }

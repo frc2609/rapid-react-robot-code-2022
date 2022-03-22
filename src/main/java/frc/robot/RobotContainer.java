@@ -27,6 +27,7 @@ import frc.robot.commands.AutoAim;
 import frc.robot.commands.ExtendIntake;
 import frc.robot.commands.FeedBall;
 import frc.robot.commands.IntakeBall;
+import frc.robot.commands.StageBall;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
@@ -107,10 +108,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    intakeButton.whenHeld(new IntakeBall());
+    intakeButton.whenPressed(new IntakeBall());
     feedButton.whenHeld(new FeedBall());
     // autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem, operatorJoystick));
-    autoAimButton.toggleWhenPressed(new FeedBall());
+    autoAimButton.toggleWhenPressed(new StageBall());
   }
 
   /**
