@@ -34,6 +34,7 @@ public class Drive extends SubsystemBase {
   AHRS bodyNavx;
   private final DifferentialDriveOdometry m_odometry;
   public boolean isReverse = false;
+  public boolean isDriveLocked = false;
 
   private final Loop mLoop = new Loop() {
     @Override
@@ -118,7 +119,9 @@ public class Drive extends SubsystemBase {
     double driveY = Math.pow(yAxisSpeed, 3);
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
-    setMotors(leftMotors*0.7, rightMotors*0.7);
+    if (!isDriveLocked) {
+      setMotors(leftMotors*0.7, rightMotors*0.7);
+    }
   }
 
   public Pose2d getPose() {
@@ -166,5 +169,13 @@ public class Drive extends SubsystemBase {
     m_leftRearMotor.setVoltage(-right);
     m_rightFrontMotor.setVoltage(-left);
     m_rightRearMotor.setVoltage(-left);
+  }
+
+  public double getLeftMotorPosition() {
+    return m_leftFrontMotor.getEncoder().getPosition();
+  }
+
+  public double getRightMotorPosition() {
+    return m_rightFrontMotor.getEncoder().getPosition();
   }
 }
