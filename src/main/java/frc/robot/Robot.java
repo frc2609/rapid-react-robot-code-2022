@@ -130,6 +130,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     logger.logTele();
+    RobotContainer.m_driveSubsystem.manualDrive(RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS));
+    RobotContainer.m_intakeSubsystem.setIntakeLift(-RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS));
+    RobotContainer.m_shooterSubsystem.manualAim(RobotContainer.operatorJoystick);
   }
 
   @Override
