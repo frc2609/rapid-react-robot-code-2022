@@ -291,15 +291,15 @@ public class Shooter extends SubsystemBase {
     double flywheelRpm = calcFlywheelRpm(distance);
     double hoodPos = Utils.clamp(calcHoodPos(distance), Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
 
-    // rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
-    // hoodPIDController.setReference(hoodPos, ControlType.kPosition);
+    rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
+    hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
     SmartDashboard.putNumber("Auto Flywheel RPM", flywheelRpm);
     SmartDashboard.putNumber("Auto Hood Position", hoodPos);
   }
 
   private double calcFlywheelRpm(double distance) {
-    return 1.1*distance*distance + 106*distance + 3000 + autoFlywheelRpmTrim;
+    return 1*distance*distance + 100*distance + 3000 + autoFlywheelRpmTrim;
   }
 
   private double calcHoodPos(double distance) {
