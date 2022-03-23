@@ -28,7 +28,7 @@ public class TeleopIntakeBall extends CommandBase {
   @Override
   public void execute() {
     boolean isBallAtIntake = RobotContainer.m_shooterSubsystem.getIntakeSensor();
-    boolean isBallAtStaging = RobotContainer.m_shooterSubsystem.stagingSensor.get();
+    boolean isBallAtStaging = RobotContainer.m_shooterSubsystem.shooterSensor.get();
 
     if (isBallAtIntake == false && isBallAtStaging == false) {
       // No balls
