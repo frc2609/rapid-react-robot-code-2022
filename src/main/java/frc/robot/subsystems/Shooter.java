@@ -129,8 +129,7 @@ public class Shooter extends SubsystemBase {
     double tx = txEntry.getDouble(0.0);
     double distance = calcDistance();
 
-    return (
-      isValidTarget
+    return (isValidTarget
       && Math.abs(tx) < Constants.Rotate.TOLERANCE
       && Math.abs(calcFlywheelRpm(distance) - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
       && Math.abs(calcHoodPos(distance) - hoodMotor.getEncoder().getPosition()) < Constants.AutoConstants.hoodTolerance
@@ -306,11 +305,11 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcFlywheelRpm(double distance) {
-    return 1*distance*distance + 100*distance + 3000 + autoFlywheelRpmTrim;
+    return 1.2*distance*distance + 105*distance + 3000 + autoFlywheelRpmTrim;
   }
 
   private double calcHoodPos(double distance) {
-    return 0.0038*distance*distance + 0.027*distance - 0.35 + autoHoodPosTrim;
+    return 0.0035*distance*distance + 0.05*distance - 0.35 + autoHoodPosTrim;
   }
 
   // manual shooter control methods
@@ -388,6 +387,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Hood Position Trim", autoHoodPosTrim);
     SmartDashboard.putNumber("Manual Hood Position", manualHoodPos);
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
+    SmartDashboard.putBoolean("isTargetLocked", isTargetLocked());
 
     // keeps autoAim enabled for rotate in auto mode so the robot doesn't lose track of the target
     if (isAutoAimMode && !isFlywheelDisabled) {
