@@ -13,13 +13,13 @@ public class ToggleManualClimb extends CommandBase {
 
   public ToggleManualClimb(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.climber = climber;
+    // this.climber = climber;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.toggleManClimb();
+    // climber.toggleManClimb();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

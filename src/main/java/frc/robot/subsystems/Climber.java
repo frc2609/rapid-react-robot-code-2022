@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.MP.Loop;
-import frc.utils.Logger;
 
 public class Climber extends SubsystemBase {
 
@@ -28,7 +26,6 @@ public class Climber extends SubsystemBase {
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, m_epsilon;
   private Joystick m_stick;
   private double armPosition = 0;
-  private ArmKinematics armKinematics;
   private boolean isManualControl = true;
 
   int climb_step = 0;
@@ -178,209 +175,8 @@ public class Climber extends SubsystemBase {
     Lift.setInverted(false);
   }
 
-  public void setArmVolt(double percent) {
-    Lift.set(percent);
-  }
-
-  public void manualBarMotorControl() {
-    double rawAxisValue = m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS);
-    double inc = (Math.abs(rawAxisValue) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE ? 0 : rawAxisValue)
-        * Constants.ArmValue.ARM_SPEED_MULTIPLIER;
-    // armPosition = Math.min(Math.max(armPosition + inc, Constants.MIN_ARM_POS),
-    // Constants.MAX_ARM_POS);
-    armPosition = Math.min(armPosition + inc, Constants.ArmValue.MAX_ARM_POS);
-
-    setArmPosition(armPosition);
-
-    SmartDashboard.putNumber("Arm Position", armPosition);
-  }
-
-  public void manualHookMotorControl() {
-    double inc = m_stick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS) - m_stick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS);
-    setHook(inc * Constants.ArmValue.HOOK_SPEED_MULTIPLIER);
-  }
-
-  public boolean isArmInPosition(double desiredPosition) {
-    return Math.abs(getArmPosition() - desiredPosition) < m_epsilon;
-  }
-
-  public boolean isHookInPosition(double desiredPosition) {
-    return Math.abs(getHookPosition() - desiredPosition) < m_epsilon;
-  }
-
-  public void setArmPosition(double position) {
-    kP = SmartDashboard.getNumber("P Gain", 0);
-    kI = SmartDashboard.getNumber("I Gain", 0);
-    kD = SmartDashboard.getNumber("D Gain", 0);
-    kIz = SmartDashboard.getNumber("I Zone", 0);
-    kFF = SmartDashboard.getNumber("Feed Forward", 0);
-    kMaxOutput = SmartDashboard.getNumber("Max Output", 0);
-    kMinOutput = SmartDashboard.getNumber("Min Output", 0);
-    maxVel = SmartDashboard.getNumber("Max Velocity", 0);
-    minVel = SmartDashboard.getNumber("Min Velocity", 0);
-    maxAcc = SmartDashboard.getNumber("Max Acceleration", 0);
-    allowedErr = SmartDashboard.getNumber("Allowed Closed Loop Error", 0);
-    m_epsilon = SmartDashboard.getNumber("epsilon for float compare", 0.01);
-
-    int smartMotionSlot = 0;
-    Lift_PID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    Lift_PID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    Lift_PID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    Lift_PID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
-
-    double armSetp = degToMotorPos(position);
-    // System.out.println(armSetp);
-    Lift_PID.setReference(armSetp, ControlType.kSmartMotion);
-  }
-
-  public void setHookPosition(double position) {
-    kP = SmartDashboard.getNumber("Hook P Gain", 0);
-    kI = SmartDashboard.getNumber("Hook I Gain", 0);
-    kD = SmartDashboard.getNumber("Hook D Gain", 0);
-    kIz = SmartDashboard.getNumber("Hook I Zone", 0);
-    kFF = SmartDashboard.getNumber("Hook Feed Forward", 0);
-    kMaxOutput = SmartDashboard.getNumber("Hook Max Output", 0);
-    kMinOutput = SmartDashboard.getNumber("Hook Min Output", 0);
-    maxVel = SmartDashboard.getNumber("Hook Max Velocity", 0);
-    minVel = SmartDashboard.getNumber("Hook Min Velocity", 0);
-    maxAcc = SmartDashboard.getNumber("Hook Max Acceleration", 0);
-    allowedErr = SmartDashboard.getNumber("Hook Allowed Closed Loop Error", 0);
-    m_epsilon = SmartDashboard.getNumber("Hook epsilon for float compare", 0.01);
-
-    // int smartMotionSlot = 0;
-    // hookPID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    // hookPID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    // hookPID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    // hookPID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
-
-    // System.out.println(armSetp);
-    Hook_PID.setReference(position, ControlType.kSmartMotion);
-  }
-
-  public void disableArm() {
-    Lift.set(0);
-  }
-
-  public void disableHook() {
-    Hook.set(0);
-  }
-
-  public void setArmToZero() {
-    armPosition = 0;
-  }
-
-  public void setManualClimb(boolean isManualControl) {
-    this.isManualControl = isManualControl;
-  }
-
-  public void toggleManClimb() {
-    this.isManualControl = !this.isManualControl;
-  }
-
-  private double degToMotorPos(double degrees) {
-    return (degrees / 360) * ARM_RATIO;
-  }
-
-  private double motorPosToDeg(double position) {
-    return 360 * position / (ARM_RATIO);
-  }
-
   public void resetEncoder() {
     Lift.getEncoder().setPosition(0);
     Hook.getEncoder().setPosition(0);
-  }
-
-  public double getArmPosition() {
-    return motorPosToDeg(Lift.getEncoder().getPosition());
-  }
-
-  public double getHookPosition() {
-    return Hook.getEncoder().getPosition();
-  }
-
-  private void initValues() {
-    kP = 5e-5;
-    kI = 1e-6;
-    kD = 0;
-    kIz = 0;
-    kFF = 0.000156;
-    kMaxOutput = 1;
-    kMinOutput = -1;
-    maxRPM = 5700;
-    m_epsilon = 0.01;
-
-    // Smart Motion Coefficients
-    maxVel = 2000; // rpm
-    maxAcc = 1500;
-
-    // set PID coefficients
-    Lift_PID.setP(kP);
-    Lift_PID.setI(kI);
-    Lift_PID.setD(kD);
-    Lift_PID.setIZone(kIz);
-    Lift_PID.setFF(kFF);
-    Lift_PID.setOutputRange(kMinOutput, kMaxOutput);
-
-    Hook_PID.setP(kP);
-    Hook_PID.setI(kI);
-    Hook_PID.setD(kD);
-    Hook_PID.setIZone(kIz);
-    Hook_PID.setFF(kFF);
-    Hook_PID.setOutputRange(kMinOutput, kMaxOutput);
-
-    /**
-     * Smart Motion coefficients are set on a SparkMaxPIDController object
-     * 
-     * - setSmartMotionMaxVelocity() will limit the velocity in RPM of
-     * the pid controller in Smart Motion mode
-     * - setSmartMotionMinOutputVelocity() will put a lower bound in
-     * RPM of the pid controller in Smart Motion mode
-     * - setSmartMotionMaxAccel() will limit the acceleration in RPM^2
-     * of the pid controller in Smart Motion mode
-     * - setSmartMotionAllowedClosedLoopError() will set the max allowed
-     * error for the pid controller in Smart Motion mode
-     */
-    int smartMotionSlot = 0;
-    Lift_PID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    Lift_PID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    Lift_PID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    Lift_PID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
-
-    Hook_PID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    Hook_PID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    Hook_PID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    Hook_PID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
-
-    // display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("P Gain", kP);
-    SmartDashboard.putNumber("I Gain", kI);
-    SmartDashboard.putNumber("D Gain", kD);
-    SmartDashboard.putNumber("I Zone", kIz);
-    SmartDashboard.putNumber("Feed Forward", kFF);
-    SmartDashboard.putNumber("Max Output", kMaxOutput);
-    SmartDashboard.putNumber("Min Output", kMinOutput);
-
-    // display Smart Motion coefficients
-    SmartDashboard.putNumber("Max Velocity", maxVel);
-    SmartDashboard.putNumber("Min Velocity", minVel);
-    SmartDashboard.putNumber("Max Acceleration", maxAcc);
-    SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
-    SmartDashboard.putNumber("Set Position", 0);
-    SmartDashboard.putNumber("Set Velocity", 0);
-
-    // display float compare epslion
-    SmartDashboard.putNumber("epsilon for float compare", m_epsilon);
-  }
-
-  public void setHook(double power) {
-    Hook.set(power);
-  }
-
-  public void resetHook() {
-    Hook.getEncoder().setPosition(0);
-  }
-
-  public ArmKinematics getArmKinematics() {
-    return this.armKinematics;
   }
 }

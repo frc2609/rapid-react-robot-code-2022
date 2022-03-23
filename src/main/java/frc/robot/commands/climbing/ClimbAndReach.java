@@ -19,36 +19,36 @@ public class ClimbAndReach extends CommandBase {
   // home first?
   public ClimbAndReach(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.climber = climber;
-    this.armPID = new SimPID(0.01, 0.0005, 0);
+    // this.climber = climber;
+    // this.armPID = new SimPID(0.01, 0.0005, 0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.setManualClimb(false);
-    climber.setHookPosition(hookPos);
-    armPID.setDesiredValue(climber.getArmKinematics().getArmAngle() - 15); // 96-81
-    // deg up
-    armPID.setDoneRange(0.5);
+    // climber.setManualClimb(false);
+    // climber.setHookPosition(hookPos);
+    // armPID.setDesiredValue(climber.getArmKinematics().getArmAngle() - 15); // 96-81
+    // // deg up
+    // armPID.setDoneRange(0.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setHookPosition(hookPos);
-    if (climber.getHookPosition() > 30) {
-      double val = armPID.calcPID(climber.getArmKinematics().getArmAngle());
-      climber.setArmVolt(val);
-    }
-    System.out.println(climber.getHookPosition());
+    // climber.setHookPosition(hookPos);
+    // if (climber.getHookPosition() > 30) {
+    //   double val = armPID.calcPID(climber.getArmKinematics().getArmAngle());
+    //   climber.setArmVolt(val);
+    // }
+    // System.out.println(climber.getHookPosition());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.disableHook();
-    DriverStation.reportWarning("ClimbAndReach done", false);
+    // climber.disableHook();
+    // DriverStation.reportWarning("ClimbAndReach done", false);
   }
 
   // Returns true when the command should end.
