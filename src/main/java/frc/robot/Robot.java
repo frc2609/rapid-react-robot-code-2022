@@ -129,7 +129,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    logger.logTele();
+    // logger.logTele();
     RobotContainer.m_driveSubsystem.manualDrive(RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS));
     RobotContainer.m_intakeSubsystem.setIntakeLift(-RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS));
   }
