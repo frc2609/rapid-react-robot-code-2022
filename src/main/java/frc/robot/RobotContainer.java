@@ -23,10 +23,13 @@ import frc.robot.MP.RamseteFactory;
 import frc.robot.auto.ThreeBallAuto;
 import frc.robot.commands.autoaim.AutoAim;
 import frc.robot.commands.autoaim.AutoAimAndLock;
+import frc.robot.commands.autoaim.TeleopAutoAim;
 import frc.robot.commands.intake.ExtendIntake;
 import frc.robot.commands.intake.FeedBall;
 import frc.robot.commands.intake.IntakeBall;
 import frc.robot.commands.intake.StageBall;
+import frc.robot.commands.intake.TeleopFeedBall;
+import frc.robot.commands.intake.TeleopIntakeBall;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
@@ -107,9 +110,13 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    intakeButton.whenPressed(new IntakeBall());
-    autoAimButton.toggleWhenPressed(new AutoAimAndLock());
-    feedButton.whenHeld(new FeedBall());
+    // intakeButton.whenHeld(new IntakeBall());
+    // autoAimButton.toggleWhenPressed(new AutoAimAndLock());
+    // feedButton.whenHeld(new FeedBall());
+
+    intakeButton.whenHeld(new TeleopIntakeBall());
+    autoAimButton.toggleWhenPressed(new TeleopAutoAim());
+    feedButton.whenHeld(new TeleopFeedBall());
   }
 
   /**
