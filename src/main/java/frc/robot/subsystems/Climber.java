@@ -19,7 +19,6 @@ import frc.robot.RobotContainer;
 import frc.robot.MP.Loop;
 import frc.utils.Logger;
 
-@Deprecated
 public class Climber extends SubsystemBase {
 
   public final CANSparkMax Hook = new CANSparkMax(Constants.CanMotorId.HOOK_MOTOR, MotorType.kBrushless);
