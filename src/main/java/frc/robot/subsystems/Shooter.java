@@ -72,7 +72,7 @@ public class Shooter extends SubsystemBase {
     rotatePIDController = rotateMotor.getPIDController();
     hoodPIDController = hoodMotor.getPIDController();
 
-    SmartDashboard.putNumber("Limelight camera angle (deg)", 27.2);
+    SmartDashboard.putNumber("Limelight camera angle (deg)", 30.7);
 
     turnLimelightOff();
     setPidValues();
@@ -180,10 +180,10 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcDistance() {
-    double cameraHeight = 0.885; // height of camera in meters (from ground)
+    double cameraHeight = 0.889; // height of camera in meters (from ground)
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
     double tv = tvEntry.getDouble(0.0);
-    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 27.2);
+    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 30.7);
 
 
     if (tv <= 0) {
