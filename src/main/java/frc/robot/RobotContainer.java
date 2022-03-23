@@ -27,6 +27,7 @@ import frc.robot.commands.autoaim.TeleopAutoAim;
 import frc.robot.commands.intake.ExtendIntake;
 import frc.robot.commands.intake.FeedBall;
 import frc.robot.commands.intake.IntakeBall;
+import frc.robot.commands.intake.ReverseUpperBeltTimer;
 import frc.robot.commands.intake.StageBall;
 import frc.robot.commands.intake.TeleopFeedBall;
 import frc.robot.commands.intake.TeleopIntakeBall;
@@ -115,8 +116,12 @@ public class RobotContainer {
     // feedButton.whenHeld(new FeedBall());
 
     intakeButton.whenHeld(new TeleopIntakeBall());
-    autoAimButton.toggleWhenPressed(new TeleopAutoAim());
+    intakeButton.whenReleased(new ReverseUpperBeltTimer(0.2));
+
+    autoAimButton.toggleWhenPressed(new AutoAimAndLock());
     feedButton.whenHeld(new TeleopFeedBall());
+    feedButton.whenReleased(new ReverseUpperBeltTimer(0.2));
+
   }
 
   /**
