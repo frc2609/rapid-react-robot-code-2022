@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -37,6 +38,7 @@ public class Shooter extends SubsystemBase {
   private boolean pov_pressed = false;
   private double kD_LastError = 0.0;
   private long kD_LastTime = 0;
+  private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, 0.02);
 
   private double manualHoodPos = 0;
   private double manualFlywheelRpm = 0;
@@ -184,7 +186,6 @@ public class Shooter extends SubsystemBase {
     double tv = tvEntry.getDouble(0.0);
     double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 30.7);
 
-
     if (tv <= 0) {
       SmartDashboard.putBoolean("Valid Limelight Target", false);
       return -1.0;
@@ -192,7 +193,7 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putBoolean("Valid Limelight Target", true);
 
-    double ty = tyEntry.getDouble(0.0);
+    double ty = filter.calculate(tyEntry.getDouble(0.0));
 
     double distance = 3.281 * (tapeHeight - cameraHeight)  // 3.281 feet per meter
         / Math.tan(Utils.degToRad(cameraAngleDegrees) + Utils.degToRad(ty));
