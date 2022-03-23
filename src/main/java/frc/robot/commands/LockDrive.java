@@ -19,9 +19,9 @@ public class LockDrive extends CommandBase {
 
   public LockDrive() {
     // Use addRequirements() here to declare subsystem dependencies.
-    rightDrivePID = new SimPID(0.01, 0.0005, 0);
-    leftDrivePID = new SimPID(0.01, 0.0005, 0);
-    headingPID = new SimPID(0.01, 0.0005, 0);
+    rightDrivePID = new SimPID(0.02, 0, 0.3);
+    leftDrivePID = new SimPID(0.02, 0, 0.3);
+    headingPID = new SimPID(0.02, 0, 0.3);
   }
 
   // Called when the command is initially scheduled.
