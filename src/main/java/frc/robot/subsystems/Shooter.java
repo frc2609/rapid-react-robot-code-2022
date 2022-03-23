@@ -46,6 +46,7 @@ public class Shooter extends SubsystemBase {
 
   public final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
   public final DigitalInput stagingSensor = new DigitalInput(0);
+  public final DigitalInput shooterSensor = new DigitalInput(1);
 
   private boolean isFlywheelDisabled = false;
 
