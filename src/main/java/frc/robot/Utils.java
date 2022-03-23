@@ -33,4 +33,8 @@ public class Utils {
             SmartDashboard.putString("VERSION HASH:", "FNF ERROR");
         }
     }
+
+    public static void print(String message) {
+        System.out.println(message);
+    }
 }

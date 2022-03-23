@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -19,7 +19,8 @@ public class FeedBall extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);}
+    m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

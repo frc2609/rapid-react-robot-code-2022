@@ -135,10 +135,10 @@ public class Logger {
         this.writer.write(String.format(",%.3f", climber.getArmPosition()));
         this.writer.write(String.format(",%.3f", climber.getArmKinematics().getBodyAngle()));
         this.writer.write(String.format(",%.3f", climber.getArmKinematics().getBodyVelocity()));
-        this.writer.write(String.format(",%.3f", climber.barMotor.getAppliedOutput()));
-        this.writer.write(String.format(",%.3f", climber.hookMotor.getAppliedOutput()));
-        this.writer.write(String.format(",%.3f", climber.barMotor.getOutputCurrent()));
-        this.writer.write(String.format(",%.3f", climber.hookMotor.getOutputCurrent()));
+        this.writer.write(String.format(",%.3f", climber.Lift.getAppliedOutput()));
+        this.writer.write(String.format(",%.3f", climber.Hook.getAppliedOutput()));
+        this.writer.write(String.format(",%.3f", climber.Lift.getOutputCurrent()));
+        this.writer.write(String.format(",%.3f", climber.Hook.getOutputCurrent()));
         this.writer.write(String.format(",%b", climber.getArmKinematics().isHooked()));
 
         this.writer.newLine();

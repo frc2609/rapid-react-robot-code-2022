@@ -2,23 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.autoaim;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class StopIntakeAndBelt extends InstantCommand {
-  public StopIntakeAndBelt() {
+/* 
+* Disables flywheel, allows auto to keep autoaim running so that it doesn't
+* lose track of the target while saving power by not running the flywheel.
+*/
+public class DisableFlywheel extends InstantCommand {
+  public DisableFlywheel() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.m_intakeSubsystem.setBelts(0);
-    RobotContainer.m_intakeSubsystem.setIntake(0);
+    RobotContainer.m_shooterSubsystem.disableFlywheel();
   }
 }

@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Utils;
-import frc.robot.Constants.Flywheel;
 
 public class Shooter extends SubsystemBase {
   private final CANSparkMax leftFlywheelMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_LEFT_MOTOR,
@@ -45,11 +44,11 @@ public class Shooter extends SubsystemBase {
   private double autoHoodPosTrim = 0;
   private double autoFlywheelRpmTrim = 0;
 
-  
   public final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
   public final DigitalInput stagingSensor = new DigitalInput(0);
+  public final DigitalInput shooterSensor = new DigitalInput(1);
 
-  public boolean isFlywheelDisabled = false;
+  private boolean isFlywheelDisabled = false;
 
   private NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private NetworkTable table = inst.getTable("limelight");
@@ -89,10 +88,10 @@ public class Shooter extends SubsystemBase {
     autoFlywheelAndHood();
   }
 
-  public void manualAim(Joystick stick) {
-    manualSetFlywheelRpm(stick);
-    manualSetHoodPos(stick);
-    manualSetRotatePower(stick);
+  public void manualAim() {
+    manualSetFlywheelRpm(RobotContainer.operatorJoystick);
+    manualSetHoodPos(RobotContainer.operatorJoystick);
+    manualSetRotatePower(RobotContainer.operatorJoystick);
   }
 
   public void enableAutoAim() {
@@ -123,6 +122,27 @@ public class Shooter extends SubsystemBase {
   public void resetMotorEncoders() {
     hoodMotor.getEncoder().setPosition(0.0);
     rotateMotor.getEncoder().setPosition(0.0);
+  }
+
+  public boolean isTargetLocked(){
+    boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
+    double tx = txEntry.getDouble(0.0);
+    double distance = calcDistance();
+
+    return (
+      isValidTarget
+      && Math.abs(tx) < Constants.Rotate.TOLERANCE
+      && Math.abs(calcFlywheelRpm(distance) - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
+      && Math.abs(calcHoodPos(distance) - hoodMotor.getEncoder().getPosition()) < Constants.AutoConstants.hoodTolerance
+    );
+  }
+
+  public void enableFlywheel() {
+    isFlywheelDisabled = false;
+  }
+
+  public void disableFlywheel() {
+    isFlywheelDisabled = true;
   }
 
   private void setPidValues() {
@@ -181,19 +201,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Limelight Distance (ft)", distance);
 
     return distance;
-  }
-
-  public boolean isTargetLocked(){
-    boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
-    double tx = txEntry.getDouble(0.0);
-    double distance = calcDistance();
-
-    return (
-      isValidTarget
-      && Math.abs(tx) < Constants.Rotate.TOLERANCE
-      && Math.abs(calcFlywheelRpm(distance) - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
-      && Math.abs(calcHoodPos(distance) - hoodMotor.getEncoder().getPosition()) < Constants.AutoConstants.hoodTolerance
-    );
   }
 
   // automatic shooter control methods
@@ -383,11 +390,15 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
 
     // keeps autoAim enabled for rotate in auto mode so the robot doesn't lose track of the target
-    if(isAutoAimMode && !isFlywheelDisabled){
+    if (isAutoAimMode) {
       autoAim();
     }else if(isAutoAimMode && isFlywheelDisabled){
       rightFlywheelMotor.set(0);
       autoRotate();
+    }else if(isFlywheelDisabled){
+      rightFlywheelMotor.set(0);
+    }else if(!isAutoAimMode) {
+      manualAim();
     }
   }
 }

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.climbing;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -31,7 +31,6 @@ public class ClimbAndReach extends CommandBase {
     armPID.setDesiredValue(climber.getArmKinematics().getArmAngle() - 15); // 96-81
     // deg up
     armPID.setDoneRange(0.5);
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.

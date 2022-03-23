@@ -13,23 +13,20 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Climber;
-//import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.MP.Looper;
 import frc.robot.MP.RamseteFactory;
 import frc.robot.auto.ThreeBallAuto;
-import frc.robot.commands.AutoAim;
-import frc.robot.commands.AutoAimAndLock;
-import frc.robot.commands.ExtendIntake;
-import frc.robot.commands.FeedBall;
-import frc.robot.commands.IntakeBall;
-import frc.robot.commands.StageBall;
-import frc.robot.commands.LockDrive;
+import frc.robot.commands.autoaim.AutoAim;
+import frc.robot.commands.autoaim.AutoAimAndLock;
+import frc.robot.commands.intake.ExtendIntake;
+import frc.robot.commands.intake.FeedBall;
+import frc.robot.commands.intake.IntakeBall;
+import frc.robot.commands.intake.StageBall;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
@@ -110,12 +107,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // intakeButton.whenHeld(new IntakeBall());
-    // autoAimButton.whenHeld(new AutoAimAndLock());
-    //autoAimButton.whenHeld(new AutoAim());
-    feedButton.whenHeld(new FeedBall());
-    autoAimButton.toggleWhenPressed(new AutoAim());
     intakeButton.whenPressed(new IntakeBall());
+    autoAimButton.toggleWhenPressed(new AutoAimAndLock());
+    feedButton.whenHeld(new FeedBall());
   }
 
   /**

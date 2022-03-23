@@ -22,7 +22,6 @@ public class LockDrive extends CommandBase {
     rightDrivePID = new SimPID(0.01, 0.0005, 0);
     leftDrivePID = new SimPID(0.01, 0.0005, 0);
     headingPID = new SimPID(0.01, 0.0005, 0);
-
   }
 
   // Called when the command is initially scheduled.
@@ -46,7 +45,7 @@ public class LockDrive extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.m_driveSubsystem.isDriveLocked = false;
+    //RobotContainer.m_driveSubsystem.isDriveLocked = false;
   }
 
   // Returns true when the command should end.

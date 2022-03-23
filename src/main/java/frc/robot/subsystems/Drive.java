@@ -14,12 +14,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.MP.Loop;
+//import frc.robot.MP.Loop;
 
 public class Drive extends SubsystemBase {
   /** Creates a new Drive. */
@@ -30,36 +30,35 @@ public class Drive extends SubsystemBase {
   private final CANSparkMax m_rightRearMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_REAR_MOTOR, MotorType.kBrushless);
   private RelativeEncoder leftEncoder = m_leftFrontMotor.getEncoder();
   private RelativeEncoder rightEncoder = m_rightFrontMotor.getEncoder();
-  private Joystick m_driveJoystick;
+  //private Joystick m_driveJoystick;
   AHRS bodyNavx;
   private final DifferentialDriveOdometry m_odometry;
   public boolean isReverse = false;
   public boolean isDriveLocked = false;
 
-  private final Loop mLoop = new Loop() {
-    @Override
-    public void onStart() {
-      System.out.println("Starting Climber loop");
-      // logger.openFile();
-    }
+  // private final Loop mLoop = new Loop() {
+  //   @Override
+  //   public void onStart() {
+  //     System.out.println("Starting Climber loop");
+  //     // logger.openFile();
+  //   }
 
-    @Override
-    public void onLoop() {
-      // logger.logTele();
-    }
+  //   @Override
+  //   public void onLoop() {
+  //     // logger.logTele();
+  //   }
 
-    @Override
-    public void onStop() {
-      System.out.println("Ending Climber loop");
-      // logger.close();
-    }
-
-  };
+  //   @Override
+  //   public void onStop() {
+  //     System.out.println("Ending Climber loop");
+  //     // logger.close();
+  //   }
+  // };
 
   public Drive() {
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
-    m_driveJoystick = RobotContainer.driveJoystick;
+    //m_driveJoystick = RobotContainer.driveJoystick;
     this.bodyNavx = RobotContainer.bodyNavx;
     m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
     leftEncoder.setPositionConversionFactor(0.4780/10.71);
@@ -74,6 +73,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void updateOdometry(){
+    // I assume this code is for updating the location info of the robot
     if(isReverse){
     m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
     }else{
