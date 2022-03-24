@@ -369,7 +369,6 @@ public class Shooter extends SubsystemBase {
     }
 
     manualHoodPos = Utils.clamp(manualHoodPos, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
-    SmartDashboard.putNumber("manual hood pos", manualHoodPos);
     hoodPIDController.setReference(manualHoodPos, ControlType.kPosition);
   }
 
@@ -391,9 +390,9 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Hood Position Trim", autoHoodPosTrim);
     SmartDashboard.putNumber("Manual Hood Position", manualHoodPos);
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
-    SmartDashboard.putBoolean("isTargetLocked", isTargetLocked());
-    SmartDashboard.putBoolean("is climbing", isClimbingFullRotate);
-    SmartDashboard.putNumber("Rotate motor current", rotateMotor.getOutputCurrent());
+    SmartDashboard.putBoolean("Target Locked", isTargetLocked());
+    SmartDashboard.putBoolean("Climbing", isClimbingFullRotate);
+    SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
 
     if (isClimbingFullRotate) {
       rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out
