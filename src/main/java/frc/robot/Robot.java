@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.ThreeBallAuto;
-import frc.utils.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,7 +24,6 @@ import frc.utils.Logger;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  Logger logger = Logger.getInstance();
   Command x;
 
   /**
@@ -40,8 +38,6 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     // printVersion();
-    logger.openFile();
-    logger.setClimber(RobotContainer.m_climbSubsystem);
     x = new ThreeBallAuto();
 
     SmartDashboard.putBoolean(Constants.INTAKE_OVERRIDE_STRING, false);
@@ -82,7 +78,6 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     // m_robotContainer.m_climbSubsystem.setArmToZero();
     m_robotContainer.enabledLooper.stop();
-    logger.close();
     RobotContainer.m_driveSubsystem.setBrake(false);
     RobotContainer.m_shooterSubsystem.disableAutoAim();
   }
@@ -126,7 +121,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    logger.openFile();
     m_robotContainer.enabledLooper.start();
     RobotContainer.m_shooterSubsystem.disableAutoAim(); // auto will leave it running, disables at start of teleop
   }
@@ -134,7 +128,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // logger.logTele();
     RobotContainer.m_driveSubsystem.manualDrive(RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS));
     RobotContainer.m_intakeSubsystem.setIntakeLift(-RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS));
   }

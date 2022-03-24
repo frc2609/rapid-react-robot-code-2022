@@ -108,10 +108,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // intakeButton.whenHeld(new IntakeBall());
-    // autoAimButton.toggleWhenPressed(new AutoAimAndLock());
-    // feedButton.whenHeld(new FeedBall());
-
     intakeButton.whenHeld(new TeleopIntakeBall());
     intakeButton.whenReleased(new ReverseUpperBeltTimer(0.2));
 
