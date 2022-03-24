@@ -31,13 +31,28 @@ public class ThreeBallAuto extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     RamseteFactory factory = RamseteFactory.getInstance();
     // addCommands(new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")), new DriveStopCommand(), new AutoaimShoot3s());
-    addCommands(new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")), new DriveStopCommand(), new ResetPose(factory.getTrajectory("firstBallToSecondSetup").getInitialPose()),
-     new TimerDelay(0.2),
+    addCommands(
+      new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")),
+      new DriveStopCommand(),
+      new ResetPose(factory.getTrajectory("firstBallToSecondSetup").getInitialPose()),
+      new TimerDelay(0.2),
       new IntakeBall(),
       new AutoAim(),
-      new FeedBall(),new AutoAim(),new StageBall(),  new FeedBall(),  new TimerDelay(0.5), new DisableFlywheel(), new StopIntakeAndBelt(),
-      factory.constructRamseteCommand("firstBallToSecondSetup"),new DriveStopCommand(),new ResetPose(factory.getTrajectory("secondSetupToBall").getInitialPose()),
+      new FeedBall(),
+      new AutoAim(),
+      new StageBall(),
+      new FeedBall(),
+      new TimerDelay(0.5),
+      new DisableFlywheel(),
+      new StopIntakeAndBelt(),
+      factory.constructRamseteCommand("firstBallToSecondSetup"),
+      new DriveStopCommand(),
+      new ResetPose(factory.getTrajectory("secondSetupToBall").getInitialPose()),
       new TimerDelay(0.2),
-      new DriveAndExtendIntake(factory.constructRamseteCommand("secondSetupToBall")), new DriveStopCommand(), new IntakeBall(), new AutoAim(), new FeedBall());
+      new DriveAndExtendIntake(factory.constructRamseteCommand("secondSetupToBall")),
+      new DriveStopCommand(),
+      new IntakeBall(),
+      new AutoAim(),
+      new FeedBall());
   }
 }
