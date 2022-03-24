@@ -10,39 +10,37 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class Climber extends SubsystemBase {
-
-  public final CANSparkMax Hook = new CANSparkMax(Constants.CanMotorId.HOOK_MOTOR, MotorType.kBrushless);
-  public final CANSparkMax Lift = new CANSparkMax(Constants.CanMotorId.BAR_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax HookMotor = new CANSparkMax(Constants.CanMotorId.HOOK_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax LiftMotor = new CANSparkMax(Constants.CanMotorId.BAR_MOTOR, MotorType.kBrushless);
   private SparkMaxPIDController Lift_PID, Hook_PID;
-  private final double ARM_RATIO = 70; // gear ratio * gearbox ratio
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, m_epsilon;
-  private Joystick m_stick;
-  private double armPosition = 0;
-  private boolean isManualControl = true;
 
-  int climb_step = 0;
-  int Step_dir = 1;
-  double sp_Lift = 0;
-  double sp_Hook = 0;
-  double upper_sp_Hook = 0;
-  double lower_sp_Hook = 0;
-  double upper_sp_Lift = 0;
-  double lower_sp_Lift = 0;
-  double Climb_speed = 0;
-  int sp_Hook_achieved = 0;
-  int sp_Lift_achieved = 0;
-  double Hook_pos_mm = 0;
-  double Lift_pos_deg = 0;
-  double length_adjacent = 0;
-  double theta = 0;
-  double Lift_angle_command = 0;
+  enum StepDir {
+    kForward,
+    kBackward
+  }
+
+  private int currentStep = 0;
+  private StepDir direction = StepDir.kForward;
+  private double sp_Lift = 0;
+  private double sp_Hook = 0;
+  private double upper_sp_Hook = 0;
+  private double lower_sp_Hook = 0;
+  private double upper_sp_Lift = 0;
+  private double lower_sp_Lift = 0;
+  private double Climb_speed = 0;
+  private boolean hookSetpointAchieved = false;
+  private boolean liftSetpointAchieved = false;
+  private double Hook_pos_mm = 0;
+  private double Lift_pos_deg = 0;
+  private double length_adjacent = 0;
+  private double theta = 0;
+  private double Lift_angle_command = 0;
 
   /** Creates a new Climber. */
   public Climber() {
@@ -51,10 +49,10 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(climb_step > 0 && climb_step < 3) {
+    if (currentStep > 0 && currentStep < 3) {
       RobotContainer.m_shooterSubsystem.isClimbingFullRotate = true;
       RobotContainer.m_shooterSubsystem.isClimbingLowRotate = false;
-    } else if(climb_step >= 3) {
+    } else if (currentStep >= 3) {
       RobotContainer.m_shooterSubsystem.isClimbingFullRotate = false;
       RobotContainer.m_shooterSubsystem.isClimbingLowRotate = true;
     } else {
@@ -62,22 +60,22 @@ public class Climber extends SubsystemBase {
       RobotContainer.m_shooterSubsystem.isClimbingLowRotate = false;
     }
 
-    SmartDashboard.putNumber("climb step", climb_step);
+    SmartDashboard.putNumber("climb step", currentStep);
     Calculate_theta();
     Climb_Sequence();
     Climb_Speed_Calc();
   }
 
-  public void Calculate_theta(){
+  private void Calculate_theta(){
     double hook_flip = 0;
-    if (climb_step>=7 && climb_step<=10) hook_flip = 356 - Hook.getEncoder().getPosition();
-    else hook_flip = Hook.getEncoder().getPosition();
+    if (currentStep>=7 && currentStep<=10) hook_flip = 356 - HookMotor.getEncoder().getPosition();
+    else hook_flip = HookMotor.getEncoder().getPosition();
 
     // Hook Position = Encoder position * (total travel in mm:850) / (NEO rotations:356)
     Hook_pos_mm = 725.0 - (hook_flip * (850.0/356.0));
 
     // Lift Position = Encoder position * (total travel in degrees:135) / (NEO rotations:130)
-    Lift_pos_deg = -(Lift.getEncoder().getPosition())*(135.0/130.0);
+    Lift_pos_deg = -(LiftMotor.getEncoder().getPosition())*(135.0/130.0);
 
     // Trigonometry to find length (mm) of adjacent side of triangle (32.7 degrees - climb rung angle)
     length_adjacent = Math.acos(Math.toRadians(32.7)) * Hook_pos_mm;
@@ -90,17 +88,17 @@ public class Climber extends SubsystemBase {
     else Lift_angle_command = theta;
   }
 
-  public void Climb_Speed_Calc(){
+  private void Climb_Speed_Calc(){
     double rightTriggerVal = RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS);
     double leftTriggerVal = RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS);
 
     if (rightTriggerVal>0.05) {
       Climb_speed = rightTriggerVal;
-      if (Step_dir!=1) { Step_dir=1; climb_step+=1; }
+      if (direction == StepDir.kBackward) { direction = StepDir.kForward; currentStep++; }
     }
     else if (leftTriggerVal>0.05) {
       Climb_speed = leftTriggerVal;
-      if (Step_dir!=0) { Step_dir=0; climb_step-=1; }
+      if (direction == StepDir.kForward) { direction = StepDir.kBackward; currentStep--; }
     }
     else Climb_speed=0.0;
 
@@ -111,9 +109,9 @@ public class Climber extends SubsystemBase {
     Lift_PID.setReference(sp_Lift, CANSparkMax.ControlType.kSmartMotion);
   }
 
-  public void Climb_Sequence(){
-    switch(climb_step) { // Hook(0:356) Lift(0:-130)
-      case 0: sp_Hook=0.0; sp_Lift=Lift.getEncoder().getPosition(); break; // Send Hooks HOME (0)
+  private void Climb_Sequence(){
+    switch(currentStep) { // Hook(0:356) Lift(0:-130)
+      case 0: sp_Hook=0.0; sp_Lift=LiftMotor.getEncoder().getPosition(); break; // Send Hooks HOME (0)
       case 1: sp_Hook=0.0; sp_Lift=0.0; break; // Send Hooks & Lift HOME (0)
       case 2: sp_Hook=0.0; sp_Lift=-130; break; // Lift up to MID rung
       case 3: sp_Hook=80.0; sp_Lift=-130.0; break; // Hooks pull robot up off ground
@@ -134,20 +132,19 @@ public class Climber extends SubsystemBase {
     upper_sp_Lift = sp_Lift + 0.8;
     lower_sp_Lift = sp_Lift - 0.8;
 
-    if ((Hook.getEncoder().getPosition() <= upper_sp_Hook) && (Hook.getEncoder().getPosition() >= lower_sp_Hook)) sp_Hook_achieved = 1;
-    else sp_Hook_achieved = 0;
+    hookSetpointAchieved = (HookMotor.getEncoder().getPosition() <= upper_sp_Hook) && (HookMotor.getEncoder().getPosition() >= lower_sp_Hook);
 
-    if ((Lift.getEncoder().getPosition() <= upper_sp_Lift) && (Lift.getEncoder().getPosition() >= lower_sp_Lift)) sp_Lift_achieved = 1;
-    else sp_Lift_achieved = 0;
+    liftSetpointAchieved = (LiftMotor.getEncoder().getPosition() <= upper_sp_Lift) && (LiftMotor.getEncoder().getPosition() >= lower_sp_Lift);
 
-    if (sp_Hook_achieved==1 && sp_Lift_achieved==1) {
-      if (RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS)>0.05  && (climb_step<12) && (Step_dir==1)) climb_step+=1;
-      if (RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS)>0.05  && (climb_step>0) && (Step_dir==0)) climb_step-=1;
+    if (hookSetpointAchieved && liftSetpointAchieved) {
+      if (RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS)>0.05  && (currentStep<12) && (direction == StepDir.kForward)) currentStep+=1;
+      if (RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS)>0.05  && (currentStep>0) && (direction == StepDir.kBackward)) currentStep-=1;
     }
   }
 
+  // this could go in the constructor
   private void initPidAndMotors() {
-    Hook_PID = Hook.getPIDController();
+    Hook_PID = HookMotor.getPIDController();
     Hook_PID.setP(0.00005);
     Hook_PID.setI(0.000000001);
     Hook_PID.setD(0.0000005);
@@ -157,7 +154,7 @@ public class Climber extends SubsystemBase {
     Hook_PID.setSmartMotionMaxVelocity(500, 0);
     Hook_PID.setSmartMotionMaxAccel(15000, 0);
 
-    Lift_PID = Lift.getPIDController();
+    Lift_PID = LiftMotor.getPIDController();
     Lift_PID.setP(0.00005);
     Lift_PID.setI(0.000000001);
     Lift_PID.setD(0.0000005);
@@ -168,22 +165,26 @@ public class Climber extends SubsystemBase {
     Lift_PID.setSmartMotionMaxAccel(15000, 0);
 
     // HOOK Spark Max Default Values
-    Hook.enableSoftLimit(SoftLimitDirection.kForward, true);
-    Hook.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    Hook.setSoftLimit(SoftLimitDirection.kForward, 356);
-    Hook.setSoftLimit(SoftLimitDirection.kReverse, 0);
-    Hook.setIdleMode(IdleMode.kCoast);
-    Hook.setSmartCurrentLimit(40);
-    Hook.setInverted(false);
+    HookMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    HookMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    HookMotor.setSoftLimit(SoftLimitDirection.kForward, 356);
+    HookMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+    HookMotor.setIdleMode(IdleMode.kCoast);
+    HookMotor.setSmartCurrentLimit(40);
+    HookMotor.setInverted(false);
    
     // LIFT Spark Max Default Values
-    Lift.enableSoftLimit(SoftLimitDirection.kForward, true);
-    Lift.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    Lift.setSoftLimit(SoftLimitDirection.kForward, 0);
-    Lift.setSoftLimit(SoftLimitDirection.kReverse, -135);
-    Lift.setIdleMode(IdleMode.kCoast);
-    Lift.setSmartCurrentLimit(40);
-    Lift.setInverted(false);
+    LiftMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    LiftMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    LiftMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+    LiftMotor.setSoftLimit(SoftLimitDirection.kReverse, -135);
+    LiftMotor.setIdleMode(IdleMode.kCoast);
+    LiftMotor.setSmartCurrentLimit(40);
+    LiftMotor.setInverted(false);
+  }
+
+  public double getLiftPositionDeg() {
+    return Lift_pos_deg;
   }
 
 }
