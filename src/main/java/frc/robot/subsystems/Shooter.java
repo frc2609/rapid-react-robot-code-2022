@@ -39,6 +39,7 @@ public class Shooter extends SubsystemBase {
   private double kD_LastError = 0.0;
   private long kD_LastTime = 0;
   private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, 0.02);
+  public boolean isClimbing = false;
 
   private double manualHoodPos = 0;
   private double manualFlywheelRpm = 0;
@@ -389,6 +390,14 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Manual Hood Position", manualHoodPos);
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
     SmartDashboard.putBoolean("isTargetLocked", isTargetLocked());
+
+    if (isClimbing) {
+      rotateMotor.setSmartCurrentLimit(2);
+      rotateMotor.set(-0.1);
+      return;
+    } else {
+      rotateMotor.setSmartCurrentLimit(20);
+    }
 
     // keeps autoAim enabled for rotate in auto mode so the robot doesn't lose track of the target
     if (isAutoAimMode && !isFlywheelDisabled) {

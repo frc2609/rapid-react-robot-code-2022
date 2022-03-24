@@ -4,9 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.fasterxml.jackson.databind.util.ClassUtil;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -47,14 +47,20 @@ public class Climber extends SubsystemBase {
 
   /** Creates a new Climber. */
   public Climber() {
-    resetEncoder();
     initPidAndMotors();
   }
 
   @Override
   public void periodic() {
-    sequence();
-    arm();
+    if(climb_step > 0) {
+      RobotContainer.m_shooterSubsystem.isClimbing = true;
+    } else {
+      RobotContainer.m_shooterSubsystem.isClimbing = false;
+    }
+    SmartDashboard.putNumber("climb step", climb_step);
+    Calculate_theta();
+    Climb_Sequence();
+    Climb_Speed_Calc();
   }
 
   public void Calculate_theta(){
@@ -79,7 +85,7 @@ public class Climber extends SubsystemBase {
     else Lift_angle_command = theta;
   }
 
-  public void arm(){
+  public void Climb_Speed_Calc(){
     double rightTriggerVal = RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS);
     double leftTriggerVal = RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS);
 
@@ -100,7 +106,7 @@ public class Climber extends SubsystemBase {
     Lift_PID.setReference(sp_Lift, CANSparkMax.ControlType.kSmartMotion);
   }
 
-  public void sequence(){
+  public void Climb_Sequence(){
     switch(climb_step) { // Hook(0:356) Lift(0:-130)
       case 0: sp_Hook=0.0; sp_Lift=Lift.getEncoder().getPosition(); break; // Send Hooks HOME (0)
       case 1: sp_Hook=0.0; sp_Lift=0.0; break; // Send Hooks & Lift HOME (0)
@@ -109,8 +115,8 @@ public class Climber extends SubsystemBase {
       case 4: sp_Hook=355.0; sp_Lift=-Lift_angle_command; break; // Move under HIGH rung
       case 5: sp_Hook=355.0; sp_Lift=-130.0; break; // Move up against HIGH rung
       case 6: sp_Hook=330.0; sp_Lift=-130.0; break; // Move back to double hook
-      case 7: sp_Hook=330.0; sp_Lift=-Lift_angle_command; break; // **Swing body
-      case 8: sp_Hook=0.0; sp_Lift=-Lift_angle_command; break; // Move under TRAVERSAL rung
+      case 7: sp_Hook=330.0; sp_Lift=-Lift_angle_command+5; break; // **Swing body
+      case 8: sp_Hook=0.0; sp_Lift=-Lift_angle_command+5; break; // Move under TRAVERSAL rung
       case 9: sp_Hook=0.0; sp_Lift=-130.0; break; // Move up against TRAVERSAL rung
       case 10: sp_Hook=25.0; sp_Lift=-130.0; break; // Move back to double hook
       case 11: sp_Hook=25.0; sp_Lift=-Lift_angle_command; break; // **Swing body
@@ -175,8 +181,4 @@ public class Climber extends SubsystemBase {
     Lift.setInverted(false);
   }
 
-  public void resetEncoder() {
-    Lift.getEncoder().setPosition(0);
-    Hook.getEncoder().setPosition(0);
-  }
 }
