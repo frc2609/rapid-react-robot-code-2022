@@ -31,6 +31,7 @@ import frc.robot.commands.intake.ReverseUpperBeltTimer;
 import frc.robot.commands.intake.StageBall;
 import frc.robot.commands.intake.TeleopFeedBall;
 import frc.robot.commands.intake.TeleopIntakeBall;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
@@ -88,10 +89,6 @@ public class RobotContainer {
     // m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(operatorJoystick), m_shooterSubsystem));
 
     enabledLooper = new Looper();
-
-    UsbCamera usbCamera = new UsbCamera("USB Camera", 0);
-    MjpegServer mjpegServer1 = new MjpegServer("USB Camera Server", 1181);
-    mjpegServer1.setSource(usbCamera);
 
     configureButtonBindings();
     // try {
