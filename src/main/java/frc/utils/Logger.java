@@ -127,19 +127,20 @@ public class Logger {
       try {
         // int ,%d
         // double ,%.3f
-        this.writer.write(String.format("%.3f", Timer.getFPGATimestamp()));
-        // this.writer.write(String.format(",%d", new java.util.Date().getTime()));
-        this.writer.write(String.format(",%.3f", climber.getHookPosition()));
-        this.writer.write(String.format(",%.3f", climber.getArmKinematics().getArmAngle()));
-        this.writer.write(String.format(",%.3f", climber.getArmKinematics().getArmVelocity()));
-        this.writer.write(String.format(",%.3f", climber.getArmPosition()));
-        this.writer.write(String.format(",%.3f", climber.getArmKinematics().getBodyAngle()));
-        this.writer.write(String.format(",%.3f", climber.getArmKinematics().getBodyVelocity()));
-        this.writer.write(String.format(",%.3f", climber.Lift.getAppliedOutput()));
-        this.writer.write(String.format(",%.3f", climber.Hook.getAppliedOutput()));
-        this.writer.write(String.format(",%.3f", climber.Lift.getOutputCurrent()));
-        this.writer.write(String.format(",%.3f", climber.Hook.getOutputCurrent()));
-        this.writer.write(String.format(",%b", climber.getArmKinematics().isHooked()));
+
+        // this.writer.write(String.format("%.3f", Timer.getFPGATimestamp()));
+        // // this.writer.write(String.format(",%d", new java.util.Date().getTime()));
+        // this.writer.write(String.format(",%.3f", climber.getHookPosition()));
+        // this.writer.write(String.format(",%.3f", climber.getArmKinematics().getArmAngle()));
+        // this.writer.write(String.format(",%.3f", climber.getArmKinematics().getArmVelocity()));
+        // this.writer.write(String.format(",%.3f", climber.getArmPosition()));
+        // this.writer.write(String.format(",%.3f", climber.getArmKinematics().getBodyAngle()));
+        // this.writer.write(String.format(",%.3f", climber.getArmKinematics().getBodyVelocity()));
+        // this.writer.write(String.format(",%.3f", climber.Lift.getAppliedOutput()));
+        // this.writer.write(String.format(",%.3f", climber.Hook.getAppliedOutput()));
+        // this.writer.write(String.format(",%.3f", climber.Lift.getOutputCurrent()));
+        // this.writer.write(String.format(",%.3f", climber.Hook.getOutputCurrent()));
+        // this.writer.write(String.format(",%b", climber.getArmKinematics().isHooked()));
 
         this.writer.newLine();
       } catch (IOException e) {

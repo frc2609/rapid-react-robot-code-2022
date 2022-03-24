@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putBoolean("intakeSensor", RobotContainer.m_shooterSubsystem.getIntakeSensor());
     SmartDashboard.putBoolean("stagingSensor", RobotContainer.m_shooterSubsystem.stagingSensor.get());
-    SmartDashboard.putBoolean("stagingSensor", RobotContainer.m_shooterSubsystem.shooterSensor.get());
+    SmartDashboard.putBoolean("shooterSensor", RobotContainer.m_shooterSubsystem.shooterSensor.get());
 
     // RamseteFactory.getInstance().printPath();
   }

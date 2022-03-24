@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -37,6 +38,7 @@ public class Shooter extends SubsystemBase {
   private boolean pov_pressed = false;
   private double kD_LastError = 0.0;
   private long kD_LastTime = 0;
+  private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, 0.02);
 
   private double manualHoodPos = 0;
   private double manualFlywheelRpm = 0;
@@ -72,7 +74,7 @@ public class Shooter extends SubsystemBase {
     rotatePIDController = rotateMotor.getPIDController();
     hoodPIDController = hoodMotor.getPIDController();
 
-    SmartDashboard.putNumber("Limelight camera angle (deg)", 27.2);
+    SmartDashboard.putNumber("Limelight camera angle (deg)", 30.7);
 
     turnLimelightOff();
     setPidValues();
@@ -129,8 +131,7 @@ public class Shooter extends SubsystemBase {
     double tx = txEntry.getDouble(0.0);
     double distance = calcDistance();
 
-    return (
-      isValidTarget
+    return (isValidTarget
       && Math.abs(tx) < Constants.Rotate.TOLERANCE
       && Math.abs(calcFlywheelRpm(distance) - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
       && Math.abs(calcHoodPos(distance) - hoodMotor.getEncoder().getPosition()) < Constants.AutoConstants.hoodTolerance
@@ -180,11 +181,10 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcDistance() {
-    double cameraHeight = 0.885; // height of camera in meters (from ground)
+    double cameraHeight = 0.889; // height of camera in meters (from ground)
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
     double tv = tvEntry.getDouble(0.0);
-    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 27.2);
-
+    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 30.7);
 
     if (tv <= 0) {
       SmartDashboard.putBoolean("Valid Limelight Target", false);
@@ -193,7 +193,7 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putBoolean("Valid Limelight Target", true);
 
-    double ty = tyEntry.getDouble(0.0);
+    double ty = filter.calculate(tyEntry.getDouble(0.0));
 
     double distance = 3.281 * (tapeHeight - cameraHeight)  // 3.281 feet per meter
         / Math.tan(Utils.degToRad(cameraAngleDegrees) + Utils.degToRad(ty));
@@ -306,11 +306,11 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcFlywheelRpm(double distance) {
-    return 1*distance*distance + 100*distance + 3000 + autoFlywheelRpmTrim;
+    return 1.2*distance*distance + 105*distance + 3000 + autoFlywheelRpmTrim;
   }
 
   private double calcHoodPos(double distance) {
-    return 0.0038*distance*distance + 0.027*distance - 0.35 + autoHoodPosTrim;
+    return 0.0035*distance*distance + 0.05*distance - 0.35 + autoHoodPosTrim;
   }
 
   // manual shooter control methods
@@ -388,6 +388,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Hood Position Trim", autoHoodPosTrim);
     SmartDashboard.putNumber("Manual Hood Position", manualHoodPos);
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
+    SmartDashboard.putBoolean("isTargetLocked", isTargetLocked());
 
     // keeps autoAim enabled for rotate in auto mode so the robot doesn't lose track of the target
     if (isAutoAimMode && !isFlywheelDisabled) {
