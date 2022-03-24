@@ -87,7 +87,7 @@ public class Shooter extends SubsystemBase {
 
   public void autoAim() {
     if(DriverStation.isTeleop()){
-      trimAdjust(RobotContainer.driveJoystick);
+      trimAdjust(RobotContainer.operatorJoystick);
     }
     autoRotate();
     autoFlywheelAndHood();
