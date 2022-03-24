@@ -56,7 +56,6 @@ public final class Constants {
         public static final int UPPER_BELT_MOTOR = 0;
         public static final int INTAKE_BALL_MOTOR = 3;
         public static final int INTAKE_LIFT_MOTOR = 2;
-        public static final int LED_CONTROLLER = 4;
     }
 
     public final class CanMotorId {
@@ -120,6 +119,12 @@ public final class Constants {
         public static final double BELT_SPEED = 1;
     }
 
+    public static final class LED {
+        public static final int PWM_PORT = 4;
+        public static final double RED = 0.61;
+        public static final double BLUE = 0.87;
+    }
+
     public static final class DriveKin {
         
         public static final double ksVolts = 0.24364;
@@ -150,5 +155,5 @@ public final class Constants {
         public static boolean isReversed = false;
         public static double rpmTolerance = 200;
         public static double hoodTolerance = 0.2;
-      }
+    }
 }
