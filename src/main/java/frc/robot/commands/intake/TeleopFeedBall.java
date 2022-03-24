@@ -44,6 +44,8 @@ public class TeleopFeedBall extends CommandBase {
     if(SmartDashboard.getBoolean(Constants.FEEDER_OVERRIDE_STRING, true)){
       RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 1);
       return false;
+    } else {
+      RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 0);
     }
     return !RobotContainer.m_shooterSubsystem.isTargetLocked();
   }
