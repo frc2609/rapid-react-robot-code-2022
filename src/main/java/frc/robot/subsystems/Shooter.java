@@ -391,12 +391,11 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
     SmartDashboard.putBoolean("isTargetLocked", isTargetLocked());
     SmartDashboard.putBoolean("is climbing", isClimbing);
-
-
+    SmartDashboard.putNumber("Rotate motor current", rotateMotor.getOutputCurrent());
 
     if (isClimbing) {
       rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out
-      rotateMotor.set(-0.3);
+      rotateMotor.set(-1.0);
       return;
     } else {
       rotateMotor.setSmartCurrentLimit(20);
