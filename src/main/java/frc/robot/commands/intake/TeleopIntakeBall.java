@@ -36,7 +36,6 @@ public class TeleopIntakeBall extends CommandBase {
       isBallAtIntake = false;
       isBallAtStaging = false;
       RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);
-      RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 1);
     }
 
     if (isBallAtIntake == false && isBallAtStaging == false) {

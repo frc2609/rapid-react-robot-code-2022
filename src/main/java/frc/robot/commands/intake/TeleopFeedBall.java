@@ -42,7 +42,6 @@ public class TeleopFeedBall extends CommandBase {
   @Override
   public boolean isFinished() {
     if(SmartDashboard.getBoolean(Constants.FEEDER_OVERRIDE_STRING, true)){
-      RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);
       RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 1);
       return false;
     }
