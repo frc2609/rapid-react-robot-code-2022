@@ -56,6 +56,7 @@ public final class Constants {
         public static final int UPPER_BELT_MOTOR = 0;
         public static final int INTAKE_BALL_MOTOR = 3;
         public static final int INTAKE_LIFT_MOTOR = 2;
+        public static final int LED_CONTROLLER = 4;
     }
 
     public final class CanMotorId {
