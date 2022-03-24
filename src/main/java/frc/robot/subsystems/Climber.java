@@ -52,7 +52,7 @@ public class Climber extends SubsystemBase {
     if (currentStep > 0 && currentStep < 3) {
       RobotContainer.m_shooterSubsystem.isClimbingFullRotate = true;
       RobotContainer.m_shooterSubsystem.isClimbingLowRotate = false;
-    } else if (currentStep >= 3) {
+    } else if (currentStep >= 3 && currentStep < 12) {
       RobotContainer.m_shooterSubsystem.isClimbingFullRotate = false;
       RobotContainer.m_shooterSubsystem.isClimbingLowRotate = true;
     } else {
@@ -102,8 +102,8 @@ public class Climber extends SubsystemBase {
     }
     else Climb_speed=0.0;
 
-    Hook_PID.setSmartMotionMaxVelocity(Climb_speed*12000, 0);
-    Lift_PID.setSmartMotionMaxVelocity(Climb_speed*12000, 0);
+    Hook_PID.setSmartMotionMaxVelocity(Climb_speed*18000, 0);
+    Lift_PID.setSmartMotionMaxVelocity(Climb_speed*18000, 0);
 
     Hook_PID.setReference(sp_Hook, CANSparkMax.ControlType.kSmartMotion);
     Lift_PID.setReference(sp_Lift, CANSparkMax.ControlType.kSmartMotion);
@@ -113,31 +113,32 @@ public class Climber extends SubsystemBase {
     switch(currentStep) { // Hook(0:356) Lift(0:-130)
       case 0: sp_Hook=0.0; sp_Lift=LiftMotor.getEncoder().getPosition(); break; // Send Hooks HOME (0)
       case 1: sp_Hook=0.0; sp_Lift=0.0; break; // Send Hooks & Lift HOME (0)
-      case 2: sp_Hook=0.0; sp_Lift=-130; break; // Lift up to MID rung
-      case 3: sp_Hook=80.0; sp_Lift=-130.0; break; // Hooks pull robot up off ground
+      case 2: sp_Hook=0.0; sp_Lift=-133; break; // Lift up to MID rung
+      case 3: sp_Hook=80.0; sp_Lift=-133.0; break; // Hooks pull robot up off ground
       case 4: sp_Hook=355.0; sp_Lift=-Lift_angle_command; break; // Move under HIGH rung
-      case 5: sp_Hook=355.0; sp_Lift=-130.0; break; // Move up against HIGH rung
-      case 6: sp_Hook=330.0; sp_Lift=-130.0; break; // Move back to double hook
-      case 7: sp_Hook=330.0; sp_Lift=-Lift_angle_command+5; break; // **Swing body
-      case 8: sp_Hook=0.0; sp_Lift=-Lift_angle_command+5; break; // Move under TRAVERSAL rung
-      case 9: sp_Hook=0.0; sp_Lift=-130.0; break; // Move up against TRAVERSAL rung
-      case 10: sp_Hook=25.0; sp_Lift=-130.0; break; // Move back to double hook
+      case 5: sp_Hook=355.0; sp_Lift=-132.0; break; // Move up against HIGH rung
+      case 6: sp_Hook=330.0; sp_Lift=-133.0; break; // Move back to double hook
+      case 7: sp_Hook=330.0; sp_Lift=-Lift_angle_command+6; break; // **Swing body
+      case 8: sp_Hook=0.0; sp_Lift=-Lift_angle_command+6; break; // Move under TRAVERSAL rung
+      case 9: sp_Hook=0.0; sp_Lift=-133.0; break; // Move up against TRAVERSAL rung
+      case 10: sp_Hook=25.0; sp_Lift=-133.0; break; // Move back to double hook
       case 11: sp_Hook=25.0; sp_Lift=-Lift_angle_command; break; // **Swing body
       case 12: sp_Hook=150.0; sp_Lift=-Lift_angle_command; break; // move up
+      case 13: sp_Hook=15.0; sp_Lift=-110; break; // move up
     }
 
-    upper_sp_Hook = sp_Hook + 0.2;
-    lower_sp_Hook = sp_Hook - 0.2;
+    upper_sp_Hook = sp_Hook + 0.3;
+    lower_sp_Hook = sp_Hook - 0.3;
 
-    upper_sp_Lift = sp_Lift + 0.8;
-    lower_sp_Lift = sp_Lift - 0.8;
+    upper_sp_Lift = sp_Lift + 0.9;
+    lower_sp_Lift = sp_Lift - 0.9;
 
     hookSetpointAchieved = (HookMotor.getEncoder().getPosition() <= upper_sp_Hook) && (HookMotor.getEncoder().getPosition() >= lower_sp_Hook);
 
     liftSetpointAchieved = (LiftMotor.getEncoder().getPosition() <= upper_sp_Lift) && (LiftMotor.getEncoder().getPosition() >= lower_sp_Lift);
 
     if (hookSetpointAchieved && liftSetpointAchieved) {
-      if (RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS)>0.05  && (currentStep<12) && (direction == StepDir.kForward)) currentStep+=1;
+      if (RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS)>0.05  && (currentStep<13) && (direction == StepDir.kForward)) currentStep+=1;
       if (RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS)>0.05  && (currentStep>0) && (direction == StepDir.kBackward)) currentStep-=1;
     }
   }
