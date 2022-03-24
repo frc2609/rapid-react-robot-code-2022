@@ -119,7 +119,7 @@ public class RobotContainer {
     intakeButton.whenReleased(new ReverseUpperBeltTimer(0.2));
 
     autoAimButton.toggleWhenPressed(new AutoAimAndLock());
-    feedButton.whenHeld(new TeleopFeedBall());
+    feedButton.whileHeld(new TeleopFeedBall());
     feedButton.whenReleased(new ReverseUpperBeltTimer(0.2));
 
   }
