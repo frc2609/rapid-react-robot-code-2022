@@ -5,12 +5,8 @@
 package frc.robot.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.RobotContainer;
 import frc.robot.MP.RamseteFactory;
-import frc.robot.commands.Print;
 import frc.robot.commands.autoaim.AutoAim;
-import frc.robot.commands.autoaim.AutoaimShoot3s;
-import frc.robot.commands.autoaim.DisableAutoAim;
 import frc.robot.commands.autoaim.DisableFlywheel;
 import frc.robot.commands.autonomous.DriveAndExtendIntake;
 import frc.robot.commands.autonomous.DriveStopCommand;
