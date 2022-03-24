@@ -395,8 +395,8 @@ public class Shooter extends SubsystemBase {
 
 
     if (isClimbing) {
-      rotateMotor.setSmartCurrentLimit(1);
-      rotateMotor.set(-0.1);
+      rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out
+      rotateMotor.set(-0.3);
       return;
     } else {
       rotateMotor.setSmartCurrentLimit(20);

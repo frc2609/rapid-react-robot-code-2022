@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.fasterxml.jackson.databind.util.ClassUtil;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
