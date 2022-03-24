@@ -391,7 +391,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Manual Hood Position", manualHoodPos);
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
     SmartDashboard.putBoolean("Target Locked", isTargetLocked());
-    SmartDashboard.putBoolean("Climbing", isClimbingFullRotate);
+    SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
     SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
 
     if (isClimbingFullRotate) {
