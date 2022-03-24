@@ -94,14 +94,7 @@ public class Drive extends SubsystemBase {
     // double rightMotors = driveY + driveX;
 
     updateOdometry();
-    
 
-    SmartDashboard.putNumber("posex", m_odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("posey", m_odometry.getPoseMeters().getY());
-    SmartDashboard.putNumber("deg", m_odometry.getPoseMeters().getRotation().getDegrees());
-    SmartDashboard.putNumber("velleft", getWheelSpeeds().leftMetersPerSecond);
-
-    
     SmartDashboard.putNumber("getpos", leftEncoder.getPosition());
     // tankDriveVolts(3, 3);
     // setMotors(leftMotors, rightMotors);
