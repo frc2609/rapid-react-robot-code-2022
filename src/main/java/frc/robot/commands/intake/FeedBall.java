@@ -20,12 +20,14 @@ public class FeedBall extends CommandBase {
   @Override
   public void initialize() {
     m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
+    m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
+    m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +39,6 @@ public class FeedBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !RobotContainer.m_shooterSubsystem.stagingSensor.get();
+    return (!RobotContainer.m_shooterSubsystem.stagingSensor.get() && !RobotContainer.m_shooterSubsystem.shooterSensor.get());
   }
 }
