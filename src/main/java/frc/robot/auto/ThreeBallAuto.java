@@ -34,10 +34,10 @@ public class ThreeBallAuto extends SequentialCommandGroup {
       new TimerDelay(0.2),
       new IntakeBall(),
       new AutoAim(),
-      new FeedBall(),
+      new FeedBall(), // first ball
       new AutoAim(),
       new StageBall(),
-      new FeedBall(),
+      new FeedBall(), // second ball
       new TimerDelay(0.5),
       new DisableFlywheel(),
       new StopIntakeAndBelt(),
@@ -49,6 +49,7 @@ public class ThreeBallAuto extends SequentialCommandGroup {
       new DriveStopCommand(),
       new IntakeBall(),
       new AutoAim(),
-      new FeedBall());
+      new FeedBall()
+    );
   }
 }
