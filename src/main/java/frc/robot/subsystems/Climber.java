@@ -51,11 +51,17 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(climb_step > 0) {
-      RobotContainer.m_shooterSubsystem.isClimbing = true;
+    if(climb_step > 0 && climb_step < 3) {
+      RobotContainer.m_shooterSubsystem.isClimbingFullRotate = true;
+      RobotContainer.m_shooterSubsystem.isClimbingLowRotate = false;
+    } else if(climb_step >= 3) {
+      RobotContainer.m_shooterSubsystem.isClimbingFullRotate = false;
+      RobotContainer.m_shooterSubsystem.isClimbingLowRotate = true;
     } else {
-      RobotContainer.m_shooterSubsystem.isClimbing = false;
+      RobotContainer.m_shooterSubsystem.isClimbingFullRotate = false;
+      RobotContainer.m_shooterSubsystem.isClimbingLowRotate = false;
     }
+
     SmartDashboard.putNumber("climb step", climb_step);
     Calculate_theta();
     Climb_Sequence();

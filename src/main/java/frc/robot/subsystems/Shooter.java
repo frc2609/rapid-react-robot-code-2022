@@ -39,7 +39,9 @@ public class Shooter extends SubsystemBase {
   private double kD_LastError = 0.0;
   private long kD_LastTime = 0;
   private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, 0.02);
-  public boolean isClimbing = false;
+  public boolean isClimbingFullRotate = false;
+  public boolean isClimbingLowRotate = false;
+
 
   private double manualHoodPos = 0;
   private double manualFlywheelRpm = 0;
@@ -390,12 +392,16 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Manual Hood Position", manualHoodPos);
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
     SmartDashboard.putBoolean("isTargetLocked", isTargetLocked());
-    SmartDashboard.putBoolean("is climbing", isClimbing);
+    SmartDashboard.putBoolean("is climbing", isClimbingFullRotate);
     SmartDashboard.putNumber("Rotate motor current", rotateMotor.getOutputCurrent());
 
-    if (isClimbing) {
+    if (isClimbingFullRotate) {
       rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out
       rotateMotor.set(-1.0);
+      return;
+    } else if (isClimbingLowRotate) {
+      rotateMotor.setSmartCurrentLimit(1);
+      rotateMotor.set(-0.1);
       return;
     } else {
       rotateMotor.setSmartCurrentLimit(20);
