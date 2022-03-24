@@ -23,8 +23,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final String INTAKE_OVERRIDE_STRING = "Intake sensor override";
-    public static final String FEEDER_OVERRIDE_STRING = "Feeder auto lock override";
+    // right click in shuffleboard, select Show as... -> Toggle Button
+    public static final String INTAKE_OVERRIDE_STRING = "Intake OV";
+    public static final String FEEDER_OVERRIDE_STRING = "Feeder Lock OV";
+
     public final class Xbox {
         public static final double JOYSTICK_DRIFT_TOLERANCE = 0.1;
         public static final int DRIVER_PORT = 0;
@@ -123,10 +125,10 @@ public final class Constants {
         public static final int PWM_PORT = 4;
         public static final double RED = 0.61;
         public static final double BLUE = 0.87;
+        public static final double PURPLE = 0.91;
     }
 
     public static final class DriveKin {
-        
         public static final double ksVolts = 0.24364;
         public static final double kvVoltSecondsPerMeter = 2.8238;
         // public static final double kaVoltSecondsSquaredPerMeter = 0.493;//0.0036601
