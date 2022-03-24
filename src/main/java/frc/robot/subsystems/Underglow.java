@@ -6,21 +6,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class Underglow extends SubsystemBase {
-    // led controller pretends to be a PWM motor controller
-    private final Spark LEDController = new Spark(Constants.LED.PWM_PORT);
-    private final double set;
+  // led controller pretends to be a PWM motor controller
+  private final Spark LEDController = new Spark(Constants.LED.PWM_PORT);
+  private final double color;
 
-    public Underglow() {
-       if (SmartDashboard.getBoolean("isRedTeam", true)) {
-           set = Constants.LED.RED;
-       } else {
-           set = Constants.LED.BLUE;
-       }
+  public Underglow() {
+    if (SmartDashboard.getBoolean("isRedTeam", true)) {
+      color = Constants.LED.RED;
+    } else {
+      color = Constants.LED.BLUE;
     }
+  }
 
-    @Override
-    public void periodic() {
-        LEDController.set(set); // changes colour of LED
-        SmartDashboard.putNumber("LED Controller Colour", set);
-    }
+  @Override
+  public void periodic() {
+    LEDController.set(color); // changes colour of LED
+    SmartDashboard.putNumber("LED Controller Colour", color);
+  }
 }
