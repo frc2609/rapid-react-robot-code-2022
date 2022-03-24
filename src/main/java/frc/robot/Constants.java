@@ -25,7 +25,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
     // right click in shuffleboard, select Show as... -> Toggle Button
     public static final String INTAKE_OVERRIDE_STRING = "Intake OV";
-    public static final String FEEDER_OVERRIDE_STRING = "Feeder Lock OV";
+    public static final String FEEDER_OVERRIDE_STRING = "Feed Lock";
 
     public final class Xbox {
         public static final double JOYSTICK_DRIFT_TOLERANCE = 0.1;
