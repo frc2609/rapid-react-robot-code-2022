@@ -393,6 +393,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putBoolean("Target Locked", isTargetLocked());
     SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
     SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Intake Sensor Proximity", intakeSensor.getProximity());
 
     if (isClimbingFullRotate) {
       rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out
