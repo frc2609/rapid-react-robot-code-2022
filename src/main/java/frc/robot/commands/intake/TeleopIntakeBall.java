@@ -4,6 +4,8 @@
 
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -29,6 +31,13 @@ public class TeleopIntakeBall extends CommandBase {
   public void execute() {
     boolean isBallAtIntake = RobotContainer.m_shooterSubsystem.getIntakeSensor();
     boolean isBallAtStaging = RobotContainer.m_shooterSubsystem.shooterSensor.get();
+
+    if(SmartDashboard.getBoolean(Constants.INTAKE_OVERRIDE_STRING, true)){
+      isBallAtIntake = false;
+      isBallAtStaging = false;
+      RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);
+      RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 1);
+    }
 
     if (isBallAtIntake == false && isBallAtStaging == false) {
       // No balls

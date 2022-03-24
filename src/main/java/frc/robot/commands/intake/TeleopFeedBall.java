@@ -4,6 +4,8 @@
 
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -39,6 +41,11 @@ public class TeleopFeedBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(SmartDashboard.getBoolean(Constants.FEEDER_OVERRIDE_STRING, true)){
+      RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);
+      RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 1);
+      return false;
+    }
     return !RobotContainer.m_shooterSubsystem.isTargetLocked();
   }
 }

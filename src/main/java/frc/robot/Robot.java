@@ -42,6 +42,9 @@ public class Robot extends TimedRobot {
     logger.openFile();
     logger.setClimber(RobotContainer.m_climbSubsystem);
     x = new ThreeBallAuto();
+
+    SmartDashboard.putBoolean(Constants.INTAKE_OVERRIDE_STRING, false);
+    SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, false);
   }
 
   /**
