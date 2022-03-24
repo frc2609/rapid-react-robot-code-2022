@@ -8,9 +8,13 @@ import frc.robot.Constants;
 public class Underglow extends SubsystemBase {
   // led controller pretends to be a PWM motor controller
   private final Spark LEDController = new Spark(Constants.LED.PWM_PORT);
-  private final double color;
+  private double color;
 
   public Underglow() {
+    checkColor();
+  }
+
+  public void checkColor() {
     if (SmartDashboard.getBoolean("isRedTeam", true)) {
       color = Constants.LED.RED;
     } else {

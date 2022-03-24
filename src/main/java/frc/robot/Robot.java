@@ -103,6 +103,7 @@ public class Robot extends TimedRobot {
     RobotContainer.bodyNavx.zeroYaw();
     m_robotContainer.enabledLooper.start();
     RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
+    RobotContainer.m_underglowSubsystem.checkColor();
   }
 
   /** This function is called periodically during autonomous. */
@@ -123,6 +124,7 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.enabledLooper.start();
     RobotContainer.m_shooterSubsystem.disableAutoAim(); // auto will leave it running, disables at start of teleop
+    RobotContainer.m_underglowSubsystem.checkColor();
   }
 
   /** This function is called periodically during operator control. */
