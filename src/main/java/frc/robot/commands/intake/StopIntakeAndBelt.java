@@ -19,6 +19,6 @@ public class StopIntakeAndBelt extends InstantCommand {
   @Override
   public void initialize() {
     RobotContainer.m_intakeSubsystem.setBelts(0);
-    RobotContainer.m_intakeSubsystem.setIntake(0);
+    RobotContainer.m_intakeSubsystem.setIntakeBelt(0);
   }
 }
