@@ -4,284 +4,188 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.MP.Loop;
-import frc.utils.Logger;
 
 public class Climber extends SubsystemBase {
+  private final CANSparkMax HookMotor = new CANSparkMax(Constants.CanMotorId.HOOK_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax LiftMotor = new CANSparkMax(Constants.CanMotorId.BAR_MOTOR, MotorType.kBrushless);
+  private SparkMaxPIDController Lift_PID, Hook_PID;
 
-  public final CANSparkMax hookMotor = new CANSparkMax(Constants.CanMotorId.HOOK_MOTOR, MotorType.kBrushless);
-  public final CANSparkMax barMotor = new CANSparkMax(Constants.CanMotorId.BAR_MOTOR, MotorType.kBrushless);
-  private SparkMaxPIDController barPID, hookPID;
-  private final double ARM_RATIO = 70; // gear ratio * gearbox ratio
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, m_epsilon;
-  private Joystick m_stick;
-  private double armPosition = 0;
-  private ArmKinematics armKinematics;
-  private final Logger logger;
-  private boolean isManualControl = true;
+  enum StepDir {
+    kForward,
+    kBackward
+  }
 
-  private final Loop mLoop = new Loop() {
-    @Override
-    public void onStart() {
-      System.out.println("Starting Climber loop");
-      // logger.openFile();
-    }
-
-    @Override
-    public void onLoop() {
-      // logger.logTele();
-    }
-
-    @Override
-    public void onStop() {
-      System.out.println("Ending Climber loop");
-      // logger.close();
-    }
-
-  };
+  private int currentStep = 0;
+  private StepDir direction = StepDir.kForward;
+  private double sp_Lift = 0;
+  private double sp_Hook = 0;
+  private double upper_sp_Hook = 0;
+  private double lower_sp_Hook = 0;
+  private double upper_sp_Lift = 0;
+  private double lower_sp_Lift = 0;
+  private double Climb_speed = 0;
+  private boolean hookSetpointAchieved = false;
+  private boolean liftSetpointAchieved = false;
+  private double Hook_pos_mm = 0;
+  private double Lift_pos_deg = 0;
+  private double length_adjacent = 0;
+  private double theta = 0;
+  private double Lift_angle_command = 0;
 
   /** Creates a new Climber. */
   public Climber() {
-    resetEncoder();
-    barMotor.setInverted(true);
-    barPID = barMotor.getPIDController();
-    hookPID = hookMotor.getPIDController();
-    initValues();
-    m_stick = RobotContainer.driveJoystick;
-    barMotor.setIdleMode(IdleMode.kBrake);
-    hookMotor.setIdleMode(IdleMode.kBrake);
-    armKinematics = new ArmKinematics(RobotContainer.bodyNavx);
-    logger = Logger.getInstance();
-    logger.setClimber(this);
+    initPidAndMotors();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putNumber("HookPositionEncoder", getHookPosition());
-    SmartDashboard.putNumber("BarPositionAngle", getArmPosition());
-    if (isManualControl) {
-      manualBarMotorControl();
-      manualHookMotorControl();
+    if (currentStep > 0 && currentStep < 3) {
+      RobotContainer.m_shooterSubsystem.isClimbingFullRotate = true;
+      RobotContainer.m_shooterSubsystem.isClimbingLowRotate = false;
+    } else if (currentStep >= 3 && currentStep < 12) {
+      RobotContainer.m_shooterSubsystem.isClimbingFullRotate = false;
+      RobotContainer.m_shooterSubsystem.isClimbingLowRotate = true;
+    } else {
+      RobotContainer.m_shooterSubsystem.isClimbingFullRotate = false;
+      RobotContainer.m_shooterSubsystem.isClimbingLowRotate = false;
     }
-    armKinematics.update();
+
+    SmartDashboard.putNumber("climb step", currentStep);
+    Calculate_theta();
+    Climb_Sequence();
+    Climb_Speed_Calc();
   }
 
-  public void setArmVolt(double percent) {
-    barMotor.set(percent);
+  private void Calculate_theta(){
+    double hook_flip = 0;
+    if (currentStep>=7 && currentStep<=10) hook_flip = 356 - HookMotor.getEncoder().getPosition();
+    else hook_flip = HookMotor.getEncoder().getPosition();
+
+    // Hook Position = Encoder position * (total travel in mm:850) / (NEO rotations:356)
+    Hook_pos_mm = 725.0 - (hook_flip * (850.0/356.0));
+
+    // Lift Position = Encoder position * (total travel in degrees:135) / (NEO rotations:130)
+    Lift_pos_deg = -(LiftMotor.getEncoder().getPosition())*(135.0/130.0);
+
+    // Trigonometry to find length (mm) of adjacent side of triangle (32.7 degrees - climb rung angle)
+    length_adjacent = Math.acos(Math.toRadians(32.7)) * Hook_pos_mm;
+
+    // Trigonometry to find angle (degrees) of lower triangle to C of G
+    theta = Math.toDegrees(Math.acos(length_adjacent/488.0)) + 10;
+
+    if ((theta > 135.0) && (theta < 360.0)) Lift_angle_command = 135.0;
+    else if (Double.isNaN(theta)) Lift_angle_command = 45.0;
+    else Lift_angle_command = theta;
   }
 
-  public void manualBarMotorControl() {
-    double rawAxisValue = m_stick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS);
-    double inc = (Math.abs(rawAxisValue) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE ? 0 : rawAxisValue)
-        * Constants.ArmValue.ARM_SPEED_MULTIPLIER;
-    // armPosition = Math.min(Math.max(armPosition + inc, Constants.MIN_ARM_POS),
-    // Constants.MAX_ARM_POS);
-    armPosition = Math.min(armPosition + inc, Constants.ArmValue.MAX_ARM_POS);
+  private void Climb_Speed_Calc(){
+    double rightTriggerVal = RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS);
+    double leftTriggerVal = RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS);
 
-    setArmPosition(armPosition);
+    if (rightTriggerVal>0.05) {
+      Climb_speed = rightTriggerVal;
+      if (direction == StepDir.kBackward) { direction = StepDir.kForward; currentStep++; }
+    }
+    else if (leftTriggerVal>0.05) {
+      Climb_speed = leftTriggerVal;
+      if (direction == StepDir.kForward) { direction = StepDir.kBackward; currentStep--; }
+    }
+    else Climb_speed=0.0;
 
-    SmartDashboard.putNumber("Arm Position", armPosition);
+    Hook_PID.setSmartMotionMaxVelocity(Climb_speed*18000, 0);
+    Lift_PID.setSmartMotionMaxVelocity(Climb_speed*18000, 0);
+
+    Hook_PID.setReference(sp_Hook, CANSparkMax.ControlType.kSmartMotion);
+    Lift_PID.setReference(sp_Lift, CANSparkMax.ControlType.kSmartMotion);
   }
 
-  public void manualHookMotorControl() {
-    double inc = m_stick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS) - m_stick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS);
-    setHook(inc * Constants.ArmValue.HOOK_SPEED_MULTIPLIER);
+  private void Climb_Sequence(){
+    switch(currentStep) { // Hook(0:356) Lift(0:-130)
+      case 0: sp_Hook=0.0; sp_Lift=LiftMotor.getEncoder().getPosition(); break; // Send Hooks HOME (0)
+      case 1: sp_Hook=0.0; sp_Lift=0.0; break; // Send Hooks & Lift HOME (0)
+      case 2: sp_Hook=0.0; sp_Lift=-133; break; // Lift up to MID rung
+      case 3: sp_Hook=80.0; sp_Lift=-133.0; break; // Hooks pull robot up off ground
+      case 4: sp_Hook=355.0; sp_Lift=-Lift_angle_command; break; // Move under HIGH rung
+      case 5: sp_Hook=355.0; sp_Lift=-132.0; break; // Move up against HIGH rung
+      case 6: sp_Hook=330.0; sp_Lift=-133.0; break; // Move back to double hook
+      case 7: sp_Hook=330.0; sp_Lift=-Lift_angle_command+6; break; // **Swing body
+      case 8: sp_Hook=0.0; sp_Lift=-Lift_angle_command+6; break; // Move under TRAVERSAL rung
+      case 9: sp_Hook=0.0; sp_Lift=-133.0; break; // Move up against TRAVERSAL rung
+      case 10: sp_Hook=25.0; sp_Lift=-133.0; break; // Move back to double hook
+      case 11: sp_Hook=25.0; sp_Lift=-Lift_angle_command; break; // **Swing body
+      case 12: sp_Hook=150.0; sp_Lift=-Lift_angle_command; break; // move up
+      case 13: sp_Hook=15.0; sp_Lift=-110; break; // move up
+    }
+
+    upper_sp_Hook = sp_Hook + 0.3;
+    lower_sp_Hook = sp_Hook - 0.3;
+
+    upper_sp_Lift = sp_Lift + 0.9;
+    lower_sp_Lift = sp_Lift - 0.9;
+
+    hookSetpointAchieved = (HookMotor.getEncoder().getPosition() <= upper_sp_Hook) && (HookMotor.getEncoder().getPosition() >= lower_sp_Hook);
+
+    liftSetpointAchieved = (LiftMotor.getEncoder().getPosition() <= upper_sp_Lift) && (LiftMotor.getEncoder().getPosition() >= lower_sp_Lift);
+
+    if (hookSetpointAchieved && liftSetpointAchieved) {
+      if (RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_TRIGGER_AXIS)>0.05  && (currentStep<13) && (direction == StepDir.kForward)) currentStep+=1;
+      if (RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_TRIGGER_AXIS)>0.05  && (currentStep>0) && (direction == StepDir.kBackward)) currentStep-=1;
+    }
   }
 
-  public boolean isArmInPosition(double desiredPosition) {
-    return Math.abs(getArmPosition() - desiredPosition) < m_epsilon;
+  // this could go in the constructor
+  private void initPidAndMotors() {
+    Hook_PID = HookMotor.getPIDController();
+    Hook_PID.setP(0.00005);
+    Hook_PID.setI(0.000000001);
+    Hook_PID.setD(0.0000005);
+    Hook_PID.setIZone(0);
+    Hook_PID.setFF(0.000156);
+    Hook_PID.setOutputRange(-1.0, 1.0);
+    Hook_PID.setSmartMotionMaxVelocity(500, 0);
+    Hook_PID.setSmartMotionMaxAccel(15000, 0);
+
+    Lift_PID = LiftMotor.getPIDController();
+    Lift_PID.setP(0.00005);
+    Lift_PID.setI(0.000000001);
+    Lift_PID.setD(0.0000005);
+    Lift_PID.setIZone(0);
+    Lift_PID.setFF(0.000156);
+    Lift_PID.setOutputRange(-1.0, 1.0);
+    Lift_PID.setSmartMotionMaxVelocity(500, 0);
+    Lift_PID.setSmartMotionMaxAccel(15000, 0);
+
+    // HOOK Spark Max Default Values
+    HookMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    HookMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    HookMotor.setSoftLimit(SoftLimitDirection.kForward, 356);
+    HookMotor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+    HookMotor.setIdleMode(IdleMode.kCoast);
+    HookMotor.setSmartCurrentLimit(40);
+    HookMotor.setInverted(false);
+   
+    // LIFT Spark Max Default Values
+    LiftMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    LiftMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    LiftMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+    LiftMotor.setSoftLimit(SoftLimitDirection.kReverse, -135);
+    LiftMotor.setIdleMode(IdleMode.kCoast);
+    LiftMotor.setSmartCurrentLimit(40);
+    LiftMotor.setInverted(false);
   }
 
-  public boolean isHookInPosition(double desiredPosition) {
-    return Math.abs(getHookPosition() - desiredPosition) < m_epsilon;
+  public double getLiftPositionDeg() {
+    return Lift_pos_deg;
   }
 
-  public void setArmPosition(double position) {
-    kP = SmartDashboard.getNumber("P Gain", 0);
-    kI = SmartDashboard.getNumber("I Gain", 0);
-    kD = SmartDashboard.getNumber("D Gain", 0);
-    kIz = SmartDashboard.getNumber("I Zone", 0);
-    kFF = SmartDashboard.getNumber("Feed Forward", 0);
-    kMaxOutput = SmartDashboard.getNumber("Max Output", 0);
-    kMinOutput = SmartDashboard.getNumber("Min Output", 0);
-    maxVel = SmartDashboard.getNumber("Max Velocity", 0);
-    minVel = SmartDashboard.getNumber("Min Velocity", 0);
-    maxAcc = SmartDashboard.getNumber("Max Acceleration", 0);
-    allowedErr = SmartDashboard.getNumber("Allowed Closed Loop Error", 0);
-    m_epsilon = SmartDashboard.getNumber("epsilon for float compare", 0.01);
-
-    int smartMotionSlot = 0;
-    barPID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    barPID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    barPID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    barPID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
-
-    double armSetp = degToMotorPos(position);
-    // System.out.println(armSetp);
-    barPID.setReference(armSetp, ControlType.kSmartMotion);
-  }
-
-  public void setHookPosition(double position) {
-    kP = SmartDashboard.getNumber("Hook P Gain", 0);
-    kI = SmartDashboard.getNumber("Hook I Gain", 0);
-    kD = SmartDashboard.getNumber("Hook D Gain", 0);
-    kIz = SmartDashboard.getNumber("Hook I Zone", 0);
-    kFF = SmartDashboard.getNumber("Hook Feed Forward", 0);
-    kMaxOutput = SmartDashboard.getNumber("Hook Max Output", 0);
-    kMinOutput = SmartDashboard.getNumber("Hook Min Output", 0);
-    maxVel = SmartDashboard.getNumber("Hook Max Velocity", 0);
-    minVel = SmartDashboard.getNumber("Hook Min Velocity", 0);
-    maxAcc = SmartDashboard.getNumber("Hook Max Acceleration", 0);
-    allowedErr = SmartDashboard.getNumber("Hook Allowed Closed Loop Error", 0);
-    m_epsilon = SmartDashboard.getNumber("Hook epsilon for float compare", 0.01);
-
-    // int smartMotionSlot = 0;
-    // hookPID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    // hookPID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    // hookPID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    // hookPID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
-
-    // System.out.println(armSetp);
-    hookPID.setReference(position, ControlType.kSmartMotion);
-  }
-
-  public void disableArm() {
-    barMotor.set(0);
-  }
-
-  public void disableHook() {
-    hookMotor.set(0);
-  }
-
-  public void setArmToZero() {
-    armPosition = 0;
-  }
-
-  public void setManualClimb(boolean isManualControl) {
-    this.isManualControl = isManualControl;
-  }
-
-  public void toggleManClimb() {
-    this.isManualControl = !this.isManualControl;
-  }
-
-  private double degToMotorPos(double degrees) {
-    return (degrees / 360) * ARM_RATIO;
-  }
-
-  private double motorPosToDeg(double position) {
-    return 360 * position / (ARM_RATIO);
-  }
-
-  public void resetEncoder() {
-    barMotor.getEncoder().setPosition(0);
-    hookMotor.getEncoder().setPosition(0);
-  }
-
-  public double getArmPosition() {
-    return motorPosToDeg(barMotor.getEncoder().getPosition());
-  }
-
-  public double getHookPosition() {
-    return hookMotor.getEncoder().getPosition();
-  }
-
-  private void initValues() {
-    kP = 5e-5;
-    kI = 1e-6;
-    kD = 0;
-    kIz = 0;
-    kFF = 0.000156;
-    kMaxOutput = 1;
-    kMinOutput = -1;
-    maxRPM = 5700;
-    m_epsilon = 0.01;
-
-    // Smart Motion Coefficients
-    maxVel = 2000; // rpm
-    maxAcc = 1500;
-
-    // set PID coefficients
-    barPID.setP(kP);
-    barPID.setI(kI);
-    barPID.setD(kD);
-    barPID.setIZone(kIz);
-    barPID.setFF(kFF);
-    barPID.setOutputRange(kMinOutput, kMaxOutput);
-
-    hookPID.setP(kP);
-    hookPID.setI(kI);
-    hookPID.setD(kD);
-    hookPID.setIZone(kIz);
-    hookPID.setFF(kFF);
-    hookPID.setOutputRange(kMinOutput, kMaxOutput);
-
-    /**
-     * Smart Motion coefficients are set on a SparkMaxPIDController object
-     * 
-     * - setSmartMotionMaxVelocity() will limit the velocity in RPM of
-     * the pid controller in Smart Motion mode
-     * - setSmartMotionMinOutputVelocity() will put a lower bound in
-     * RPM of the pid controller in Smart Motion mode
-     * - setSmartMotionMaxAccel() will limit the acceleration in RPM^2
-     * of the pid controller in Smart Motion mode
-     * - setSmartMotionAllowedClosedLoopError() will set the max allowed
-     * error for the pid controller in Smart Motion mode
-     */
-    int smartMotionSlot = 0;
-    barPID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    barPID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    barPID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    barPID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
-
-    hookPID.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    hookPID.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    hookPID.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    hookPID.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
-
-    // display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("P Gain", kP);
-    SmartDashboard.putNumber("I Gain", kI);
-    SmartDashboard.putNumber("D Gain", kD);
-    SmartDashboard.putNumber("I Zone", kIz);
-    SmartDashboard.putNumber("Feed Forward", kFF);
-    SmartDashboard.putNumber("Max Output", kMaxOutput);
-    SmartDashboard.putNumber("Min Output", kMinOutput);
-
-    // display Smart Motion coefficients
-    SmartDashboard.putNumber("Max Velocity", maxVel);
-    SmartDashboard.putNumber("Min Velocity", minVel);
-    SmartDashboard.putNumber("Max Acceleration", maxAcc);
-    SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
-    SmartDashboard.putNumber("Set Position", 0);
-    SmartDashboard.putNumber("Set Velocity", 0);
-
-    // display float compare epslion
-    SmartDashboard.putNumber("epsilon for float compare", m_epsilon);
-  }
-
-  public void setHook(double power) {
-    hookMotor.set(power);
-  }
-
-  public void resetHook() {
-    hookMotor.getEncoder().setPosition(0);
-  }
-
-  public ArmKinematics getArmKinematics() {
-    return this.armKinematics;
-  }
 }

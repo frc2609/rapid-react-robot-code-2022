@@ -7,23 +7,24 @@ package frc.robot;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Climber;
-//import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Underglow;
 import frc.robot.MP.Looper;
-import frc.robot.commands.AutoAim;
-import frc.robot.commands.FeedBall;
-import frc.robot.commands.IntakeBall;
+import frc.robot.commands.autoaim.AutoAimAndLock;
+import frc.robot.commands.intake.IntakeReverse;
+import frc.robot.commands.intake.ReverseUpperBeltTimer;
+import frc.robot.commands.intake.TeleopFeedBall;
+import frc.robot.commands.intake.TeleopIntakeBall;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -41,36 +42,34 @@ public class RobotContainer {
   public static JoystickButton intakeButton = new JoystickButton(driveJoystick, Constants.Xbox.A_BUTTON);
   public static JoystickButton feedButton = new JoystickButton(operatorJoystick, Constants.Xbox.B_BUTTON);
   public static JoystickButton autoAimButton = new JoystickButton(operatorJoystick, Constants.Xbox.A_BUTTON);
+  public static JoystickButton outtakeButton = new JoystickButton(operatorJoystick, 8);
   // subsystems
   public static Drive m_driveSubsystem;
   public static Climber m_climbSubsystem;
   public static Shooter m_shooterSubsystem;
   public static Intake m_intakeSubsystem;
+  public static Underglow m_underglowSubsystem;
   public static AHRS bodyNavx;
   
   public Looper enabledLooper;
 
-  // commands
-  // commands go here when read
+  public CvSink m_cvSink;
+  public CvSource m_outputStream;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
     try {
       bodyNavx = new AHRS(SerialPort.Port.kMXP);
-    }catch(RuntimeException e){
+    } catch (RuntimeException e) {
       DriverStation.reportError("BodyNavx failed to initialize", false);
     }
     m_driveSubsystem = new Drive();
     m_climbSubsystem = new Climber();
     m_intakeSubsystem = new Intake();
     m_shooterSubsystem = new Shooter();
-
-    m_driveSubsystem.setDefaultCommand(new RunCommand(() -> m_driveSubsystem.manualDrive(driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS)), m_driveSubsystem));
-    m_intakeSubsystem.setDefaultCommand(new RunCommand(() -> m_intakeSubsystem.setIntakeLift(-driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS)), m_intakeSubsystem));
-    m_shooterSubsystem.setDefaultCommand(new RunCommand(() -> m_shooterSubsystem.manualAim(operatorJoystick), m_shooterSubsystem));
+    m_underglowSubsystem = new Underglow();
 
     enabledLooper = new Looper();
 
@@ -83,23 +82,18 @@ public class RobotContainer {
     // }
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-   * it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
+  // define button mappings here
   private void configureButtonBindings() {
-    intakeButton.whenHeld(new IntakeBall(m_intakeSubsystem));
-    feedButton.whenHeld(new FeedBall(m_intakeSubsystem));
-    autoAimButton.toggleWhenPressed(new AutoAim(m_shooterSubsystem, operatorJoystick));
+    intakeButton.whenHeld(new TeleopIntakeBall());
+    intakeButton.whenReleased(new ReverseUpperBeltTimer(0.2));
+    autoAimButton.toggleWhenPressed(new AutoAimAndLock());
+    feedButton.whileHeld(new TeleopFeedBall());
+    feedButton.whenReleased(new ReverseUpperBeltTimer(0.2));
+    outtakeButton.whileHeld(new IntakeReverse());
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {

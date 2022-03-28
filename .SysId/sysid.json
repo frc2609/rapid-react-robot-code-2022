@@ -1,6 +1,6 @@
 {
   "SysId": {
-    "Analysis Type": "Drivetrain",
+    "Analysis Type": "General Mechanism",
     "AnalyzerJSONLocation": "C:\\Users\\student\\Documents\\aimbotdrivetrainsysid\\sysid_data20220311-214549.json",
     "NetworkTables Settings": {
       "serverTeam": "2609"

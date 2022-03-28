@@ -4,15 +4,21 @@ import java.util.concurrent.TimeUnit;
 
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Utils;
 
 public class Shooter extends SubsystemBase {
@@ -32,6 +38,10 @@ public class Shooter extends SubsystemBase {
   private boolean pov_pressed = false;
   private double kD_LastError = 0.0;
   private long kD_LastTime = 0;
+  private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, 0.02);
+  public boolean isClimbingFullRotate = false;
+  public boolean isClimbingLowRotate = false;
+
 
   private double manualHoodPos = 0;
   private double manualFlywheelRpm = 0;
@@ -39,12 +49,20 @@ public class Shooter extends SubsystemBase {
   private double autoHoodPosTrim = 0;
   private double autoFlywheelRpmTrim = 0;
 
+  public final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
+  public final DigitalInput stagingSensor = new DigitalInput(0);
+  public final DigitalInput shooterSensor = new DigitalInput(1);
+
+  private boolean isFlywheelDisabled = false;
+
   private NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private NetworkTable table = inst.getTable("limelight");
   private NetworkTableEntry txEntry = table.getEntry("tx");
   private NetworkTableEntry tyEntry = table.getEntry("ty");
   private NetworkTableEntry tvEntry = table.getEntry("tv");
-
+  
+  public double autoRPMsetp = 0;
+  public double autoHoodSetp = 0;
   public Shooter() {
     hoodMotor.setInverted(true);
     rotateMotor.setInverted(true);
@@ -61,7 +79,7 @@ public class Shooter extends SubsystemBase {
     rotatePIDController = rotateMotor.getPIDController();
     hoodPIDController = hoodMotor.getPIDController();
 
-    SmartDashboard.putNumber("Limelight camera angle (deg)", 27.2);
+    SmartDashboard.putNumber("Limelight camera angle (deg)", 30.7);
 
     turnLimelightOff();
     setPidValues();
@@ -69,21 +87,31 @@ public class Shooter extends SubsystemBase {
     resetMotorEncoders();
   }
 
-  public void autoAim(Joystick stick) {
-    trimAdjust(stick);
+  public void autoAim() {
+    if(DriverStation.isTeleop()){
+      trimAdjust(RobotContainer.operatorJoystick);
+    }
     autoRotate();
     autoFlywheelAndHood();
   }
 
-  public void manualAim(Joystick stick) {
-    manualSetFlywheelRpm(stick);
-    manualSetHoodPos(stick);
-    manualSetRotatePower(stick);
+  public void setRPMTrim(double trimAmt){
+    this.autoFlywheelRpmTrim = trimAmt;
+  }
+
+  public void manualAim() {
+    manualSetFlywheelRpm(RobotContainer.operatorJoystick);
+    manualSetHoodPos(RobotContainer.operatorJoystick);
+    manualSetRotatePower(RobotContainer.operatorJoystick);
   }
 
   public void enableAutoAim() {
     isAutoAimMode = true;
     turnLimelightOn();
+  }
+
+  public boolean getIntakeSensor(){
+    return intakeSensor.getProximity() > Constants.AutoConstants.proxThreshold;
   }
 
   public void disableAutoAim() {
@@ -105,6 +133,26 @@ public class Shooter extends SubsystemBase {
   public void resetMotorEncoders() {
     hoodMotor.getEncoder().setPosition(0.0);
     rotateMotor.getEncoder().setPosition(0.0);
+  }
+
+  public boolean isTargetLocked(){
+    boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
+    double tx = txEntry.getDouble(0.0);
+    double distance = calcDistance();
+
+    return (isValidTarget
+      && Math.abs(tx) < Constants.Rotate.TOLERANCE
+      && Math.abs(calcFlywheelRpm(distance) - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
+      && Math.abs(calcHoodPos(distance) - hoodMotor.getEncoder().getPosition()) < Constants.AutoConstants.hoodTolerance
+    );
+  }
+
+  public void enableFlywheel() {
+    isFlywheelDisabled = false;
+  }
+
+  public void disableFlywheel() {
+    isFlywheelDisabled = true;
   }
 
   private void setPidValues() {
@@ -142,11 +190,10 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcDistance() {
-    double cameraHeight = 0.9017; // height of camera in meters (from ground)
+    double cameraHeight = 0.889; // height of camera in meters (from ground)
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
     double tv = tvEntry.getDouble(0.0);
-    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 27.2);
-
+    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 30.7);
 
     if (tv <= 0) {
       SmartDashboard.putBoolean("Valid Limelight Target", false);
@@ -155,7 +202,7 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putBoolean("Valid Limelight Target", true);
 
-    double ty = tyEntry.getDouble(0.0);
+    double ty = filter.calculate(tyEntry.getDouble(0.0));
 
     double distance = 3.281 * (tapeHeight - cameraHeight)  // 3.281 feet per meter
         / Math.tan(Utils.degToRad(cameraAngleDegrees) + Utils.degToRad(ty));
@@ -257,14 +304,24 @@ public class Shooter extends SubsystemBase {
     }
     distance = Math.round(distance);
 
-    double flywheelRpm = 1*distance*distance + 100*distance + 3000 + autoFlywheelRpmTrim;
-    double hoodPos = Utils.clamp(0.0033*distance*distance + 0.027*distance - 0.35 + autoHoodPosTrim, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
+    double flywheelRpm = calcFlywheelRpm(distance);
+    double hoodPos = Utils.clamp(calcHoodPos(distance), Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
 
     rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
+    autoRPMsetp = flywheelRpm;
+    autoHoodSetp = hoodPos;
     SmartDashboard.putNumber("Auto Flywheel RPM", flywheelRpm);
     SmartDashboard.putNumber("Auto Hood Position", hoodPos);
+  }
+
+  private double calcFlywheelRpm(double distance) {
+    return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
+  }
+
+  private double calcHoodPos(double distance) {
+    return 0.0035*distance*distance + 0.05*distance - 0.35 + autoHoodPosTrim;
   }
 
   // manual shooter control methods
@@ -320,7 +377,6 @@ public class Shooter extends SubsystemBase {
     }
 
     manualHoodPos = Utils.clamp(manualHoodPos, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
-    SmartDashboard.putNumber("manual hood pos", manualHoodPos);
     hoodPIDController.setReference(manualHoodPos, ControlType.kPosition);
   }
 
@@ -342,5 +398,31 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Hood Position Trim", autoHoodPosTrim);
     SmartDashboard.putNumber("Manual Hood Position", manualHoodPos);
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
+    SmartDashboard.putBoolean("Target Locked", isTargetLocked());
+    SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
+    SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Intake Sensor Proximity", intakeSensor.getProximity());
+
+    if (isClimbingFullRotate) {
+      rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out
+      rotateMotor.set(-1.0);
+      return;
+    } else if (isClimbingLowRotate) {
+      rotateMotor.setSmartCurrentLimit(1);
+      rotateMotor.set(-0.1);
+      return;
+    } else {
+      rotateMotor.setSmartCurrentLimit(20);
+    }
+
+    // keeps autoAim enabled for rotate in auto mode so the robot doesn't lose track of the target
+    if (isAutoAimMode && !isFlywheelDisabled) {
+      autoAim();
+    } else if(isAutoAimMode && isFlywheelDisabled){
+      rightFlywheelMotor.set(0);
+      autoRotate();
+    } else if(!isAutoAimMode) {
+      manualAim();
+    }
   }
 }

@@ -8,6 +8,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -21,6 +23,10 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    // right click in shuffleboard, select Show as... -> Toggle Button
+    public static final String INTAKE_OVERRIDE_STRING = "Intake OV";
+    public static final String FEEDER_OVERRIDE_STRING = "Feed Lock";
+
     public final class Xbox {
         public static final double JOYSTICK_DRIFT_TOLERANCE = 0.1;
         public static final int DRIVER_PORT = 0;
@@ -95,23 +101,61 @@ public final class Constants {
         public static final double FEED_FORWARD = 0.0;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_POS = 2.0;
+        public static final double MAX_POS = 2.7;
         public static final double MIN_POS = 0.0;
     }
 
     public final class Flywheel {
         public static final double PROPORTIONAL = 0.00006; // 0.00004;
         public static final double INTEGRAL = 0.0; //0.0002;
-        public static final double DERIVATIVE = 0.0;
+        public static final double DERIVATIVE = 0.001;
         public static final double INTEGRAL_ZONE = 5.0;
-        public static final double FEED_FORWARD = 0.000186; //0.000195; //0.000183;
+        public static final double FEED_FORWARD = 0.00018; //0.000195; //0.000183;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0.0;
     }
 
     public final class Motors {
-        public static final double INTAKE_SPEED = 0.5;
-        public static final double INTAKE_LIFT_SPEED = 0.25;
+        public static final double INTAKE_SPEED = 1;
+        public static final double INTAKE_LIFT_SPEED = 0.35;
         public static final double BELT_SPEED = 1;
+    }
+
+    public static final class LED {
+        public static final int PWM_PORT = 4;
+        public static final double RED = 0.61;
+        public static final double BLUE = 0.87;
+        public static final double PURPLE = 0.91;
+    }
+
+    public static final class DriveKin {
+        public static final double ksVolts = 0.24364;
+        public static final double kvVoltSecondsPerMeter = 2.8238;
+        // public static final double kaVoltSecondsSquaredPerMeter = 0.493;//0.0036601
+        public static final double kaVoltSecondsSquaredPerMeter = 0.46022;
+
+        // Example value only - as above, this must be tuned for your drive!
+        public static final double kPDriveVel = 5.7579; 
+        public static final double kTrackwidthMeters = 0.56;
+        public static final DifferentialDriveKinematics kDriveKinematics =
+            new DifferentialDriveKinematics(kTrackwidthMeters);
+
+                // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
+    }
+
+    public static final class AutoConstants {
+        public static final double kMaxSpeedMetersPerSecond = 2;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+    
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
+
+        public static final int proxThreshold = 100;
+    
+        public static boolean isReversed = false;
+        public static double rpmTolerance = 200;
+        public static double hoodTolerance = 0.2;
     }
 }

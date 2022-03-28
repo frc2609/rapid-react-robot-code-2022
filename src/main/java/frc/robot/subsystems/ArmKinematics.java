@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -14,6 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.FiniteDoubleQueue;
 
 /** Add your docs here. */
+// I'm going to assume this is for logging so it's gonna go eventually
+@Deprecated
 public class ArmKinematics {
   private AHRS armNavx, bodyNavx;
   private FiniteDoubleQueue armAvg, bodyAvg;
