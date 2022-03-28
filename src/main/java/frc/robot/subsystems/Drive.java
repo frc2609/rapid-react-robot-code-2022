@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.math.filter.LinearFilter;
 //import frc.robot.MP.Loop;
 
 public class Drive extends SubsystemBase {
@@ -40,6 +40,8 @@ public class Drive extends SubsystemBase {
   private final DifferentialDriveOdometry m_odometry;
   public boolean isReverse = false;
   public boolean isDriveLocked = false;
+  public LinearFilter leftFilter = LinearFilter.singlePoleIIR(0.2, 0.02);
+  public LinearFilter rightFilter = LinearFilter.singlePoleIIR(0.2, 0.02);
 
   // private final Loop mLoop = new Loop() {
   // @Override
@@ -117,10 +119,14 @@ public class Drive extends SubsystemBase {
   public void manualDrive(double xAxisSpeed, double yAxisSpeed) {
     double driveX = Math.pow(xAxisSpeed, 3);
     double driveY = Math.pow(yAxisSpeed, 3);
-    double leftMotors = driveY - driveX;
-    double rightMotors = driveY + driveX;
+    double leftMotors = leftFilter.calculate(driveY - driveX);
+    double rightMotors = rightFilter.calculate(driveY + driveX);
     if (!isDriveLocked) {
-      setMotors(leftMotors * 0.5, rightMotors * 0.5);
+      // setMotors(leftMotors * 0.5, rightMotors * 0.5);
+      SmartDashboard.putNumber("Raw left motor", driveY - driveX);
+      SmartDashboard.putNumber("Raw right motor", driveY + driveX);
+      SmartDashboard.putNumber("Filter left motor", leftMotors);
+      SmartDashboard.putNumber("Filter right motor", rightMotors);
     }
   }
 
