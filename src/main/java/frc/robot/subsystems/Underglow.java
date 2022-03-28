@@ -8,10 +8,11 @@ import frc.robot.Constants;
 public class Underglow extends SubsystemBase {
   // led controller pretends to be a PWM motor controller
   private final Spark LEDController = new Spark(Constants.LED.PWM_PORT);
-  private double color;
+  public static double color;
 
   public Underglow() {
     checkColor();
+    SmartDashboard.putNumber("LED Controller Colour", color);
   }
 
   public void checkColor() {
@@ -24,6 +25,7 @@ public class Underglow extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // color = SmartDashboard.getNumber("LED Controller Colour", color);
     LEDController.set(color); // changes colour of LED
     SmartDashboard.putNumber("LED Controller Colour", color);
   }

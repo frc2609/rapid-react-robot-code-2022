@@ -14,6 +14,6 @@ public class Shoot extends SequentialCommandGroup {
   public Shoot() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AutoAim(), new TimedFeed(0.3));
+    addCommands(new AutoAim(), new TimedFeed(0.3), new DisableAutoAim(), new DisableFlywheel());
   }
 }

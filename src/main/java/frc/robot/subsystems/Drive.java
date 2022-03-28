@@ -25,7 +25,7 @@ public class Drive extends SubsystemBase {
   /** Creates a new Drive. */
 
   private final CANSparkMax m_leftFrontMotor = new CANSparkMax(Constants.CanMotorId.LEFT_FRONT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax m_leftRearMotor = new CANSparkMax(Constants.CanMotorId.LEFT_REAR_MOTOR, MotorType.kBrushless);
+  public static final CANSparkMax m_leftRearMotor = new CANSparkMax(Constants.CanMotorId.LEFT_REAR_MOTOR, MotorType.kBrushless);
   private final CANSparkMax m_rightFrontMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_FRONT_MOTOR, MotorType.kBrushless);
   private final CANSparkMax m_rightRearMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_REAR_MOTOR, MotorType.kBrushless);
   private RelativeEncoder leftEncoder = m_leftFrontMotor.getEncoder();
@@ -113,7 +113,7 @@ public class Drive extends SubsystemBase {
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
     if (!isDriveLocked) {
-      setMotors(leftMotors*0.7, rightMotors*0.7);
+      setMotors(leftMotors*0.5, rightMotors*0.5);
     }
   }
 

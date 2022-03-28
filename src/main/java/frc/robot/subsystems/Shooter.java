@@ -60,7 +60,9 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry txEntry = table.getEntry("tx");
   private NetworkTableEntry tyEntry = table.getEntry("ty");
   private NetworkTableEntry tvEntry = table.getEntry("tv");
-
+  
+  public double autoRPMsetp = 0;
+  public double autoHoodSetp = 0;
   public Shooter() {
     hoodMotor.setInverted(true);
     rotateMotor.setInverted(true);
@@ -91,6 +93,10 @@ public class Shooter extends SubsystemBase {
     }
     autoRotate();
     autoFlywheelAndHood();
+  }
+
+  public void setRPMTrim(double trimAmt){
+    this.autoFlywheelRpmTrim = trimAmt;
   }
 
   public void manualAim() {
@@ -304,12 +310,14 @@ public class Shooter extends SubsystemBase {
     rightFlywheelPIDController.setReference(flywheelRpm, ControlType.kVelocity);
     hoodPIDController.setReference(hoodPos, ControlType.kPosition);
 
+    autoRPMsetp = flywheelRpm;
+    autoHoodSetp = hoodPos;
     SmartDashboard.putNumber("Auto Flywheel RPM", flywheelRpm);
     SmartDashboard.putNumber("Auto Hood Position", hoodPos);
   }
 
   private double calcFlywheelRpm(double distance) {
-    return 1.2*distance*distance + 105*distance + 3000 + autoFlywheelRpmTrim;
+    return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
   }
 
   private double calcHoodPos(double distance) {

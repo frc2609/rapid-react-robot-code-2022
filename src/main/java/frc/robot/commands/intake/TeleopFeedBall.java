@@ -4,6 +4,7 @@
 
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -21,7 +22,10 @@ public class TeleopFeedBall extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    DriverStation.reportError("RPMSETP" + RobotContainer.m_shooterSubsystem.autoRPMsetp ,false);
+    DriverStation.reportError("HOODSETP: " + RobotContainer.m_shooterSubsystem.autoHoodSetp , false);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
