@@ -122,11 +122,11 @@ public class Drive extends SubsystemBase {
     double leftMotors = leftFilter.calculate(driveY - driveX);
     double rightMotors = rightFilter.calculate(driveY + driveX);
     if (!isDriveLocked) {
-      // setMotors(leftMotors * 0.5, rightMotors * 0.5);
-      SmartDashboard.putNumber("Raw left motor", driveY - driveX);
-      SmartDashboard.putNumber("Raw right motor", driveY + driveX);
-      SmartDashboard.putNumber("Filter left motor", leftMotors);
-      SmartDashboard.putNumber("Filter right motor", rightMotors);
+      setMotors(leftMotors * 0.5, rightMotors * 0.5);
+      // SmartDashboard.putNumber("Raw left motor", driveY - driveX);
+      // SmartDashboard.putNumber("Raw right motor", driveY + driveX);
+      // SmartDashboard.putNumber("Filter left motor", leftMotors);
+      // SmartDashboard.putNumber("Filter right motor", rightMotors);
     }
   }
 
