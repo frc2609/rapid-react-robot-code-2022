@@ -43,7 +43,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putBoolean(Constants.INTAKE_OVERRIDE_STRING, false);
     SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, false);
-    CameraServer.startAutomaticCapture();
     RobotContainer.m_shooterSubsystem.disableAutoAim();
   }
 
