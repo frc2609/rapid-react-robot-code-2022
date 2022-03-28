@@ -19,65 +19,70 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 //import frc.robot.MP.Loop;
 
 public class Drive extends SubsystemBase {
   /** Creates a new Drive. */
 
-  private final CANSparkMax m_leftFrontMotor = new CANSparkMax(Constants.CanMotorId.LEFT_FRONT_MOTOR, MotorType.kBrushless);
-  public static final CANSparkMax m_leftRearMotor = new CANSparkMax(Constants.CanMotorId.LEFT_REAR_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax m_rightFrontMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_FRONT_MOTOR, MotorType.kBrushless);
-  private final CANSparkMax m_rightRearMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_REAR_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax m_leftFrontMotor = new CANSparkMax(Constants.CanMotorId.LEFT_FRONT_MOTOR,
+      MotorType.kBrushless);
+  public static final CANSparkMax m_leftRearMotor = new CANSparkMax(Constants.CanMotorId.LEFT_REAR_MOTOR,
+      MotorType.kBrushless);
+  private final CANSparkMax m_rightFrontMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_FRONT_MOTOR,
+      MotorType.kBrushless);
+  private final CANSparkMax m_rightRearMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_REAR_MOTOR,
+      MotorType.kBrushless);
   private RelativeEncoder leftEncoder = m_leftFrontMotor.getEncoder();
   private RelativeEncoder rightEncoder = m_rightFrontMotor.getEncoder();
-  //private Joystick m_driveJoystick;
+  // private Joystick m_driveJoystick;
   AHRS bodyNavx;
   private final DifferentialDriveOdometry m_odometry;
   public boolean isReverse = false;
   public boolean isDriveLocked = false;
 
   // private final Loop mLoop = new Loop() {
-  //   @Override
-  //   public void onStart() {
-  //     System.out.println("Starting Climber loop");
-  //     // logger.openFile();
-  //   }
+  // @Override
+  // public void onStart() {
+  // System.out.println("Starting Climber loop");
+  // // logger.openFile();
+  // }
 
-  //   @Override
-  //   public void onLoop() {
-  //     // logger.logTele();
-  //   }
+  // @Override
+  // public void onLoop() {
+  // // logger.logTele();
+  // }
 
-  //   @Override
-  //   public void onStop() {
-  //     System.out.println("Ending Climber loop");
-  //     // logger.close();
-  //   }
+  // @Override
+  // public void onStop() {
+  // System.out.println("Ending Climber loop");
+  // // logger.close();
+  // }
   // };
 
   public Drive() {
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
-    //m_driveJoystick = RobotContainer.driveJoystick;
+    // m_driveJoystick = RobotContainer.driveJoystick;
     this.bodyNavx = RobotContainer.bodyNavx;
     m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
-    leftEncoder.setPositionConversionFactor(0.4780/10.71);
-    rightEncoder.setPositionConversionFactor(0.4780/10.71);
+    leftEncoder.setPositionConversionFactor(0.4780 / 10.71);
+    rightEncoder.setPositionConversionFactor(0.4780 / 10.71);
     // leftEncoder.setPositionConversionFactor(1);
-    leftEncoder.setVelocityConversionFactor(0.4780/10.71);
-    rightEncoder.setVelocityConversionFactor(0.4780/10.71);
+    leftEncoder.setVelocityConversionFactor(0.4780 / 10.71);
+    rightEncoder.setVelocityConversionFactor(0.4780 / 10.71);
     // rightEncoder.setPositionConversionFactor(1);
     // 10.71*0.4780
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
   }
 
-  public void updateOdometry(){
+  public void updateOdometry() {
     // I assume this code is for updating the location info of the robot
-    if(isReverse){
-    m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
-    }else{
-    m_odometry.update(bodyNavx.getRotation2d().unaryMinus(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    if (isReverse) {
+      m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    } else {
+      m_odometry.update(bodyNavx.getRotation2d().unaryMinus(), leftEncoder.getPosition(), rightEncoder.getPosition());
     }
     SmartDashboard.putNumber("posex", m_odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("posey", m_odometry.getPoseMeters().getY());
@@ -88,8 +93,10 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // double driveX = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), 3);
-    // double driveY = Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS), 3);
+    // double driveX =
+    // Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), 3);
+    // double driveY =
+    // Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS), 3);
     // double leftMotors = driveY - driveX;
     // double rightMotors = driveY + driveX;
 
@@ -113,36 +120,62 @@ public class Drive extends SubsystemBase {
     double leftMotors = driveY - driveX;
     double rightMotors = driveY + driveX;
     if (!isDriveLocked) {
-      setMotors(leftMotors*0.5, rightMotors*0.5);
+      setMotors(leftMotors * 0.5, rightMotors * 0.5);
+    }
+  }
+
+  public void curveDrive(double xAxisSpeed, double yAxisSpeed, boolean turnInPlace) {
+    double speedY = yAxisSpeed;
+    double rotation = xAxisSpeed;
+    double leftMotors;
+    double rightMotors;
+    if (turnInPlace) {
+      leftMotors = speedY - rotation;
+      rightMotors = speedY + rotation;
+    } else {
+      leftMotors = speedY - Math.abs(speedY) * rotation;
+      rightMotors = speedY + Math.abs(speedY) * rotation;
+    }
+
+    double maxMagnitude = Math.max(Math.abs(leftMotors), Math.abs(rightMotors));
+    if (maxMagnitude > 1.0) {
+      leftMotors /= maxMagnitude;
+      rightMotors /= maxMagnitude;
+    }
+
+    if (!isDriveLocked) {
+      setMotors(leftMotors * 0.5, rightMotors * 0.5);
     }
   }
 
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
+
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    if(isReverse){
-    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity()/60, rightEncoder.getVelocity()/60);
+    if (isReverse) {
+      return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity() / 60, rightEncoder.getVelocity() / 60);
     }
-    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity()/60, rightEncoder.getVelocity()/60);
+    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity() / 60, rightEncoder.getVelocity() / 60);
   }
 
-  public void resetEncoders(){
+  public void resetEncoders() {
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
   }
+
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(-RobotContainer.bodyNavx.getYaw()));
   }
-  
-  public void setBrake(boolean isBrake){
-    if (isBrake){
+
+  public void setBrake(boolean isBrake) {
+    if (isBrake) {
       m_rightFrontMotor.setIdleMode(IdleMode.kBrake);
       m_rightRearMotor.setIdleMode(IdleMode.kBrake);
       m_leftRearMotor.setIdleMode(IdleMode.kBrake);
       m_leftFrontMotor.setIdleMode(IdleMode.kBrake);
-    }else{
+    } else {
       m_rightFrontMotor.setIdleMode(IdleMode.kCoast);
       m_rightRearMotor.setIdleMode(IdleMode.kCoast);
       m_leftRearMotor.setIdleMode(IdleMode.kCoast);
@@ -150,14 +183,15 @@ public class Drive extends SubsystemBase {
 
     }
   }
-  public void tankDriveVolts(double left, double right){
+
+  public void tankDriveVolts(double left, double right) {
     m_leftFrontMotor.setVoltage(left);
     m_leftRearMotor.setVoltage(left);
     m_rightFrontMotor.setVoltage(right);
     m_rightRearMotor.setVoltage(right);
   }
 
-  public void tankDriveVoltsReverse(double left, double right){
+  public void tankDriveVoltsReverse(double left, double right) {
     m_leftFrontMotor.setVoltage(-right);
     m_leftRearMotor.setVoltage(-right);
     m_rightFrontMotor.setVoltage(-left);

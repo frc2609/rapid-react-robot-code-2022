@@ -133,14 +133,20 @@ public class Robot extends TimedRobot {
     RobotContainer.m_shooterSubsystem.disableAutoAim(); // auto will leave it running, disables at start of teleop
     RobotContainer.m_underglowSubsystem.checkColor();
 
- }
+  }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     RobotContainer.m_underglowSubsystem.periodic();
-    RobotContainer.m_driveSubsystem.manualDrive(RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS));
-    RobotContainer.m_intakeSubsystem.setIntakeLift(-RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS));
+    // RobotContainer.m_driveSubsystem.manualDrive(RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS),
+    // RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS));
+    RobotContainer.m_driveSubsystem.curveDrive(
+        RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS),
+        RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS),
+        RobotContainer.driveJoystick.getRawButton(Constants.Xbox.X_BUTTON));
+    RobotContainer.m_intakeSubsystem
+        .setIntakeLift(-RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS));
   }
 
   @Override
