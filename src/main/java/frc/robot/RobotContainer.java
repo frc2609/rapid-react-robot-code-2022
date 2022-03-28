@@ -42,7 +42,7 @@ public class RobotContainer {
   public static JoystickButton intakeButton = new JoystickButton(driveJoystick, Constants.Xbox.A_BUTTON);
   public static JoystickButton feedButton = new JoystickButton(operatorJoystick, Constants.Xbox.B_BUTTON);
   public static JoystickButton autoAimButton = new JoystickButton(operatorJoystick, Constants.Xbox.A_BUTTON);
-  public static JoystickButton outtakeButton = new JoystickButton(operatorJoystick, 8);
+  public static JoystickButton outtakeButton = new JoystickButton(operatorJoystick, Constants.Xbox.START_BUTTON);
   // subsystems
   public static Drive m_driveSubsystem;
   public static Climber m_climbSubsystem;
