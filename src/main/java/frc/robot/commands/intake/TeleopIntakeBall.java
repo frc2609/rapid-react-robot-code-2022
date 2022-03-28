@@ -32,7 +32,7 @@ public class TeleopIntakeBall extends CommandBase {
     boolean isBallAtIntake = RobotContainer.m_shooterSubsystem.getIntakeSensor();
     boolean isBallAtStaging = RobotContainer.m_shooterSubsystem.shooterSensor.get();
 
-    if(SmartDashboard.getBoolean(Constants.INTAKE_OVERRIDE_STRING, true)){
+    if(SmartDashboard.getBoolean(Constants.INTAKE_OVERRIDE_STRING, true)) {
       isBallAtIntake = false;
       isBallAtStaging = false;
       RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);

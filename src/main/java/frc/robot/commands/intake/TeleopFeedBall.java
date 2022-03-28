@@ -23,8 +23,8 @@ public class TeleopFeedBall extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    DriverStation.reportError("RPMSETP" + RobotContainer.m_shooterSubsystem.autoRPMsetp ,false);
-    DriverStation.reportError("HOODSETP: " + RobotContainer.m_shooterSubsystem.autoHoodSetp , false);
+    DriverStation.reportError("RPMSETP" + RobotContainer.m_shooterSubsystem.autoRPMsetp, false);
+    DriverStation.reportError("HOODSETP: " + RobotContainer.m_shooterSubsystem.autoHoodSetp, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,12 +45,13 @@ public class TeleopFeedBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(SmartDashboard.getBoolean(Constants.FEEDER_OVERRIDE_STRING, true)){
+    if(SmartDashboard.getBoolean(Constants.FEEDER_OVERRIDE_STRING, true)) {
       RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 1);
       return false;
     } else {
       RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 0);
     }
+    
     return !RobotContainer.m_shooterSubsystem.isTargetLocked();
   }
 }
