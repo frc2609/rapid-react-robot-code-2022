@@ -119,10 +119,12 @@ public class Drive extends SubsystemBase {
   public void manualDrive(double xAxisSpeed, double yAxisSpeed) {
     double driveX = Math.pow(xAxisSpeed, 3);
     double driveY = Math.pow(yAxisSpeed, 3);
-    double leftMotors = leftFilter.calculate(driveY - driveX);
-    double rightMotors = rightFilter.calculate(driveY + driveX);
+    double leftMotorRaw = driveY - driveX;
+    double rightMotorRaw = driveY + driveX;
+    double leftMotors = leftFilter.calculate(leftMotorRaw);
+    double rightMotors = rightFilter.calculate(rightMotorRaw);
     if (!isDriveLocked) {
-      setMotors(leftMotors * 0.5, rightMotors * 0.5);
+      setMotors(leftMotors * 0.6, rightMotors * 0.6);
       // SmartDashboard.putNumber("Raw left motor", driveY - driveX);
       // SmartDashboard.putNumber("Raw right motor", driveY + driveX);
       // SmartDashboard.putNumber("Filter left motor", leftMotors);
