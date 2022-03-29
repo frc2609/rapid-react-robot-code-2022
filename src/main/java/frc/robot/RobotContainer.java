@@ -19,7 +19,9 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Underglow;
 import frc.robot.MP.Looper;
 import frc.robot.commands.autoaim.AutoAimAndLock;
+import frc.robot.commands.intake.ExtendIntakeRunBelt;
 import frc.robot.commands.intake.IntakeReverse;
+import frc.robot.commands.intake.RetractIntakeStopBelt;
 import frc.robot.commands.intake.ReverseUpperBeltTimer;
 import frc.robot.commands.intake.TeleopFeedBall;
 import frc.robot.commands.intake.TeleopIntakeBall;
@@ -84,8 +86,10 @@ public class RobotContainer {
 
   // define button mappings here
   private void configureButtonBindings() {
-    intakeButton.whenHeld(new TeleopIntakeBall());
-    intakeButton.whenReleased(new ReverseUpperBeltTimer(0.2));
+    // intakeButton.whenHeld(new TeleopIntakeBall());
+    // intakeButton.whenReleased(new ReverseUpperBeltTimer(0.2));
+    intakeButton.whenHeld(new ExtendIntakeRunBelt());
+    intakeButton.whenReleased(new RetractIntakeStopBelt());
     autoAimButton.toggleWhenPressed(new AutoAimAndLock());
     feedButton.whileHeld(new TeleopFeedBall());
     feedButton.whenReleased(new ReverseUpperBeltTimer(0.2));
