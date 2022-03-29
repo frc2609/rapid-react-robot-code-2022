@@ -375,6 +375,10 @@ public class Shooter extends SubsystemBase {
     if (pov == -1) {
       pov_pressed = false;
     }
+    
+    if (stick.getRawButton(Constants.Xbox.Y_BUTTON)) {
+      manualFlywheelRpm = Constants.Flywheel.LOW_GOAL_RPM;
+    } 
 
     manualHoodPos = Utils.clamp(manualHoodPos, Constants.Hood.MIN_POS, Constants.Hood.MAX_POS);
     hoodPIDController.setReference(manualHoodPos, ControlType.kPosition);
