@@ -22,6 +22,7 @@ import frc.robot.commands.autoaim.AutoAimAndLock;
 import frc.robot.commands.intake.ExtendIntakeRunBelt;
 import frc.robot.commands.intake.IntakeReverse;
 import frc.robot.commands.intake.RetractIntakeStopBelt;
+import frc.robot.commands.intake.ReverseUpperBelt;
 import frc.robot.commands.intake.ReverseUpperBeltTimer;
 import frc.robot.commands.intake.TeleopFeedBall;
 import frc.robot.commands.intake.TeleopIntakeBall;
@@ -45,6 +46,7 @@ public class RobotContainer {
   public static JoystickButton feedButton = new JoystickButton(operatorJoystick, Constants.Xbox.B_BUTTON);
   public static JoystickButton autoAimButton = new JoystickButton(operatorJoystick, Constants.Xbox.A_BUTTON);
   public static JoystickButton outtakeButton = new JoystickButton(driveJoystick, Constants.Xbox.START_BUTTON);
+  public static JoystickButton reverseUpperBeltButton = new JoystickButton(operatorJoystick, Constants.Xbox.X_BUTTON);
   // subsystems
   public static Drive m_driveSubsystem;
   public static Climber m_climbSubsystem;
@@ -94,6 +96,7 @@ public class RobotContainer {
     feedButton.whileHeld(new TeleopFeedBall());
     feedButton.whenReleased(new ReverseUpperBeltTimer(0.2));
     outtakeButton.whileHeld(new IntakeReverse());
+    reverseUpperBeltButton.whileHeld(new ReverseUpperBelt());
   }
 
   /**
