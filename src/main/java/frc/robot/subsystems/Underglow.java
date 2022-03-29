@@ -23,6 +23,10 @@ public class Underglow extends SubsystemBase {
     }
   }
 
+  public void setColor(double set) {
+    color = set;
+  }
+
   @Override
   public void periodic() {
     // color = SmartDashboard.getNumber("LED Controller Colour", color);

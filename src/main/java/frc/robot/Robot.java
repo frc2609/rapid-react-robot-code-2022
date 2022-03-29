@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
+//import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -85,8 +85,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    RobotContainer.m_underglowSubsystem.color = 0.91;
-    RobotContainer.m_underglowSubsystem.periodic();
+    RobotContainer.m_underglowSubsystem.setColor(Constants.LED.PURPLE);
   }
 
   /**
