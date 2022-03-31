@@ -69,7 +69,7 @@ public class Shooter extends SubsystemBase {
     rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
     rotatePIDController = rotateMotor.getPIDController();
 
-    SmartDashboard.putNumber("Limelight camera angle (deg)", 30.7);
+    SmartDashboard.putNumber("Limelight camera angle (deg)", 29.8);
 
     turnLimelightOff();
     setPidValues();
@@ -170,7 +170,7 @@ public class Shooter extends SubsystemBase {
     double cameraHeight = 0.889; // height of camera in meters (from ground)
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
     double tv = tvEntry.getDouble(0.0);
-    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 30.7);
+    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 29.8);
 
     if (tv <= 0) {
       SmartDashboard.putBoolean("Valid Limelight Target", false);
@@ -282,7 +282,8 @@ public class Shooter extends SubsystemBase {
   }
 
   private double calcFlywheelRpm(double distance) {
-    return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
+    // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
+    return 90.9*distance + 1570;
   }
 
   // manual shooter control methods
