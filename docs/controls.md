@@ -36,7 +36,5 @@
     RIGHT_BUMPER = 6;
     LEFT_STICK_BUTTON = 9;
     RIGHT_STICK_BUTTON = 10;
-    DPAD_UP = manual: hood up (auto hood trim up)
-    DPAD_DOWN = manual: hood down (auto hood trim down)
     DPAD_LEFT = manual: flywheel rpm decrease (auto rpm trim down)
     DPAD_RIGHT = manual: flywheel rpm increase (auto rpm trim up)

@@ -8,8 +8,6 @@
 
 - Move the **RED** hooks to the **lowest** position
 
-- Move the **hood** to the **lowest** position
-
 - Make sure the shooter is aligned straight
 
 - Turn on the robot circuit breaker
@@ -52,19 +50,11 @@ Right Joystick X Axis:
 
 Directional Pad (**Automatic Shooter Control**):
 
-- Up: Increase hood position TRIM by 0.1
-
-- Down: Decrease hood position TRIM by 0.1
-
 - Left: Decrease shooter RPM TRIM by 100
 
 - Right: Increase shooter RPM TRIM by 100
 
 Directional Pad (**Manual Shooter Control**):
-
-- Up: Increase hood position by 0.1
-
-- Down: Decrease hood position by 0.1
 
 - Left: Decrease shooter RPM by 200
 
