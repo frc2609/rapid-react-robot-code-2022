@@ -326,7 +326,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("Actual Hood Position", hoodMotor.getEncoder().getPosition());
     SmartDashboard.putNumber("Actual Flywheel RPM", rightFlywheelMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Actual Rotate Position", rotateMotor.getEncoder().getPosition());
     SmartDashboard.putNumber("Flywheel RPM Trim", autoFlywheelRpmTrim);

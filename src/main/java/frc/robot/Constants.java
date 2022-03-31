@@ -61,7 +61,6 @@ public final class Constants {
     }
 
     public final class CanMotorId {
-        public static final int SHOOTER_HOOD_MOTOR = 11;
         public static final int SHOOTER_ROTATE_MOTOR = 10;
         public static final int SHOOTER_RIGHT_MOTOR = 9;
         public static final int SHOOTER_LEFT_MOTOR = 8;
@@ -91,18 +90,6 @@ public final class Constants {
         public static final int MAX_POS = 20;
         public static final int MIN_POS = -20;
         public static final double TOLERANCE = 1;  // How much the limelight can be off in x-direction (degrees)
-    }
-
-    public final class Hood {
-        public static final double PROPORTIONAL = 1;
-        public static final double INTEGRAL = 0.0002;
-        public static final double DERIVATIVE = 0.0;
-        public static final double INTEGRAL_ZONE = 0.0;
-        public static final double FEED_FORWARD = 0.0;
-        public static final double MAX_OUTPUT = 1.0;
-        public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_POS = 2.7;
-        public static final double MIN_POS = 0.0;
     }
 
     public final class Flywheel {
@@ -157,6 +144,5 @@ public final class Constants {
     
         public static boolean isReversed = false;
         public static double rpmTolerance = 200;
-        public static double hoodTolerance = 0.2;
     }
 }
