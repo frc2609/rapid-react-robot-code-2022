@@ -10,7 +10,7 @@ import frc.robot.RobotContainer;
 
 public class RetractIntakeTimer extends CommandBase {
   /** Creates a new RetractIntake. */
-  double time,startTime;
+  double time, startTime;
 
   public RetractIntakeTimer(double time) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -26,7 +26,8 @@ public class RetractIntakeTimer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_intakeSubsystem.setIntakeLift(2);  // setIntakeLift() uses the value passed in multiplied by INTAKE_LIFT_SPEED which is 0.4, so 2*0.4 = 0.8 actual speed set
+    RobotContainer.m_intakeSubsystem.setIntakeLift(1.8); // setIntakeLift() uses the value passed in multiplied by
+                                                         // INTAKE_LIFT_SPEED which is 0.4
   }
 
   // Called once the command ends or is interrupted.
@@ -38,6 +39,6 @@ public class RetractIntakeTimer extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Timer.getFPGATimestamp()>=(startTime+time));
+    return (Timer.getFPGATimestamp() >= (startTime + time));
   }
 }
