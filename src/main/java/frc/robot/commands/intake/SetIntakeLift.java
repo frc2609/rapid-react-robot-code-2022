@@ -21,5 +21,7 @@ public class SetIntakeLift extends InstantCommand {
   @Override
   public void initialize() {
     RobotContainer.m_intakeSubsystem.setIntakeLift(speed);
+    System.out.println("initializing SetIntakeLift");
+
   }
 }

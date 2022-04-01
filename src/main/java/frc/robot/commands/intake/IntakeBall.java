@@ -20,6 +20,8 @@ public class IntakeBall extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("initializing IntakeBall");
+
     if (RobotContainer.m_shooterSubsystem.stagingSensor.get()){
       whereToIntake = 2; // staging sensor populated
     }else if(RobotContainer.m_shooterSubsystem.getIntakeSensor()){
@@ -59,6 +61,8 @@ public class IntakeBall extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("ending IntakeBall");
+
     m_intake.setIntakeBelt(0.0);
     m_intake.setBelts(0);
   }

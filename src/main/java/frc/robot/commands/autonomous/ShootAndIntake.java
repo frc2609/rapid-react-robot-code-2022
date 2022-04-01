@@ -17,6 +17,9 @@ public class ShootAndIntake extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new TimedIntake(2),
-        new AutoShoot());
+        new AutoShoot()
+    );
+
+    System.out.println("initializing ShootAndIntake");
   }
 }

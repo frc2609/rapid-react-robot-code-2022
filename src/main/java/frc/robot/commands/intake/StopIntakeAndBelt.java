@@ -20,5 +20,7 @@ public class StopIntakeAndBelt extends InstantCommand {
   public void initialize() {
     RobotContainer.m_intakeSubsystem.setBelts(0);
     RobotContainer.m_intakeSubsystem.setIntakeBelt(0);
+    System.out.println("initializing StopIntakeAndBelt");
+
   }
 }

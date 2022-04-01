@@ -20,6 +20,8 @@ public class IntakeNoStage extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("initializing IntakeNoStage");
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,6 +39,8 @@ public class IntakeNoStage extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("ending IntakeNoStage");
+
     m_intake.setIntakeBelt(0.0);
     m_intake.setBelts(0);
   }

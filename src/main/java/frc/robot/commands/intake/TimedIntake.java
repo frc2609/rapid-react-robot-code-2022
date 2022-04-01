@@ -17,5 +17,7 @@ public class TimedIntake extends ParallelRaceGroup {
     // addCommands().
     super(new TimerDelay(intakeTime), new IntakeNoStage());
     // addCommands(new FooCommand(), new BarCommand());
+    System.out.println("initializing TimedIntake");
+
   }
 }

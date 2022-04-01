@@ -23,6 +23,7 @@ public class FeedBall extends CommandBase {
   public void initialize() {
     m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
     m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    System.out.println("initializing FeedBall");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,6 +43,7 @@ public class FeedBall extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_intake.setBelts(0.0);
+    System.out.println("ending FeedBall");
   }
 
   // Returns true when the command should end.

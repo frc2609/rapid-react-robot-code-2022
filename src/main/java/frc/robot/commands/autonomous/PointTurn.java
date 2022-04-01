@@ -24,6 +24,8 @@ public class PointTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("initializing PointTurn");
+
     RobotContainer.m_driveSubsystem.isDriveLocked = true;
     angle += RobotContainer.bodyNavx.getAngle();
     pid.setDesiredValue(angle);
@@ -42,6 +44,8 @@ public class PointTurn extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("ending PointTurn");
+
     RobotContainer.m_driveSubsystem.tankDriveVolts(0, 0);
     RobotContainer.m_driveSubsystem.isDriveLocked = false;
     DriverStation.reportWarning("end angle: " + angle, false);
