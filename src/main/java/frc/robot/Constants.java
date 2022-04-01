@@ -95,9 +95,9 @@ public final class Constants {
     public final class Flywheel {
         public static final double PROPORTIONAL = 0.00015; // 0.00004;
         public static final double INTEGRAL = 0.0; //0.0002;
-        public static final double DERIVATIVE = 0.001;
+        public static final double DERIVATIVE = 0.0001;
         public static final double INTEGRAL_ZONE = 5.0;
-        public static final double FEED_FORWARD = 0.000217; //0.000195; //0.000183;
+        public static final double FEED_FORWARD = 0.000214; //0.000195; //0.000183;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0.0;
         public static final double LOW_GOAL_RPM = 1600;
