@@ -5,48 +5,46 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Intake;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Intake;
 
-public class FeedBall extends CommandBase {
+public class IntakeNoStage extends CommandBase {
   private Intake m_intake;
-  private int outCounter = 0;
+  private int whereToIntake = 2; // 1 - stage, 2 - intake, 0 - intake needs staging
 
-  /** Creates a new Feed. */
-  public FeedBall() {
+  public IntakeNoStage() {
     m_intake = RobotContainer.m_intakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-    m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-    m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
-    if (!RobotContainer.m_shooterSubsystem.stagingSensor.get()
-        && !RobotContainer.m_shooterSubsystem.shooterSensor.get()) {
-      outCounter++;
-    } else {
-      outCounter = 0;
+    if (whereToIntake == 2 && !RobotContainer.m_shooterSubsystem.getIntakeSensor()) {
+      m_intake.setIntakeBelt(Constants.Motors.INTAKE_SPEED);
+      m_intake.setLowerBelt(Constants.Motors.BELT_SPEED * 0.5);
+    } else if (whereToIntake == 2 && RobotContainer.m_shooterSubsystem.getIntakeSensor()) {
+      m_intake.setBelts(0);
     }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intake.setBelts(0.0);
+    m_intake.setIntakeBelt(0.0);
+    m_intake.setBelts(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return outCounter >= 5;
+    return RobotContainer.m_shooterSubsystem.getIntakeSensor();
+
   }
 }
