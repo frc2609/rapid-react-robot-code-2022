@@ -15,11 +15,12 @@ public class ShootAndIntake extends ParallelCommandGroup {
   public ShootAndIntake() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    System.out.println("initializing ShootAndIntake");
+
     addCommands(
         new TimedIntake(2),
         new AutoShoot()
     );
 
-    System.out.println("initializing ShootAndIntake");
   }
 }
