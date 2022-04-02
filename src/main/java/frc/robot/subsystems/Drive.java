@@ -66,18 +66,10 @@ public class Drive extends SubsystemBase {
   public Drive() {
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
-    // m_driveJoystick = RobotContainer.driveJoystick;
     this.bodyNavx = RobotContainer.bodyNavx;
     m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
     leftEncoder.setPositionConversionFactor(0.4780 / 10.71);
     rightEncoder.setPositionConversionFactor(0.4780 / 10.71);
-    // leftEncoder.setPositionConversionFactor(1);
-    leftEncoder.setVelocityConversionFactor(0.4780 / 10.71);
-    rightEncoder.setVelocityConversionFactor(0.4780 / 10.71);
-    // rightEncoder.setPositionConversionFactor(1);
-    // 10.71*0.4780
-    m_leftFrontMotor.setInverted(true);
-    m_leftRearMotor.setInverted(true);
   }
 
   public void updateOdometry() {
