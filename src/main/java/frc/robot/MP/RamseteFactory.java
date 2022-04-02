@@ -51,61 +51,50 @@ public class RamseteFactory {
     public Map<String, Trajectory> trajectoryMap = new HashMap<String, Trajectory>();
 
     Trajectory startToBall = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
             new Pose2d(0.0, 0.0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
             List.of(
             // new Translation2d(1, 1),
             // new Translation2d(2, 0.5)
             ),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(-1, 0, new Rotation2d(-0)),
-            // Pass config
+            new Pose2d(-1, 0, new Rotation2d(0)),
             config);
 
     Trajectory crossTaxi = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
             new Pose2d(0.0, 0.0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
             List.of(
             // new Translation2d(1, 1),
             // new Translation2d(2, 0.5)
             ),
-            // End 3 meters straight ahead of where we started, facing forward
             new Pose2d(-4, 0, new Rotation2d(-0)),
-            // Pass config
             config);
 
     Trajectory secondToThird = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
             new Pose2d(0.0, 0.0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
             List.of(
             // new Translation2d(1, 1),
             // new Translation2d(2, 0.5)
             ),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(-2, 0, new Rotation2d(0)),
+            new Pose2d(-2.1, -0.23, new Rotation2d(0)),
             // Pass config
             config);
 
-    // Trajectory thirdBallToForth = TrajectoryGenerator.generateTrajectory(
-    // // Start at the origin facing the +X direction
-    // new Pose2d(0.0, 0.0, new Rotation2d(0)),
-    // // Pass through these two interior waypoints, making an 's' curve path
-    // List.of(
-    // // new Translation2d(1, 1),
-    // // new Translation2d(2, 0.5)
-    // ),
-    // // End 3 meters straight ahead of where we started, facing forward
-    // new Pose2d(-1.5, -0.4, new Rotation2d(0)),
-    // // Pass config
-    // config_back);
+    Trajectory thirdBallToForth = TrajectoryGenerator.generateTrajectory(
+    // Start at the origin facing the +X direction
+    new Pose2d(0.0, 0.0, new Rotation2d(0)),
+    // Pass through these two interior waypoints, making an 's' curve path
+    List.of(
+    // new Translation2d(1, 1),
+    // new Translation2d(2, 0.5)
+    ),
+    // End 3 meters straight ahead of where we started, facing forward
+    new Pose2d(-3.8, 2, new Rotation2d(0)),
+    // Pass config
+    config);
 
     private RamseteFactory() {
         trajectoryMap.put("startToBall", startToBall);
         trajectoryMap.put("secondToThird", secondToThird);
-
+        trajectoryMap.put("thirdBallToForth", thirdBallToForth);
     }
 
     public Trajectory getTrajectory(String pathName) {
