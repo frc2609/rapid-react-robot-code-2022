@@ -144,5 +144,6 @@ public final class Constants {
     
         public static boolean isReversed = false;
         public static double rpmTolerance = 200;
+        public static double commandTimer = 3;
     }
 }
