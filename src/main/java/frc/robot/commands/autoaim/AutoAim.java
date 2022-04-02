@@ -4,7 +4,9 @@
 
 package frc.robot.commands.autoaim;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 
@@ -17,9 +19,11 @@ import frc.robot.subsystems.Shooter;
 public class AutoAim extends CommandBase {
   /** Creates a new AutoAim. */
   private Shooter m_shooter;
+  double time,startTime;
 
   public AutoAim() {
     m_shooter = RobotContainer.m_shooterSubsystem;
+    this.time = Constants.AutoConstants.commandTimer;
   }
 
   // Called when the command is initially scheduled.
@@ -27,6 +31,7 @@ public class AutoAim extends CommandBase {
   public void initialize() {
     m_shooter.enableAutoAim();
     m_shooter.enableFlywheel();
+    startTime = Timer.getFPGATimestamp();
     System.out.println("initializing AutoAim");
   }
 
@@ -45,6 +50,6 @@ public class AutoAim extends CommandBase {
   @Override
   public boolean isFinished() {
     // end the command when the target is locked so auto can continue sequence
-    return RobotContainer.m_shooterSubsystem.isTargetLocked();
+    return RobotContainer.m_shooterSubsystem.isTargetLocked() || (Timer.getFPGATimestamp()>=(startTime+time));
   }
 }

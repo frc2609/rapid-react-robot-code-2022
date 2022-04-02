@@ -117,18 +117,14 @@ public final class Constants {
     }
 
     public static final class DriveKin {
-        public static final double ksVolts = 0.24364;
-        public static final double kvVoltSecondsPerMeter = 2.8238;
-        // public static final double kaVoltSecondsSquaredPerMeter = 0.493;//0.0036601
-        public static final double kaVoltSecondsSquaredPerMeter = 0.46022;
-
-        // Example value only - as above, this must be tuned for your drive!
-        public static final double kPDriveVel = 5.7579; 
+        public static final double ksVolts = 0.24533; //0.24364;
+        public static final double kvVoltSecondsPerMeter = 2.8011; //2.8238;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.40306; //0.46022;
+        public static final double kPDriveVel = 4.945; //5.7579; 
         public static final double kTrackwidthMeters = 0.56;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
-                // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = 0.7;
     }
@@ -144,5 +140,6 @@ public final class Constants {
     
         public static boolean isReversed = false;
         public static double rpmTolerance = 200;
+        public static double commandTimer = 3;
     }
 }

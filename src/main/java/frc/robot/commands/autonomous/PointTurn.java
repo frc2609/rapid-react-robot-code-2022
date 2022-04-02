@@ -17,7 +17,7 @@ public class PointTurn extends CommandBase {
 
   public PointTurn(double desiredAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
-    pid = new SimPID(4.9014, 0, 0.99603);
+    pid = new SimPID(4.4149, 0, 0.76093); // 4.9014, 0, 0.99603 or 0.76093
     angle = desiredAngle;
   }
 
@@ -35,7 +35,7 @@ public class PointTurn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double output = pid.calcPID(RobotContainer.bodyNavx.getAngle()) + 0.36185;
+    double output = pid.calcPID(RobotContainer.bodyNavx.getAngle()) + 0.30291; //0.36185;
     RobotContainer.m_driveSubsystem.tankDriveVolts(
         -output, output);
     SmartDashboard.putNumber("getAngle", RobotContainer.bodyNavx.getAngle());
