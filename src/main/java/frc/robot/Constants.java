@@ -79,6 +79,11 @@ public final class Constants {
         public static final double HOOK_SPEED_MULTIPLIER = 0.75;
     }
 
+    public final class SweetSpot {
+        public static final double MIN = 4; // PLACEHOLDER
+        public static final double MAX = 14; // PLACEHOLDER
+    }
+
     public final class Rotate {
         public static final double PROPORTIONAL = 0.2; //0.11
         public static final double INTEGRAL = 0.0; //0.0000000005;
@@ -95,7 +100,7 @@ public final class Constants {
     public final class Flywheel {
         public static final double PROPORTIONAL = 0.00015; // 0.00004;
         public static final double INTEGRAL = 0.0; //0.0002;
-        public static final double DERIVATIVE = 0.0001;
+        public static final double DERIVATIVE = 0.0007;
         public static final double INTEGRAL_ZONE = 5.0;
         public static final double FEED_FORWARD = 0.000214; //0.000195; //0.000183;
         public static final double MAX_OUTPUT = 1.0;
@@ -112,6 +117,7 @@ public final class Constants {
     public static final class LED {
         public static final int PWM_PORT = 4;
         public static final double RED = 0.61;
+        public static final double GREEN = 0.77;
         public static final double BLUE = 0.87;
         public static final double PURPLE = 0.91;
     }
