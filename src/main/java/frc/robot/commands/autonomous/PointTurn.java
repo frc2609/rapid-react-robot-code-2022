@@ -17,7 +17,7 @@ public class PointTurn extends CommandBase {
 
   public PointTurn(double desiredAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
-    pid = new SimPID(4.9014, 0, 0.99603);
+    pid = new SimPID(6, 0, 0.99603); // 4.9014
     angle = desiredAngle;
   }
 

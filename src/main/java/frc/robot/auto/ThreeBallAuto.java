@@ -16,6 +16,7 @@ import frc.robot.commands.autonomous.DriveStopCommand;
 import frc.robot.commands.autonomous.PointTurn;
 import frc.robot.commands.autonomous.ResetPose;
 import frc.robot.commands.autonomous.ShootAndIntake;
+import frc.robot.commands.autonomous.ShootAndIntakeHumanStation;
 import frc.robot.commands.autonomous.TimerDelay;
 import frc.robot.commands.autonomous.ZeroYaw;
 import frc.robot.commands.intake.FeedBall;
@@ -63,7 +64,8 @@ public class ThreeBallAuto extends SequentialCommandGroup {
         new DriveAndExtendIntake(factory.constructRamseteCommand("thirdBallToForth")),
         new DriveStopCommand(),
         new TimerDelay(0.2),
-        new ShootAndIntake(),
+        // new ShootAndIntake(),
+        new ShootAndIntakeHumanStation(),
         new AutoShoot()
 
     // factory.constructRamseteCommand("firstBallToSecondSetup"),
