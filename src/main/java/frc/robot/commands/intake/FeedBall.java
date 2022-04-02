@@ -32,7 +32,8 @@ public class FeedBall extends CommandBase {
     m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
     m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
     if (!RobotContainer.m_shooterSubsystem.stagingSensor.get()
-        && !RobotContainer.m_shooterSubsystem.shooterSensor.get()) {
+        && !RobotContainer.m_shooterSubsystem.shooterSensor.get()
+        && !RobotContainer.m_shooterSubsystem.getIntakeSensor()) {
       outCounter++;
     } else {
       outCounter = 0;
@@ -49,6 +50,6 @@ public class FeedBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return outCounter >= 5;
+    return outCounter >= 10;
   }
 }
