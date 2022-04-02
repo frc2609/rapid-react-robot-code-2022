@@ -203,11 +203,11 @@ public class Shooter extends SubsystemBase {
       switch (pov) {
         case Constants.Xbox.POV_LEFT_BUTTON:
           pov_pressed = true;
-          autoFlywheelRpmTrim -= 100;
+          autoFlywheelRpmTrim -= 50;
           break;
         case Constants.Xbox.POV_RIGHT_BUTTON:
           pov_pressed = true;
-          autoFlywheelRpmTrim += 100;
+          autoFlywheelRpmTrim += 50;
           break;
         default:
           break;
@@ -288,7 +288,7 @@ public class Shooter extends SubsystemBase {
 
   private double calcFlywheelRpm(double distance) {
     // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
-    return 91*distance + 1480;
+    return 105*distance + 1420;
   }
 
   // manual shooter control methods
