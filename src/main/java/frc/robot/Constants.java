@@ -79,6 +79,11 @@ public final class Constants {
         public static final double HOOK_SPEED_MULTIPLIER = 0.75;
     }
 
+    public final class SweetSpot {
+        public static final double MIN = 4; // PLACEHOLDER
+        public static final double MAX = 14; // PLACEHOLDER
+    }
+
     public final class Rotate {
         public static final double PROPORTIONAL = 0.2; //0.11
         public static final double INTEGRAL = 0.0; //0.0000000005;
@@ -112,6 +117,7 @@ public final class Constants {
     public static final class LED {
         public static final int PWM_PORT = 4;
         public static final double RED = 0.61;
+        public static final double GREEN = 0.77;
         public static final double BLUE = 0.87;
         public static final double PURPLE = 0.91;
     }
