@@ -112,6 +112,11 @@ public class Shooter extends SubsystemBase {
     return isAutoAimMode;
   }
 
+  public boolean isSweetSpot() {
+    double distance = calcDistance();
+    return distance > Constants.SweetSpot.MIN && distance < Constants.SweetSpot.MAX;
+  }
+
   public void stopAllMotors() {
     rightFlywheelMotor.set(0.0);
     rotateMotor.set(0.0);
