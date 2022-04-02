@@ -83,7 +83,7 @@ public class RamseteFactory {
                         // new Translation2d(1, 1),
                         // new Translation2d(2, 0.5)
                         ),
-                        new Pose2d(-3.3, 2, new Rotation2d(-0.1)),
+                        new Pose2d(-3.0, 2, new Rotation2d(0.1)),
                         config);
 
         private RamseteFactory() {
