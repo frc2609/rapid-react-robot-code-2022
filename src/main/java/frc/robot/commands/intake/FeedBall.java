@@ -18,7 +18,7 @@ public class FeedBall extends CommandBase {
   /** Creates a new Feed. */
   public FeedBall() {
     m_intake = RobotContainer.m_intakeSubsystem;
-    this.time = Constants.AutoConstants.commandTimer + 2;  // add another 2 seconds on top of constant value just in case
+    this.time = Constants.AutoConstants.commandTimer;  // add another 2 seconds on top of constant value just in case
   }
 
   // Called when the command is initially scheduled.
@@ -54,6 +54,6 @@ public class FeedBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return outCounter >= 10 || (Timer.getFPGATimestamp()>=(startTime+time));
+    return outCounter >= 5 || (Timer.getFPGATimestamp()>=(startTime+time));
   }
 }
