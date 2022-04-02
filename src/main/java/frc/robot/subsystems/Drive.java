@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import edu.wpi.first.hal.PowerDistributionFaults;
 import edu.wpi.first.math.filter.LinearFilter;
 //import frc.robot.MP.Loop;
 
@@ -125,6 +126,22 @@ public class Drive extends SubsystemBase {
     double rightMotors = rightFilter.calculate(rightMotorRaw);
     if (!isDriveLocked) {
       setMotors(leftMotors * 0.6, rightMotors * 0.6);
+      SmartDashboard.putNumber("left front motor current", m_leftFrontMotor.getOutputCurrent());
+      SmartDashboard.putNumber("left rear motor current", m_leftRearMotor.getOutputCurrent());
+      SmartDashboard.putNumber("right front motor current", m_rightFrontMotor.getOutputCurrent());
+      SmartDashboard.putNumber("right rear motor current", m_rightRearMotor.getOutputCurrent());
+
+      SmartDashboard.putNumber("left front motor temperature", m_leftFrontMotor.getMotorTemperature());
+      SmartDashboard.putNumber("left rear motor temperature", m_leftRearMotor.getMotorTemperature());
+      SmartDashboard.putNumber("right front motor temperature", m_rightFrontMotor.getMotorTemperature());
+      SmartDashboard.putNumber("right rear motor temperature", m_rightRearMotor.getMotorTemperature());
+
+      SmartDashboard.putNumber("left front motor velocity", m_leftFrontMotor.getEncoder().getVelocity());
+      SmartDashboard.putNumber("left rear motor velocity", m_leftRearMotor.getEncoder().getVelocity());
+      SmartDashboard.putNumber("right front motor velocity", m_rightFrontMotor.getEncoder().getVelocity());
+      SmartDashboard.putNumber("right rear motor velocity", m_rightRearMotor.getEncoder().getVelocity());
+
+
       // SmartDashboard.putNumber("Raw left motor", driveY - driveX);
       // SmartDashboard.putNumber("Raw right motor", driveY + driveX);
       // SmartDashboard.putNumber("Filter left motor", leftMotors);
