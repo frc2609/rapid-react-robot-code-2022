@@ -70,6 +70,8 @@ public class Drive extends SubsystemBase {
     m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
     leftEncoder.setPositionConversionFactor(0.4780 / 10.71);
     rightEncoder.setPositionConversionFactor(0.4780 / 10.71);
+    leftEncoder.setVelocityConversionFactor(0.4780 / 10.71);
+    rightEncoder.setVelocityConversionFactor(0.4780 / 10.71);
   }
 
   public void updateOdometry() {
