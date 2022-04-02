@@ -20,6 +20,7 @@ import frc.robot.commands.autonomous.TimerDelay;
 import frc.robot.commands.autonomous.ZeroYaw;
 import frc.robot.commands.intake.FeedBall;
 import frc.robot.commands.intake.IntakeBall;
+import frc.robot.commands.intake.SetBelt;
 import frc.robot.commands.intake.StageBall;
 import frc.robot.commands.intake.StopIntakeAndBelt;
 import frc.robot.commands.intake.TimedIntake;
@@ -33,6 +34,7 @@ public class ThreeBallAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     RamseteFactory factory = RamseteFactory.getInstance();
+    System.out.println("*********************STARTING AUTONOMOUS");
     // addCommands(new
     // DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")), new
     // DriveStopCommand(), new AutoaimShoot3s());
@@ -51,6 +53,17 @@ public class ThreeBallAuto extends SequentialCommandGroup {
         new DriveAndExtendIntake(factory.constructRamseteCommand("secondToThird")),
         new DriveStopCommand(),
         new TimerDelay(0.2),
+        new ShootAndIntake(),
+        new AutoShoot(),
+        new DisableFlywheel(),
+        new StopIntakeAndBelt(),
+
+        // below is 4 ball stuff (experimental)
+        new ResetPose(factory.getTrajectory("thirdBallToForth").getInitialPose()),
+        new DriveAndExtendIntake(factory.constructRamseteCommand("thirdBallToForth")),
+        new DriveStopCommand(),
+        new TimerDelay(0.2),
+        new ShootAndIntake(),
         new AutoShoot()
 
     // factory.constructRamseteCommand("firstBallToSecondSetup"),
@@ -71,5 +84,7 @@ public class ThreeBallAuto extends SequentialCommandGroup {
     // new DriveStopCommand(),
     // new TrimShooter(0));
     );
+
+    System.out.println("*********************ENDING AUTONOMOUS");
   }
 }
