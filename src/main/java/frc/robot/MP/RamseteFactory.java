@@ -77,6 +77,15 @@ public class RamseteFactory {
                         new Pose2d(-2.1, 0, new Rotation2d(0)), // -0.1
                         config);
 
+        Trajectory secondToThirdPast = TrajectoryGenerator.generateTrajectory(
+                new Pose2d(0.0, 0.0, new Rotation2d(0)),
+                List.of(
+                // new Translation2d(1, 1),
+                // new Translation2d(2, 0.5)
+                ),
+                new Pose2d(-2.5, 0, new Rotation2d(0)), // -0.1
+                config);
+
         Trajectory thirdBallToForth = TrajectoryGenerator.generateTrajectory(
                         new Pose2d(0.0, 0.0, new Rotation2d(0)),
                         List.of(
@@ -90,6 +99,7 @@ public class RamseteFactory {
                 trajectoryMap.put("startToBall", startToBall);
                 trajectoryMap.put("secondToThird", secondToThird);
                 trajectoryMap.put("thirdBallToForth", thirdBallToForth);
+                trajectoryMap.put("secondToThirdPast", secondToThirdPast);
         }
 
         public Trajectory getTrajectory(String pathName) {
