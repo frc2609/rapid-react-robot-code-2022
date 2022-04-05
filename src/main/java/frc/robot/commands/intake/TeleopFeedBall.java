@@ -50,7 +50,7 @@ public class TeleopFeedBall extends CommandBase {
     else if (isBallAtIntake == false && isBallAtShooter == true) {
       // Staged ball
       m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-      m_intake.setLowerBelt(0);
+      m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
     } 
     else if (isBallAtIntake == true && isBallAtShooter == false) {
       // Intake ball
@@ -60,7 +60,7 @@ public class TeleopFeedBall extends CommandBase {
     else if (isBallAtIntake == true && isBallAtShooter == true) {
       // Full
       m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-      m_intake.setLowerBelt(0);
+      m_intake.setLowerBelt(-0.1);
     }
   }
 
