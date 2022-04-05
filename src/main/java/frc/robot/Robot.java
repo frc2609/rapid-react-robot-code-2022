@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, false);
     RobotContainer.m_shooterSubsystem.disableAutoAim();
     RobotContainer.m_shooterSubsystem.turnLimelightOff();
-    SmartDashboard.putBoolean("LIMELIGHT", false);
+    SmartDashboard.putBoolean("LIMELIGHT LED", false);
   }
 
   /**
@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     RobotContainer.m_underglowSubsystem.setColor(Constants.LED.PURPLE);
-    if(SmartDashboard.getBoolean("LIMELIGHT", false)){
+    if(SmartDashboard.getBoolean("LIMELIGHT LED", false)){
       RobotContainer.m_shooterSubsystem.turnLimelightOn();
     }else{
       RobotContainer.m_shooterSubsystem.turnLimelightOff();

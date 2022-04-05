@@ -37,7 +37,7 @@ public class Looper {
           }
           dt_ = now - timestamp_;
           timestamp_ = now;
-          outputToSmartDashboard();
+          // outputToSmartDashboard();
         }
       }
     }
@@ -84,6 +84,6 @@ public class Looper {
   }
 
   public void outputToSmartDashboard() {
-    SmartDashboard.putNumber("looper_dt", dt_);
+    // SmartDashboard.putNumber("looper_dt", dt_);
   }
 }

@@ -267,7 +267,7 @@ public class Shooter extends SubsystemBase {
     rotatePower = tx*kP + frictionPower*isNegative + rateError*kD;
 
     rotateMotor.set(rotatePower);
-    SmartDashboard.putNumber("Auto Rotate Power", rotatePower);
+    // SmartDashboard.putNumber("Auto Rotate Power", rotatePower);
 
     kD_LastError = tx;
     kD_LastTime = currTime;
@@ -328,7 +328,7 @@ public class Shooter extends SubsystemBase {
     double val = stick.getRawAxis(Constants.Xbox.RIGHT_STICK_X_AXIS);
     val = (Math.abs(val) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
 
-    SmartDashboard.putNumber("Manual Rotate Power", val);
+    // SmartDashboard.putNumber("Manual Rotate Power", val);
 
     rotateMotor.set(val / 4);
   }
@@ -341,8 +341,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
     SmartDashboard.putBoolean("Target Locked", isTargetLocked());
     SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
-    SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
-    SmartDashboard.putNumber("Intake Sensor Proximity", intakeSensor.getProximity());
+    // //SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("Intake Sensor Proximity", intakeSensor.getProximity());
 
     if (isClimbingFullRotate) {
       rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out

@@ -13,7 +13,6 @@ public class Underglow extends SubsystemBase {
 
   public Underglow() {
     checkColor();
-    SmartDashboard.putNumber("LED Controller Colour", color);
   }
 
   public void checkColor() {
@@ -38,10 +37,8 @@ public class Underglow extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // color = SmartDashboard.getNumber("LED Controller Colour", color);
     checkColor();
     color = Constants.LED.PURPLE;  // force set purple for now
     LEDController.set(color); // changes colour of LED
-    SmartDashboard.putNumber("LED Controller Colour", color);
   }
 }

@@ -10,7 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -60,7 +60,7 @@ public class Climber extends SubsystemBase {
       RobotContainer.m_shooterSubsystem.isClimbingLowRotate = false;
     }
 
-    SmartDashboard.putNumber("climb step", currentStep);
+    //SmartDashboard.putNumber("climb step", currentStep);
     Calculate_theta();
     Climb_Sequence();
     Climb_Speed_Calc();

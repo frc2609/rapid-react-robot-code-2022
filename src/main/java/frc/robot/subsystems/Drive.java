@@ -15,7 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 //import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -81,10 +81,10 @@ public class Drive extends SubsystemBase {
     } else {
       m_odometry.update(bodyNavx.getRotation2d().unaryMinus(), leftEncoder.getPosition(), rightEncoder.getPosition());
     }
-    SmartDashboard.putNumber("posex", m_odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("posey", m_odometry.getPoseMeters().getY());
-    SmartDashboard.putNumber("deg", m_odometry.getPoseMeters().getRotation().getDegrees());
-    SmartDashboard.putNumber("velleft", getWheelSpeeds().leftMetersPerSecond);
+    // SmartDashboard.putNumber("posex", m_odometry.getPoseMeters().getX());
+    // SmartDashboard.putNumber("posey", m_odometry.getPoseMeters().getY());
+    // SmartDashboard.putNumber("deg", m_odometry.getPoseMeters().getRotation().getDegrees());
+    // SmartDashboard.putNumber("velleft", getWheelSpeeds().leftMetersPerSecond);
   }
 
   @Override
@@ -99,7 +99,7 @@ public class Drive extends SubsystemBase {
 
     updateOdometry();
 
-    SmartDashboard.putNumber("getpos", leftEncoder.getPosition());
+    // SmartDashboard.putNumber("getpos", leftEncoder.getPosition());
     // tankDriveVolts(3, 3);
     // setMotors(leftMotors, rightMotors);
   }
@@ -121,7 +121,7 @@ public class Drive extends SubsystemBase {
     double driveMultiplier = turbo ? 1.0 : 0.6;
     if (!isDriveLocked) {
       setMotors(leftMotors * driveMultiplier, rightMotors * driveMultiplier);
-      SmartDashboard.putNumber("DriveMultiplier", driveMultiplier);
+      // SmartDashboard.putNumber("DriveMultiplier", driveMultiplier);
       // SmartDashboard.putNumber("left front motor current", m_leftFrontMotor.getOutputCurrent());
       // SmartDashboard.putNumber("left rear motor current", m_leftRearMotor.getOutputCurrent());
       // SmartDashboard.putNumber("right front motor current", m_rightFrontMotor.getOutputCurrent());
