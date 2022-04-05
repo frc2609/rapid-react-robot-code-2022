@@ -61,7 +61,6 @@ public final class Constants {
     }
 
     public final class CanMotorId {
-        public static final int SHOOTER_HOOD_MOTOR = 11;
         public static final int SHOOTER_ROTATE_MOTOR = 10;
         public static final int SHOOTER_RIGHT_MOTOR = 9;
         public static final int SHOOTER_LEFT_MOTOR = 8;
@@ -80,6 +79,11 @@ public final class Constants {
         public static final double HOOK_SPEED_MULTIPLIER = 0.75;
     }
 
+    public final class SweetSpot {
+        public static final double MIN = 4; // PLACEHOLDER
+        public static final double MAX = 14; // PLACEHOLDER
+    }
+
     public final class Rotate {
         public static final double PROPORTIONAL = 0.2; //0.11
         public static final double INTEGRAL = 0.0; //0.0000000005;
@@ -93,54 +97,40 @@ public final class Constants {
         public static final double TOLERANCE = 1;  // How much the limelight can be off in x-direction (degrees)
     }
 
-    public final class Hood {
-        public static final double PROPORTIONAL = 1;
-        public static final double INTEGRAL = 0.0002;
-        public static final double DERIVATIVE = 0.0;
-        public static final double INTEGRAL_ZONE = 0.0;
-        public static final double FEED_FORWARD = 0.0;
-        public static final double MAX_OUTPUT = 1.0;
-        public static final double MIN_OUTPUT = -1.0;
-        public static final double MAX_POS = 2.7;
-        public static final double MIN_POS = 0.0;
-    }
-
     public final class Flywheel {
-        public static final double PROPORTIONAL = 0.00006; // 0.00004;
+        public static final double PROPORTIONAL = 0.00015; // 0.00004;
         public static final double INTEGRAL = 0.0; //0.0002;
         public static final double DERIVATIVE = 0.001;
         public static final double INTEGRAL_ZONE = 5.0;
-        public static final double FEED_FORWARD = 0.00018; //0.000195; //0.000183;
+        public static final double FEED_FORWARD = 0.000214; //0.000195; //0.000183;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0.0;
+        public static final double LOW_GOAL_RPM = 1600;
     }
 
     public final class Motors {
         public static final double INTAKE_SPEED = 1;
-        public static final double INTAKE_LIFT_SPEED = 0.35;
+        public static final double INTAKE_LIFT_SPEED = 0.4;
         public static final double BELT_SPEED = 1;
     }
 
     public static final class LED {
         public static final int PWM_PORT = 4;
         public static final double RED = 0.61;
+        public static final double GREEN = 0.77;
         public static final double BLUE = 0.87;
         public static final double PURPLE = 0.91;
     }
 
     public static final class DriveKin {
-        public static final double ksVolts = 0.24364;
-        public static final double kvVoltSecondsPerMeter = 2.8238;
-        // public static final double kaVoltSecondsSquaredPerMeter = 0.493;//0.0036601
-        public static final double kaVoltSecondsSquaredPerMeter = 0.46022;
-
-        // Example value only - as above, this must be tuned for your drive!
-        public static final double kPDriveVel = 5.7579; 
+        public static final double ksVolts = 0.24533; //0.24364;
+        public static final double kvVoltSecondsPerMeter = 2.8011; //2.8238;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.40306; //0.46022;
+        public static final double kPDriveVel = 4.945; //5.7579; 
         public static final double kTrackwidthMeters = 0.56;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
-                // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = 0.7;
     }
@@ -155,7 +145,7 @@ public final class Constants {
         public static final int proxThreshold = 100;
     
         public static boolean isReversed = false;
-        public static double rpmTolerance = 200;
-        public static double hoodTolerance = 0.2;
+        public static double rpmTolerance = 100;
+        public static double commandTimer = 3;
     }
 }

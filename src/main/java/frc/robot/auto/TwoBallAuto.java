@@ -7,16 +7,11 @@ package frc.robot.auto;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.MP.RamseteFactory;
 import frc.robot.commands.autoaim.AutoAim;
-import frc.robot.commands.autoaim.DisableFlywheel;
-import frc.robot.commands.autoaim.TimedFeed;
 import frc.robot.commands.autonomous.DriveAndExtendIntake;
 import frc.robot.commands.autonomous.DriveStopCommand;
 import frc.robot.commands.autonomous.ResetPose;
-import frc.robot.commands.autonomous.TimerDelay;
 import frc.robot.commands.intake.FeedBall;
-import frc.robot.commands.intake.IntakeBall;
 import frc.robot.commands.intake.StageBall;
-import frc.robot.commands.intake.StopIntakeAndBelt;
 import frc.robot.commands.intake.TimedIntake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -30,9 +25,8 @@ public class TwoBallAuto extends SequentialCommandGroup {
     RamseteFactory factory = RamseteFactory.getInstance();
     // addCommands(new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")), new DriveStopCommand(), new AutoaimShoot3s());
     addCommands(
-      new DriveAndExtendIntake(factory.constructRamseteCommand("twoBallStartToBall")),
+      new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")),
       new DriveStopCommand(),
-      new ResetPose(factory.getTrajectory("firstBallToSecondSetup").getInitialPose()),
       new TimedIntake(2),
       new AutoAim(),
       new FeedBall(), // first ball

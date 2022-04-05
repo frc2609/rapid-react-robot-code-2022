@@ -4,20 +4,17 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import frc.robot.commands.autonomous.TimerDelay;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TimedIntake extends ParallelRaceGroup {
-  /** Creates a new TimedIntake. */
-  public TimedIntake(double intakeTime) {
+public class ExtendIntakeRunBelt extends ParallelDeadlineGroup {
+  /** Creates a new ExtendIntakeRunBelt. */
+  public ExtendIntakeRunBelt() {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
-    super(new TimerDelay(intakeTime), new IntakeNoStage());
-    // addCommands(new FooCommand(), new BarCommand());
-    System.out.println("initializing TimedIntake");
-
+    super(new TeleopIntakeBall());
+    addCommands(new ExtendIntakeTimer(0.5));
   }
 }

@@ -4,14 +4,13 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
+//import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.ThreeBallAuto;
-import frc.robot.auto.TwoBallAuto;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -43,8 +42,9 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putBoolean(Constants.INTAKE_OVERRIDE_STRING, false);
     SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, false);
-    CameraServer.startAutomaticCapture();
     RobotContainer.m_shooterSubsystem.disableAutoAim();
+    RobotContainer.m_shooterSubsystem.turnLimelightOff();
+    SmartDashboard.putBoolean("LIMELIGHT", false);
   }
 
   /**
@@ -71,7 +71,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("intakeSensor", RobotContainer.m_shooterSubsystem.getIntakeSensor());
     SmartDashboard.putBoolean("stagingSensor", RobotContainer.m_shooterSubsystem.stagingSensor.get());
     SmartDashboard.putBoolean("shooterSensor", RobotContainer.m_shooterSubsystem.shooterSensor.get());
-
     // RamseteFactory.getInstance().printPath();
   }
 
@@ -86,8 +85,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    RobotContainer.m_underglowSubsystem.color = 0.91;
-    RobotContainer.m_underglowSubsystem.periodic();
+    RobotContainer.m_underglowSubsystem.setColor(Constants.LED.PURPLE);
+    if(SmartDashboard.getBoolean("LIMELIGHT", false)){
+      RobotContainer.m_shooterSubsystem.turnLimelightOn();
+    }else{
+      RobotContainer.m_shooterSubsystem.turnLimelightOff();
+    }
   }
 
   /**
@@ -107,7 +110,7 @@ public class Robot extends TimedRobot {
     RobotContainer.bodyNavx.zeroYaw();
     m_robotContainer.enabledLooper.start();
     RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
-    RobotContainer.m_underglowSubsystem.checkColor();
+    RobotContainer.m_underglowSubsystem.checkSweetSpot();
   }
 
   /** This function is called periodically during autonomous. */
@@ -120,6 +123,9 @@ public class Robot extends TimedRobot {
     RobotContainer.m_driveSubsystem.setBrake(true);
     RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
     RobotContainer.m_shooterSubsystem.setRPMTrim(0);
+    RobotContainer.bodyNavx.zeroYaw();
+    RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
+    RobotContainer.m_driveSubsystem.resetEncoders();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -129,14 +135,13 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.enabledLooper.start();
     RobotContainer.m_shooterSubsystem.disableAutoAim(); // auto will leave it running, disables at start of teleop
-    RobotContainer.m_underglowSubsystem.checkColor();
+    RobotContainer.m_underglowSubsystem.checkSweetSpot();
 
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    RobotContainer.m_underglowSubsystem.periodic();
     RobotContainer.m_driveSubsystem.manualDrive(
         RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS),
         RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS));

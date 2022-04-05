@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase {
     upperBeltMotor.set(speed);
   }
 
-  public void setIntake(double speed) {
+  public void setIntakeBelt(double speed) {
     intakeBallMotor.set(speed);
   }
 

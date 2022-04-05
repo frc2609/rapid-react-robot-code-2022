@@ -65,18 +65,12 @@ public class Drive extends SubsystemBase {
   public Drive() {
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
-    // m_driveJoystick = RobotContainer.driveJoystick;
     this.bodyNavx = RobotContainer.bodyNavx;
     m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
     leftEncoder.setPositionConversionFactor(0.4780 / 10.71);
     rightEncoder.setPositionConversionFactor(0.4780 / 10.71);
-    // leftEncoder.setPositionConversionFactor(1);
     leftEncoder.setVelocityConversionFactor(0.4780 / 10.71);
     rightEncoder.setVelocityConversionFactor(0.4780 / 10.71);
-    // rightEncoder.setPositionConversionFactor(1);
-    // 10.71*0.4780
-    m_leftFrontMotor.setInverted(true);
-    m_leftRearMotor.setInverted(true);
   }
 
   public void updateOdometry() {
@@ -125,6 +119,21 @@ public class Drive extends SubsystemBase {
     double rightMotors = rightFilter.calculate(rightMotorRaw);
     if (!isDriveLocked) {
       setMotors(leftMotors * 0.6, rightMotors * 0.6);
+      // SmartDashboard.putNumber("left front motor current", m_leftFrontMotor.getOutputCurrent());
+      // SmartDashboard.putNumber("left rear motor current", m_leftRearMotor.getOutputCurrent());
+      // SmartDashboard.putNumber("right front motor current", m_rightFrontMotor.getOutputCurrent());
+      // SmartDashboard.putNumber("right rear motor current", m_rightRearMotor.getOutputCurrent());
+
+      // SmartDashboard.putNumber("left front motor temperature", m_leftFrontMotor.getMotorTemperature());
+      // SmartDashboard.putNumber("left rear motor temperature", m_leftRearMotor.getMotorTemperature());
+      // SmartDashboard.putNumber("right front motor temperature", m_rightFrontMotor.getMotorTemperature());
+      // SmartDashboard.putNumber("right rear motor temperature", m_rightRearMotor.getMotorTemperature());
+
+      // SmartDashboard.putNumber("left front motor velocity", m_leftFrontMotor.getEncoder().getVelocity());
+      // SmartDashboard.putNumber("left rear motor velocity", m_leftRearMotor.getEncoder().getVelocity());
+      // SmartDashboard.putNumber("right front motor velocity", m_rightFrontMotor.getEncoder().getVelocity());
+      // SmartDashboard.putNumber("right rear motor velocity", m_rightRearMotor.getEncoder().getVelocity());
+
       // SmartDashboard.putNumber("Raw left motor", driveY - driveX);
       // SmartDashboard.putNumber("Raw right motor", driveY + driveX);
       // SmartDashboard.putNumber("Filter left motor", leftMotors);

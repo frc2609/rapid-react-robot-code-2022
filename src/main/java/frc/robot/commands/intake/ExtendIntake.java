@@ -15,6 +15,8 @@ public class ExtendIntake extends SequentialCommandGroup {
   public ExtendIntake() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SetIntake(-1), new TimerDelay(0.5), new SetIntake(0));
+    addCommands(new SetIntakeLift(-1), new TimerDelay(0.5), new SetIntakeLift(0), new SetIntakeBelt(1));
+    System.out.println("initializing ExtendIntake");
+
   }
 }

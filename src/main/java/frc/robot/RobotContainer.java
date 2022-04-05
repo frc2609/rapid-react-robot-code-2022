@@ -18,11 +18,16 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Underglow;
 import frc.robot.MP.Looper;
+// import frc.robot.MP.RamseteFactory;
 import frc.robot.commands.autoaim.AutoAimAndLock;
+// import frc.robot.commands.autonomous.PointTurn;
+import frc.robot.commands.intake.ExtendIntakeRunBelt;
 import frc.robot.commands.intake.IntakeReverse;
+import frc.robot.commands.intake.RetractIntakeStopBelt;
+import frc.robot.commands.intake.ReverseUpperBelt;
 import frc.robot.commands.intake.ReverseUpperBeltTimer;
 import frc.robot.commands.intake.TeleopFeedBall;
-import frc.robot.commands.intake.TeleopIntakeBall;
+//import frc.robot.commands.intake.TeleopIntakeBall;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 
@@ -42,7 +47,9 @@ public class RobotContainer {
   public static JoystickButton intakeButton = new JoystickButton(driveJoystick, Constants.Xbox.A_BUTTON);
   public static JoystickButton feedButton = new JoystickButton(operatorJoystick, Constants.Xbox.B_BUTTON);
   public static JoystickButton autoAimButton = new JoystickButton(operatorJoystick, Constants.Xbox.A_BUTTON);
-  public static JoystickButton outtakeButton = new JoystickButton(operatorJoystick, 8);
+  public static JoystickButton outtakeButton = new JoystickButton(driveJoystick, Constants.Xbox.START_BUTTON);
+  public static JoystickButton reverseUpperBeltButton = new JoystickButton(operatorJoystick, Constants.Xbox.X_BUTTON);
+  public static JoystickButton testButton = new JoystickButton(driveJoystick, 7);
   // subsystems
   public static Drive m_driveSubsystem;
   public static Climber m_climbSubsystem;
@@ -50,7 +57,7 @@ public class RobotContainer {
   public static Intake m_intakeSubsystem;
   public static Underglow m_underglowSubsystem;
   public static AHRS bodyNavx;
-  
+
   public Looper enabledLooper;
 
   public CvSink m_cvSink;
@@ -75,25 +82,30 @@ public class RobotContainer {
 
     configureButtonBindings();
     // try {
-    //   enabledLooper.register(m_driveSubsystem.getLooper());
+    // enabledLooper.register(m_driveSubsystem.getLooper());
     // } catch (Throwable t) {
-    //   System.out.println(t.getMessage());
-    //   System.out.println(t.getStackTrace());
+    // System.out.println(t.getMessage());
+    // System.out.println(t.getStackTrace());
     // }
   }
 
   // define button mappings here
   private void configureButtonBindings() {
-    intakeButton.whenHeld(new TeleopIntakeBall());
-    intakeButton.whenReleased(new ReverseUpperBeltTimer(0.2));
+    // intakeButton.whenHeld(new TeleopIntakeBall());
+    // intakeButton.whenReleased(new ReverseUpperBeltTimer(0.2));
+    intakeButton.whenHeld(new ExtendIntakeRunBelt());
+    intakeButton.whenReleased(new RetractIntakeStopBelt());
     autoAimButton.toggleWhenPressed(new AutoAimAndLock());
     feedButton.whileHeld(new TeleopFeedBall());
     feedButton.whenReleased(new ReverseUpperBeltTimer(0.2));
     outtakeButton.whileHeld(new IntakeReverse());
+    reverseUpperBeltButton.whileHeld(new ReverseUpperBelt());
+    // testButton.whenPressed(RamseteFactory.getInstance().constructRamseteCommand("secondToThird"));
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
+   * 
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {

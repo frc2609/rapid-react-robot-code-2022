@@ -20,6 +20,8 @@ public class IntakeBall extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("initializing IntakeBall");
+
     if (RobotContainer.m_shooterSubsystem.stagingSensor.get()){
       whereToIntake = 2; // staging sensor populated
     }else if(RobotContainer.m_shooterSubsystem.getIntakeSensor()){
@@ -33,7 +35,7 @@ public class IntakeBall extends CommandBase {
   @Override
   public void execute() {
     if (whereToIntake == 0 && !RobotContainer.m_shooterSubsystem.stagingSensor.get()){
-      m_intake.setIntake(0);
+      m_intake.setIntakeBelt(0);
       m_intake.setBelts(Constants.Motors.BELT_SPEED*0.5);
     }else if(whereToIntake == 0 && RobotContainer.m_shooterSubsystem.stagingSensor.get()){
       m_intake.setBelts(0);
@@ -41,14 +43,14 @@ public class IntakeBall extends CommandBase {
     }
 
     if(whereToIntake == 1 && !RobotContainer.m_shooterSubsystem.stagingSensor.get()){
-      m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
+      m_intake.setIntakeBelt(Constants.Motors.INTAKE_SPEED);
       m_intake.setBelts(Constants.Motors.BELT_SPEED*0.5);
     }else if(whereToIntake == 1 && RobotContainer.m_shooterSubsystem.stagingSensor.get()){
       m_intake.setBelts(0);
     }
 
     if(whereToIntake == 2 && !RobotContainer.m_shooterSubsystem.getIntakeSensor()){
-      m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
+      m_intake.setIntakeBelt(Constants.Motors.INTAKE_SPEED);
       m_intake.setLowerBelt(Constants.Motors.BELT_SPEED*0.5);
     }else if(whereToIntake == 2 && RobotContainer.m_shooterSubsystem.getIntakeSensor()){
       m_intake.setBelts(0);
@@ -59,7 +61,9 @@ public class IntakeBall extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intake.setIntake(0.0);
+    System.out.println("ending IntakeBall");
+
+    m_intake.setIntakeBelt(0.0);
     m_intake.setBelts(0);
   }
 

@@ -21,6 +21,8 @@ public class ResetPose extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("initializing ResetPose");
+
     RobotContainer.m_driveSubsystem.resetOdometry(desiredPose);
   }
 }

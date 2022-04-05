@@ -43,33 +43,33 @@ public class TeleopIntakeBall extends CommandBase {
     if (isBallAtIntake == false && isBallAtStaging == false) {
       // No balls
       m_intake.setBelts(Constants.Motors.BELT_SPEED);
-      m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
+      m_intake.setIntakeBelt(Constants.Motors.INTAKE_SPEED);
     } 
     else if (isBallAtIntake == false && isBallAtStaging == true) {
       // Staged ball
       m_intake.setUpperBelt(-0.05);
       m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
-      m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
+      m_intake.setIntakeBelt(Constants.Motors.INTAKE_SPEED);
 
     } 
     else if (isBallAtIntake == true && isBallAtStaging == false) {
       // Intake ball
       m_intake.setBelts(Constants.Motors.BELT_SPEED);
-      m_intake.setIntake(Constants.Motors.INTAKE_SPEED);
+      m_intake.setIntakeBelt(Constants.Motors.INTAKE_SPEED);
 
     }
     else if (isBallAtIntake == true && isBallAtStaging == true) {
       // Full
       m_intake.setBelts(0);
-      m_intake.setIntake(0);
+      m_intake.setIntakeBelt(0);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intake.setBelts(0.0);
-    m_intake.setIntake(0);
+    // m_intake.setBelts(0.0);
+    // m_intake.setIntakeBelt(0);
   }
 
   // Returns true when the command should end.

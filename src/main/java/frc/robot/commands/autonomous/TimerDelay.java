@@ -28,6 +28,8 @@ public class TimerDelay extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("initializing TimerDelay");
+
     startTime = Timer.getFPGATimestamp();
   }
 
@@ -39,6 +41,8 @@ public class TimerDelay extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("ending TimerDelay");
+
   }
 
   // Returns true when the command should end.

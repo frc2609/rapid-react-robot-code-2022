@@ -24,7 +24,6 @@ public class TeleopFeedBall extends CommandBase {
   @Override
   public void initialize() {
     DriverStation.reportError("RPMSETP" + RobotContainer.m_shooterSubsystem.autoRPMsetp, false);
-    DriverStation.reportError("HOODSETP: " + RobotContainer.m_shooterSubsystem.autoHoodSetp, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

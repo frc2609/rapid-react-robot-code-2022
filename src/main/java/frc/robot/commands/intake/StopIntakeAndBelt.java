@@ -18,7 +18,10 @@ public class StopIntakeAndBelt extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("initializing StopIntakeAndBelt");
+
     RobotContainer.m_intakeSubsystem.setBelts(0);
-    RobotContainer.m_intakeSubsystem.setIntake(0);
+    RobotContainer.m_intakeSubsystem.setIntakeBelt(0);
+
   }
 }

@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Underglow extends SubsystemBase {
   // led controller pretends to be a PWM motor controller
@@ -23,10 +24,23 @@ public class Underglow extends SubsystemBase {
     }
   }
 
+  public void checkSweetSpot() {
+    if (RobotContainer.m_shooterSubsystem.isSweetSpot()) {
+      color = Constants.LED.GREEN;
+    } else {
+      color = Constants.LED.RED;
+    }
+  }
+
+  public void setColor(double set) {
+    color = set;
+  }
+
   @Override
   public void periodic() {
     // color = SmartDashboard.getNumber("LED Controller Colour", color);
     checkColor();
+    color = Constants.LED.PURPLE;  // force set purple for now
     LEDController.set(color); // changes colour of LED
     SmartDashboard.putNumber("LED Controller Colour", color);
   }

@@ -10,9 +10,9 @@ import frc.robot.RobotContainer;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class SetIntake extends InstantCommand {
+public class SetIntakeLift extends InstantCommand {
   double speed;
-  public SetIntake(double speed) {
+  public SetIntakeLift(double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.speed = speed;
   }
@@ -21,5 +21,7 @@ public class SetIntake extends InstantCommand {
   @Override
   public void initialize() {
     RobotContainer.m_intakeSubsystem.setIntakeLift(speed);
+    System.out.println("initializing SetIntakeLift");
+
   }
 }
