@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.autoaim.AutoAim;
 import frc.robot.commands.intake.ExtendIntake;
-import frc.robot.commands.intake.IntakeBall;
+// import frc.robot.commands.intake.IntakeBall;
 import frc.robot.commands.intake.IntakeNoStage;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more

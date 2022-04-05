@@ -5,8 +5,8 @@
 package frc.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import frc.robot.commands.intake.IntakeBall;
-import frc.robot.commands.intake.IntakeNoStage;
+// import frc.robot.commands.intake.IntakeBall;
+// import frc.robot.commands.intake.IntakeNoStage;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

@@ -6,25 +6,25 @@ package frc.robot.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.MP.RamseteFactory;
-import frc.robot.commands.autoaim.AutoAim;
+// import frc.robot.commands.autoaim.AutoAim;
 import frc.robot.commands.autoaim.DisableFlywheel;
-import frc.robot.commands.autoaim.TimedFeed;
-import frc.robot.commands.autoaim.TrimShooter;
+// import frc.robot.commands.autoaim.TimedFeed;
+// import frc.robot.commands.autoaim.TrimShooter;
 import frc.robot.commands.autonomous.AutoShoot;
 import frc.robot.commands.autonomous.DriveAndExtendIntake;
 import frc.robot.commands.autonomous.DriveStopCommand;
 import frc.robot.commands.autonomous.PointTurn;
 import frc.robot.commands.autonomous.ResetPose;
 import frc.robot.commands.autonomous.ShootAndIntake;
-import frc.robot.commands.autonomous.ShootAndIntakeHumanStation;
+// import frc.robot.commands.autonomous.ShootAndIntakeHumanStation;
 import frc.robot.commands.autonomous.TimerDelay;
 import frc.robot.commands.autonomous.ZeroYaw;
-import frc.robot.commands.intake.FeedBall;
-import frc.robot.commands.intake.IntakeBall;
-import frc.robot.commands.intake.SetBelt;
-import frc.robot.commands.intake.StageBall;
+// import frc.robot.commands.intake.FeedBall;
+// import frc.robot.commands.intake.IntakeBall;
+// import frc.robot.commands.intake.SetBelt;
+// import frc.robot.commands.intake.StageBall;
 import frc.robot.commands.intake.StopIntakeAndBelt;
-import frc.robot.commands.intake.TimedIntake;
+// import frc.robot.commands.intake.TimedIntake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
