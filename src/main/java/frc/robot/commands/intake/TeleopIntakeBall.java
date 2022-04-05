@@ -30,35 +30,35 @@ public class TeleopIntakeBall extends CommandBase {
   @Override
   public void execute() {
     boolean isBallAtIntake = RobotContainer.m_shooterSubsystem.getIntakeSensor();
-    boolean isBallAtStaging = RobotContainer.m_shooterSubsystem.shooterSensor.get();
+    boolean isBallAtShooter = RobotContainer.m_shooterSubsystem.shooterSensor.get();
 
     if(SmartDashboard.getBoolean(Constants.INTAKE_OVERRIDE_STRING, true)) {
       isBallAtIntake = false;
-      isBallAtStaging = false;
+      isBallAtShooter = false;
       RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);
     } else {
       RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 0);
     }
 
-    if (isBallAtIntake == false && isBallAtStaging == false) {
+    if (isBallAtIntake == false && isBallAtShooter == false) {
       // No balls
       m_intake.setBelts(Constants.Motors.BELT_SPEED);
       m_intake.setIntakeBelt(Constants.Motors.INTAKE_SPEED);
     } 
-    else if (isBallAtIntake == false && isBallAtStaging == true) {
+    else if (isBallAtIntake == false && isBallAtShooter == true) {
       // Staged ball
       m_intake.setUpperBelt(-0.05);
       m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
       m_intake.setIntakeBelt(Constants.Motors.INTAKE_SPEED);
 
     } 
-    else if (isBallAtIntake == true && isBallAtStaging == false) {
+    else if (isBallAtIntake == true && isBallAtShooter == false) {
       // Intake ball
       m_intake.setBelts(Constants.Motors.BELT_SPEED);
       m_intake.setIntakeBelt(Constants.Motors.INTAKE_SPEED);
 
     }
-    else if (isBallAtIntake == true && isBallAtStaging == true) {
+    else if (isBallAtIntake == true && isBallAtShooter == true) {
       // Full
       m_intake.setBelts(0);
       m_intake.setIntakeBelt(0);
