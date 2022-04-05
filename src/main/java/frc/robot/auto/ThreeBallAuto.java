@@ -63,10 +63,10 @@ public class ThreeBallAuto extends SequentialCommandGroup {
         new ResetPose(factory.getTrajectory("thirdBallToForth").getInitialPose()),
         new DriveAndExtendIntake(factory.constructRamseteCommand("thirdBallToForth")),
         new DriveStopCommand(),
-        new TimerDelay(0.2),
+        new TimerDelay(0.2)
         // new ShootAndIntake(),
-        new ShootAndIntakeHumanStation(),
-        new AutoShoot()
+        // new ShootAndIntakeHumanStation(),
+        // new AutoShoot()
 
     // factory.constructRamseteCommand("firstBallToSecondSetup"),
     // new DriveStopCommand(),

@@ -44,6 +44,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean(Constants.INTAKE_OVERRIDE_STRING, false);
     SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, false);
     RobotContainer.m_shooterSubsystem.disableAutoAim();
+    RobotContainer.m_shooterSubsystem.turnLimelightOff();
+    SmartDashboard.putBoolean("LIMELIGHT", false);
   }
 
   /**
@@ -70,7 +72,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("intakeSensor", RobotContainer.m_shooterSubsystem.getIntakeSensor());
     SmartDashboard.putBoolean("stagingSensor", RobotContainer.m_shooterSubsystem.stagingSensor.get());
     SmartDashboard.putBoolean("shooterSensor", RobotContainer.m_shooterSubsystem.shooterSensor.get());
-
     // RamseteFactory.getInstance().printPath();
   }
 
@@ -86,6 +87,11 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     RobotContainer.m_underglowSubsystem.setColor(Constants.LED.PURPLE);
+    if(SmartDashboard.getBoolean("LIMELIGHT", false)){
+      RobotContainer.m_shooterSubsystem.turnLimelightOn();
+    }else{
+      RobotContainer.m_shooterSubsystem.turnLimelightOff();
+    }
   }
 
   /**
@@ -118,6 +124,9 @@ public class Robot extends TimedRobot {
     RobotContainer.m_driveSubsystem.setBrake(true);
     RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
     RobotContainer.m_shooterSubsystem.setRPMTrim(0);
+    RobotContainer.bodyNavx.zeroYaw();
+    RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
+    RobotContainer.m_driveSubsystem.resetEncoders();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

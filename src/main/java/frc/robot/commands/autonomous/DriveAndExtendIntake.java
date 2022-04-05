@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.autoaim.AutoAim;
 import frc.robot.commands.intake.ExtendIntake;
 import frc.robot.commands.intake.IntakeBall;
+import frc.robot.commands.intake.IntakeNoStage;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -18,7 +19,7 @@ public class DriveAndExtendIntake extends ParallelDeadlineGroup {
   public DriveAndExtendIntake(Command driveCommand) {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
-    super(driveCommand, new ExtendIntake(),new AutoAim(), new IntakeBall());
+    super(driveCommand, new ExtendIntake(),new AutoAim(), new IntakeNoStage());
 
     System.out.println("initializing DriveAndExtendIntake");
   }

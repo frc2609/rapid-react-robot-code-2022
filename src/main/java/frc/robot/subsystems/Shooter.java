@@ -70,6 +70,7 @@ public class Shooter extends SubsystemBase {
     rotatePIDController = rotateMotor.getPIDController();
 
     SmartDashboard.putNumber("Limelight camera angle (deg)", 29.8);
+    SmartDashboard.putNumber("Shooter offset", 0);
 
     turnLimelightOff();
     setPidValues();
@@ -128,7 +129,8 @@ public class Shooter extends SubsystemBase {
 
   public boolean isTargetLocked(){
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
-    double tx = txEntry.getDouble(0.0);
+    double offset = SmartDashboard.getNumber("Shooter offset", 0);
+    double tx = txEntry.getDouble(0.0)+offset;
     double distance = calcDistance();
 
     return (isValidTarget
@@ -163,11 +165,11 @@ public class Shooter extends SubsystemBase {
         Constants.Rotate.MAX_OUTPUT);
   }
 
-  private void turnLimelightOff() {
+  public void turnLimelightOff() {
     table.getEntry("ledMode").setNumber(1); // force LEDs off
   }
 
-  private void turnLimelightOn() {
+  public void turnLimelightOn() {
     table.getEntry("ledMode").setNumber(3); // force LEDs on
   }
 
@@ -228,13 +230,14 @@ public class Shooter extends SubsystemBase {
     double currTurretPosition = rotateMotor.getEncoder().getPosition();
     long currTime = System.nanoTime();
     double kD = 0.3;
+    double offset = SmartDashboard.getNumber("Shooter offset", 0);
 
     if (!isValidTarget) {
       rotateMotor.set(0.0);
       return;
     }
 
-    double tx = txEntry.getDouble(0.0);
+    double tx = txEntry.getDouble(0.0)+offset;
     SmartDashboard.putNumber("tx", tx);
 
     if (Math.abs(tx) < Constants.Rotate.TOLERANCE) { 
@@ -288,7 +291,7 @@ public class Shooter extends SubsystemBase {
 
   private double calcFlywheelRpm(double distance) {
     // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
-    return 105*distance + 1420;
+    return 105*distance + 1320;
   }
 
   // manual shooter control methods

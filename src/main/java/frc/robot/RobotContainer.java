@@ -18,6 +18,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Underglow;
 import frc.robot.MP.Looper;
+import frc.robot.MP.RamseteFactory;
 import frc.robot.commands.autoaim.AutoAimAndLock;
 import frc.robot.commands.autonomous.PointTurn;
 import frc.robot.commands.intake.ExtendIntakeRunBelt;
@@ -99,7 +100,7 @@ public class RobotContainer {
     feedButton.whenReleased(new ReverseUpperBeltTimer(0.2));
     outtakeButton.whileHeld(new IntakeReverse());
     reverseUpperBeltButton.whileHeld(new ReverseUpperBelt());
-    testButton.whenPressed(new PointTurn(90));
+    // testButton.whenPressed(RamseteFactory.getInstance().constructRamseteCommand("secondToThird"));
   }
 
   /**

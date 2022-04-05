@@ -25,9 +25,8 @@ public class TwoBallAuto extends SequentialCommandGroup {
     RamseteFactory factory = RamseteFactory.getInstance();
     // addCommands(new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")), new DriveStopCommand(), new AutoaimShoot3s());
     addCommands(
-      new DriveAndExtendIntake(factory.constructRamseteCommand("twoBallStartToBall")),
+      new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")),
       new DriveStopCommand(),
-      new ResetPose(factory.getTrajectory("firstBallToSecondSetup").getInitialPose()),
       new TimedIntake(2),
       new AutoAim(),
       new FeedBall(), // first ball

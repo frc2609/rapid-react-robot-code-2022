@@ -41,25 +41,26 @@ public class FiveBallAuto extends SequentialCommandGroup {
     // DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")), new
     // DriveStopCommand(), new AutoaimShoot3s());
     addCommands(
-        new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")),
+        factory.constructRamseteCommand("startToBall"),
+        // new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")),
         new DriveStopCommand(),
         new TimerDelay(0.2),
-        new ShootAndIntake(),
-        new AutoShoot(),
-        new DisableFlywheel(),
-        new StopIntakeAndBelt(),
-        new PointTurn(120),
-        new DriveStopCommand(),
-        new ZeroYaw(),
-        new ResetPose(factory.getTrajectory("secondToThirdPast").getInitialPose()),
-        new DriveAndExtendIntake(factory.constructRamseteCommand("secondToThird")),
-        new DriveStopCommand(),
-        new ResetPose(factory.getTrajectory("thirdBallToForth").getInitialPose()),
-        new DriveAndShoot(factory.constructRamseteCommand("thirdBallToForth")),
-        new DriveStopCommand(),
-        new TimerDelay(0.2),
-        new ShootAndIntakeHumanStation(),
-        new AutoShoot()
+        new ShootAndIntake()
+        // new AutoShoot(),
+        // new DisableFlywheel(),
+        // new StopIntakeAndBelt(),
+        // new PointTurn(120),
+        // new DriveStopCommand(),
+        // new ZeroYaw(),
+        // new ResetPose(factory.getTrajectory("secondToThirdPast").getInitialPose()),
+        // new DriveAndExtendIntake(factory.constructRamseteCommand("secondToThird")),
+        // new DriveStopCommand(),
+        // new ResetPose(factory.getTrajectory("thirdBallToForth").getInitialPose()),
+        // new DriveAndShoot(factory.constructRamseteCommand("thirdBallToForth")),
+        // new DriveStopCommand(),
+        // new TimerDelay(0.2),
+        // new ShootAndIntakeHumanStation(),
+        // new AutoShoot()
 
     // factory.constructRamseteCommand("firstBallToSecondSetup"),
     // new DriveStopCommand(),
