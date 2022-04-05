@@ -42,6 +42,7 @@ public class Drive extends SubsystemBase {
   public boolean isDriveLocked = false;
   public LinearFilter leftFilter = LinearFilter.singlePoleIIR(0.2, 0.02);
   public LinearFilter rightFilter = LinearFilter.singlePoleIIR(0.2, 0.02);
+  //private double driveMultiplier = 0.6;
 
   // private final Loop mLoop = new Loop() {
   // @Override
@@ -110,15 +111,17 @@ public class Drive extends SubsystemBase {
     m_rightRearMotor.set(right);
   }
 
-  public void manualDrive(double xAxisSpeed, double yAxisSpeed) {
+  public void manualDrive(double xAxisSpeed, double yAxisSpeed, boolean turbo) {
     double driveX = Math.pow(xAxisSpeed, 3);
     double driveY = Math.pow(yAxisSpeed, 3);
     double leftMotorRaw = driveY - driveX;
     double rightMotorRaw = driveY + driveX;
     double leftMotors = leftFilter.calculate(leftMotorRaw);
     double rightMotors = rightFilter.calculate(rightMotorRaw);
+    double driveMultiplier = turbo ? 1.0 : 0.6;
     if (!isDriveLocked) {
-      setMotors(leftMotors * 0.6, rightMotors * 0.6);
+      setMotors(leftMotors * driveMultiplier, rightMotors * driveMultiplier);
+      SmartDashboard.putNumber("DriveMultiplier", driveMultiplier);
       // SmartDashboard.putNumber("left front motor current", m_leftFrontMotor.getOutputCurrent());
       // SmartDashboard.putNumber("left rear motor current", m_leftRearMotor.getOutputCurrent());
       // SmartDashboard.putNumber("right front motor current", m_rightFrontMotor.getOutputCurrent());

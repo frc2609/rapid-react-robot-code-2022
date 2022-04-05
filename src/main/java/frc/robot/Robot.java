@@ -144,7 +144,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     RobotContainer.m_driveSubsystem.manualDrive(
         RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS),
-        RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS));
+        RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS),
+        RobotContainer.driveJoystick.getRawButton(Constants.Xbox.LEFT_BUMPER));
     /*
      * RobotContainer.m_driveSubsystem.curveDrive(
      * RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS),
