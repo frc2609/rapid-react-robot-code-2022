@@ -95,8 +95,8 @@ public class Drive extends SubsystemBase {
     boolean atRiskForTipping = isDrivingForward() && yAxisSpeed > Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE;
 
     if (atRiskForTipping) {
-      leftMotorRaw *= 0.1;
-      rightMotorRaw *= 0.1;
+      leftMotorRaw *= 0.05;
+      rightMotorRaw *= 0.05;
     }
 
     double leftMotorsRegularFilter = leftFilterRegular.calculate(leftMotorRaw * 0.6);
@@ -106,13 +106,22 @@ public class Drive extends SubsystemBase {
     double rightMotorsFullSpeedFilter = rightFilterFullSpeed.calculate(rightMotorRaw * 0.8);
 
     // logDriveData();
+    SmartDashboard.putBoolean("turbo button", turbo);
+
+    SmartDashboard.putNumber("turboTimer", turboTimer);
+    SmartDashboard.putNumber("System.currentTimeMillis()", System.currentTimeMillis());
 
     if (!isDriveLocked) {
-      if (!turbo || turboTimer > System.currentTimeMillis()) {
-        setMotors(leftMotorsRegularFilter, rightMotorsRegularFilter);
-      } else {
-        turboTimer = System.currentTimeMillis() + 1500;
+      if (turbo) {
+        SmartDashboard.putBoolean("turbo", true);
+        turboTimer = System.currentTimeMillis() + 2000;
         setMotors(leftMotorsFullSpeedFilter, rightMotorsFullSpeedFilter);
+      } else if (turboTimer > System.currentTimeMillis()) {
+        SmartDashboard.putBoolean("turbo", true);
+        setMotors(leftMotorsFullSpeedFilter, rightMotorsFullSpeedFilter);
+      } else {
+        SmartDashboard.putBoolean("turbo", false);
+        setMotors(leftMotorsRegularFilter, rightMotorsRegularFilter);
       }
     }
   }
