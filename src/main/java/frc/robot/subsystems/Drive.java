@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -33,8 +34,11 @@ public class Drive extends SubsystemBase {
   private RelativeEncoder leftEncoder = m_leftFrontMotor.getEncoder();
   private RelativeEncoder rightEncoder = m_rightFrontMotor.getEncoder();
   // filters
-  public LinearFilter leftFilter = LinearFilter.singlePoleIIR(0.2, 0.02);
-  public LinearFilter rightFilter = LinearFilter.singlePoleIIR(0.2, 0.02);
+  public LinearFilter leftFilterRegular = LinearFilter.singlePoleIIR(0.25, 0.02);
+  public LinearFilter rightFilterRegular = LinearFilter.singlePoleIIR(0.25, 0.02);
+  public LinearFilter leftFilterFullSpeed = LinearFilter.singlePoleIIR(0.75, 0.02);
+  public LinearFilter rightFilterFullSpeed = LinearFilter.singlePoleIIR(0.75, 0.02);
+
   // auto
   private final DifferentialDriveOdometry m_odometry;
   // navx
@@ -42,10 +46,11 @@ public class Drive extends SubsystemBase {
   // other
   private boolean isReverse = false;
   private boolean isDriveLocked = false;
+  private long turboTimer = 0;
 
   /** Creates a new Drive. */
   public Drive() {
-    // sparkmax controllers
+    // invert left side
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
     // navx
@@ -71,18 +76,44 @@ public class Drive extends SubsystemBase {
     m_rightRearMotor.set(right);
   }
 
+  public boolean isDrivingForward() {
+    double leftRearVelocity = m_leftRearMotor.getEncoder().getVelocity();
+    double rightRearVelocity = m_rightRearMotor.getEncoder().getVelocity();
+    boolean leftRearNegative = leftRearVelocity < Constants.Drive.isDrivingForwardDeadzone;
+    boolean rightRearNegative = rightRearVelocity < Constants.Drive.isDrivingForwardDeadzone;
+    
+    return leftRearNegative && rightRearNegative;
+  }
+
   // constant turning speed even at high speeds
   public void manualDrive(double xAxisSpeed, double yAxisSpeed, boolean turbo) {
     double driveX = Math.pow(xAxisSpeed, 3);
     double driveY = Math.pow(yAxisSpeed, 3);
     double leftMotorRaw = driveY - driveX;
     double rightMotorRaw = driveY + driveX;
-    double leftMotors = leftFilter.calculate(leftMotorRaw);
-    double rightMotors = rightFilter.calculate(rightMotorRaw);
-    double driveMultiplier = turbo ? 1.0 : 0.6;
+
+    boolean atRiskForTipping = isDrivingForward() && yAxisSpeed > Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE;
+
+    if (atRiskForTipping) {
+      leftMotorRaw *= 0.1;
+      rightMotorRaw *= 0.1;
+    }
+
+    double leftMotorsRegularFilter = leftFilterRegular.calculate(leftMotorRaw * 0.6);
+    double rightMotorsRegularFilter = rightFilterRegular.calculate(rightMotorRaw * 0.6);
+
+    double leftMotorsFullSpeedFilter = leftFilterFullSpeed.calculate(leftMotorRaw * 0.8);
+    double rightMotorsFullSpeedFilter = rightFilterFullSpeed.calculate(rightMotorRaw * 0.8);
+
+    // logDriveData();
+
     if (!isDriveLocked) {
-      setMotors(leftMotors * driveMultiplier, rightMotors * driveMultiplier);
-      //logDriveData();
+      if (!turbo || turboTimer > System.currentTimeMillis()) {
+        setMotors(leftMotorsRegularFilter, rightMotorsRegularFilter);
+      } else {
+        turboTimer = System.currentTimeMillis() + 1500;
+        setMotors(leftMotorsFullSpeedFilter, rightMotorsFullSpeedFilter);
+      }
     }
   }
 
@@ -139,7 +170,6 @@ public class Drive extends SubsystemBase {
       m_rightRearMotor.setIdleMode(IdleMode.kCoast);
       m_leftRearMotor.setIdleMode(IdleMode.kCoast);
       m_leftFrontMotor.setIdleMode(IdleMode.kCoast);
-
     }
   }
 
@@ -182,26 +212,20 @@ public class Drive extends SubsystemBase {
     // SmartDashboard.putNumber("velleft", getWheelSpeeds().leftMetersPerSecond);
   }
 
-  //private void logDriveData() {
-    // SmartDashboard.putNumber("DriveMultiplier", driveMultiplier);
-    // SmartDashboard.putNumber("left front motor current", m_leftFrontMotor.getOutputCurrent());
-    // SmartDashboard.putNumber("left rear motor current", m_leftRearMotor.getOutputCurrent());
-    // SmartDashboard.putNumber("right front motor current", m_rightFrontMotor.getOutputCurrent());
-    // SmartDashboard.putNumber("right rear motor current", m_rightRearMotor.getOutputCurrent());
+  private void logDriveData() {
+    SmartDashboard.putNumber("left front motor current", m_leftFrontMotor.getOutputCurrent());
+    SmartDashboard.putNumber("left rear motor current", m_leftRearMotor.getOutputCurrent());
+    SmartDashboard.putNumber("right front motor current", m_rightFrontMotor.getOutputCurrent());
+    SmartDashboard.putNumber("right rear motor current", m_rightRearMotor.getOutputCurrent());
 
-    // SmartDashboard.putNumber("left front motor temperature", m_leftFrontMotor.getMotorTemperature());
-    // SmartDashboard.putNumber("left rear motor temperature", m_leftRearMotor.getMotorTemperature());
-    // SmartDashboard.putNumber("right front motor temperature", m_rightFrontMotor.getMotorTemperature());
-    // SmartDashboard.putNumber("right rear motor temperature", m_rightRearMotor.getMotorTemperature());
+    SmartDashboard.putNumber("left front motor temperature", m_leftFrontMotor.getMotorTemperature());
+    SmartDashboard.putNumber("left rear motor temperature", m_leftRearMotor.getMotorTemperature());
+    SmartDashboard.putNumber("right front motor temperature", m_rightFrontMotor.getMotorTemperature());
+    SmartDashboard.putNumber("right rear motor temperature", m_rightRearMotor.getMotorTemperature());
 
-    // SmartDashboard.putNumber("left front motor velocity", m_leftFrontMotor.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("left rear motor velocity", m_leftRearMotor.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("right front motor velocity", m_rightFrontMotor.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("right rear motor velocity", m_rightRearMotor.getEncoder().getVelocity());
-
-    // SmartDashboard.putNumber("Raw left motor", driveY - driveX);
-    // SmartDashboard.putNumber("Raw right motor", driveY + driveX);
-    // SmartDashboard.putNumber("Filter left motor", leftMotors);
-    // SmartDashboard.putNumber("Filter right motor", rightMotors);
-  //}
+    SmartDashboard.putNumber("left front motor velocity", m_leftFrontMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("left rear motor velocity", m_leftRearMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("right front motor velocity", m_rightFrontMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("right rear motor velocity", m_rightRearMotor.getEncoder().getVelocity());
+  }
 }
