@@ -26,7 +26,7 @@ public class PointTurn extends CommandBase {
   public void initialize() {
     System.out.println("initializing PointTurn");
 
-    RobotContainer.m_driveSubsystem.isDriveLocked = true;
+    RobotContainer.m_driveSubsystem.setDriveLock(true);
     angle += RobotContainer.bodyNavx.getAngle();
     pid.setDesiredValue(angle);
     DriverStation.reportWarning("desired angle: " + angle, false);
@@ -47,7 +47,7 @@ public class PointTurn extends CommandBase {
     System.out.println("ending PointTurn");
 
     RobotContainer.m_driveSubsystem.tankDriveVolts(0, 0);
-    RobotContainer.m_driveSubsystem.isDriveLocked = false;
+    RobotContainer.m_driveSubsystem.setDriveLock(false);
     DriverStation.reportWarning("end angle: " + angle, false);
     angle = 0;
 

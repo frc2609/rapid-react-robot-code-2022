@@ -14,17 +14,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-//import edu.wpi.first.wpilibj.Joystick;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import edu.wpi.first.math.filter.LinearFilter;
-//import frc.robot.MP.Loop;
 
 public class Drive extends SubsystemBase {
-  /** Creates a new Drive. */
-
+  // motors
   private final CANSparkMax m_leftFrontMotor = new CANSparkMax(Constants.CanMotorId.LEFT_FRONT_MOTOR,
       MotorType.kBrushless);
   public static final CANSparkMax m_leftRearMotor = new CANSparkMax(Constants.CanMotorId.LEFT_REAR_MOTOR,
@@ -33,75 +29,39 @@ public class Drive extends SubsystemBase {
       MotorType.kBrushless);
   private final CANSparkMax m_rightRearMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_REAR_MOTOR,
       MotorType.kBrushless);
+  // encoders
   private RelativeEncoder leftEncoder = m_leftFrontMotor.getEncoder();
   private RelativeEncoder rightEncoder = m_rightFrontMotor.getEncoder();
-  // private Joystick m_driveJoystick;
-  AHRS bodyNavx;
-  private final DifferentialDriveOdometry m_odometry;
-  public boolean isReverse = false;
-  public boolean isDriveLocked = false;
+  // filters
   public LinearFilter leftFilter = LinearFilter.singlePoleIIR(0.2, 0.02);
   public LinearFilter rightFilter = LinearFilter.singlePoleIIR(0.2, 0.02);
-  //private double driveMultiplier = 0.6;
+  // auto
+  private final DifferentialDriveOdometry m_odometry;
+  // navx
+  public AHRS bodyNavx;
+  // other
+  private boolean isReverse = false;
+  private boolean isDriveLocked = false;
 
-  // private final Loop mLoop = new Loop() {
-  // @Override
-  // public void onStart() {
-  // System.out.println("Starting Climber loop");
-  // // logger.openFile();
-  // }
-
-  // @Override
-  // public void onLoop() {
-  // // logger.logTele();
-  // }
-
-  // @Override
-  // public void onStop() {
-  // System.out.println("Ending Climber loop");
-  // // logger.close();
-  // }
-  // };
-
+  /** Creates a new Drive. */
   public Drive() {
+    // sparkmax controllers
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
+    // navx
     this.bodyNavx = RobotContainer.bodyNavx;
+    // auto
     m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
+    // encoders
     leftEncoder.setPositionConversionFactor(0.4780 / 10.71);
     rightEncoder.setPositionConversionFactor(0.4780 / 10.71);
     leftEncoder.setVelocityConversionFactor(0.4780 / 10.71);
     rightEncoder.setVelocityConversionFactor(0.4780 / 10.71);
   }
 
-  public void updateOdometry() {
-    // I assume this code is for updating the location info of the robot
-    if (isReverse) {
-      m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
-    } else {
-      m_odometry.update(bodyNavx.getRotation2d().unaryMinus(), leftEncoder.getPosition(), rightEncoder.getPosition());
-    }
-    // SmartDashboard.putNumber("posex", m_odometry.getPoseMeters().getX());
-    // SmartDashboard.putNumber("posey", m_odometry.getPoseMeters().getY());
-    // SmartDashboard.putNumber("deg", m_odometry.getPoseMeters().getRotation().getDegrees());
-    // SmartDashboard.putNumber("velleft", getWheelSpeeds().leftMetersPerSecond);
-  }
-
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    // double driveX =
-    // Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS), 3);
-    // double driveY =
-    // Math.pow(m_driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS), 3);
-    // double leftMotors = driveY - driveX;
-    // double rightMotors = driveY + driveX;
-
     updateOdometry();
-
-    // SmartDashboard.putNumber("getpos", leftEncoder.getPosition());
-    // tankDriveVolts(3, 3);
-    // setMotors(leftMotors, rightMotors);
   }
 
   public void setMotors(double left, double right) {
@@ -111,6 +71,7 @@ public class Drive extends SubsystemBase {
     m_rightRearMotor.set(right);
   }
 
+  // constant turning speed even at high speeds
   public void manualDrive(double xAxisSpeed, double yAxisSpeed, boolean turbo) {
     double driveX = Math.pow(xAxisSpeed, 3);
     double driveY = Math.pow(yAxisSpeed, 3);
@@ -121,29 +82,11 @@ public class Drive extends SubsystemBase {
     double driveMultiplier = turbo ? 1.0 : 0.6;
     if (!isDriveLocked) {
       setMotors(leftMotors * driveMultiplier, rightMotors * driveMultiplier);
-      // SmartDashboard.putNumber("DriveMultiplier", driveMultiplier);
-      // SmartDashboard.putNumber("left front motor current", m_leftFrontMotor.getOutputCurrent());
-      // SmartDashboard.putNumber("left rear motor current", m_leftRearMotor.getOutputCurrent());
-      // SmartDashboard.putNumber("right front motor current", m_rightFrontMotor.getOutputCurrent());
-      // SmartDashboard.putNumber("right rear motor current", m_rightRearMotor.getOutputCurrent());
-
-      // SmartDashboard.putNumber("left front motor temperature", m_leftFrontMotor.getMotorTemperature());
-      // SmartDashboard.putNumber("left rear motor temperature", m_leftRearMotor.getMotorTemperature());
-      // SmartDashboard.putNumber("right front motor temperature", m_rightFrontMotor.getMotorTemperature());
-      // SmartDashboard.putNumber("right rear motor temperature", m_rightRearMotor.getMotorTemperature());
-
-      // SmartDashboard.putNumber("left front motor velocity", m_leftFrontMotor.getEncoder().getVelocity());
-      // SmartDashboard.putNumber("left rear motor velocity", m_leftRearMotor.getEncoder().getVelocity());
-      // SmartDashboard.putNumber("right front motor velocity", m_rightFrontMotor.getEncoder().getVelocity());
-      // SmartDashboard.putNumber("right rear motor velocity", m_rightRearMotor.getEncoder().getVelocity());
-
-      // SmartDashboard.putNumber("Raw left motor", driveY - driveX);
-      // SmartDashboard.putNumber("Raw right motor", driveY + driveX);
-      // SmartDashboard.putNumber("Filter left motor", leftMotors);
-      // SmartDashboard.putNumber("Filter right motor", rightMotors);
+      //logDriveData();
     }
   }
 
+  // drives similar to a car, slower turning at high speeds
   public void curveDrive(double xAxisSpeed, double yAxisSpeed, boolean turnInPlace) {
     double speedY = yAxisSpeed;
     double rotation = xAxisSpeed;
@@ -166,10 +109,6 @@ public class Drive extends SubsystemBase {
     if (!isDriveLocked) {
       setMotors(leftMotors * 0.5, rightMotors * 0.5);
     }
-  }
-
-  public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -225,4 +164,44 @@ public class Drive extends SubsystemBase {
   public double getRightMotorPosition() {
     return m_rightFrontMotor.getEncoder().getPosition();
   }
+
+  public Pose2d getPose() { return m_odometry.getPoseMeters(); }
+  public void setReverse(boolean on) { isReverse = on; }
+  public void setDriveLock(boolean on) { isDriveLocked = on; }
+
+  private void updateOdometry() {
+    // I assume this code is for updating the location info of the robot
+    if (isReverse) {
+      m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    } else {
+      m_odometry.update(bodyNavx.getRotation2d().unaryMinus(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    }
+    // SmartDashboard.putNumber("posex", m_odometry.getPoseMeters().getX());
+    // SmartDashboard.putNumber("posey", m_odometry.getPoseMeters().getY());
+    // SmartDashboard.putNumber("deg", m_odometry.getPoseMeters().getRotation().getDegrees());
+    // SmartDashboard.putNumber("velleft", getWheelSpeeds().leftMetersPerSecond);
+  }
+
+  //private void logDriveData() {
+    // SmartDashboard.putNumber("DriveMultiplier", driveMultiplier);
+    // SmartDashboard.putNumber("left front motor current", m_leftFrontMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("left rear motor current", m_leftRearMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("right front motor current", m_rightFrontMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("right rear motor current", m_rightRearMotor.getOutputCurrent());
+
+    // SmartDashboard.putNumber("left front motor temperature", m_leftFrontMotor.getMotorTemperature());
+    // SmartDashboard.putNumber("left rear motor temperature", m_leftRearMotor.getMotorTemperature());
+    // SmartDashboard.putNumber("right front motor temperature", m_rightFrontMotor.getMotorTemperature());
+    // SmartDashboard.putNumber("right rear motor temperature", m_rightRearMotor.getMotorTemperature());
+
+    // SmartDashboard.putNumber("left front motor velocity", m_leftFrontMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("left rear motor velocity", m_leftRearMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("right front motor velocity", m_rightFrontMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("right rear motor velocity", m_rightRearMotor.getEncoder().getVelocity());
+
+    // SmartDashboard.putNumber("Raw left motor", driveY - driveX);
+    // SmartDashboard.putNumber("Raw right motor", driveY + driveX);
+    // SmartDashboard.putNumber("Filter left motor", leftMotors);
+    // SmartDashboard.putNumber("Filter right motor", rightMotors);
+  //}
 }

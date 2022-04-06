@@ -25,7 +25,7 @@ public class LockDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.m_driveSubsystem.isDriveLocked = true;
+    RobotContainer.m_driveSubsystem.setDriveLock(true);
     rightDrivePID.setDesiredValue(RobotContainer.m_driveSubsystem.getRightMotorPosition());
     leftDrivePID.setDesiredValue(RobotContainer.m_driveSubsystem.getLeftMotorPosition());
     headingPID.setDesiredValue(RobotContainer.bodyNavx.getAngle());
@@ -43,7 +43,7 @@ public class LockDrive extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.m_driveSubsystem.isDriveLocked = false;
+    RobotContainer.m_driveSubsystem.setDriveLock(false);
   }
 
   // Returns true when the command should end.
