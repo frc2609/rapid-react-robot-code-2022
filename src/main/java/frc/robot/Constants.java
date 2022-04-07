@@ -123,7 +123,7 @@ public final class Constants {
     }
 
     public static final class Drive {
-        public static final double isDrivingForwardDeadzone = -50;
+        public static final double isDrivingForwardDeadzone = -250;
     }
 
     public static final class DriveKin {
