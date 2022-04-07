@@ -122,6 +122,10 @@ public final class Constants {
         public static final double PURPLE = 0.91;
     }
 
+    public static final class Drive {
+        public static final double isDrivingForwardDeadzone = -250;
+    }
+
     public static final class DriveKin {
         public static final double ksVolts = 0.24533; //0.24364;
         public static final double kvVoltSecondsPerMeter = 2.8011; //2.8238;
