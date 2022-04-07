@@ -34,10 +34,10 @@ public class Drive extends SubsystemBase {
   private RelativeEncoder leftEncoder = m_leftFrontMotor.getEncoder();
   private RelativeEncoder rightEncoder = m_rightFrontMotor.getEncoder();
   // filters
-  public LinearFilter leftFilterRegular = LinearFilter.singlePoleIIR(0.25, 0.02);
-  public LinearFilter rightFilterRegular = LinearFilter.singlePoleIIR(0.25, 0.02);
-  public LinearFilter leftFilterFullSpeed = LinearFilter.singlePoleIIR(0.75, 0.02);
-  public LinearFilter rightFilterFullSpeed = LinearFilter.singlePoleIIR(0.75, 0.02);
+  public LinearFilter leftFilterRegular = LinearFilter.singlePoleIIR(0.37, 0.02);
+  public LinearFilter rightFilterRegular = LinearFilter.singlePoleIIR(0.37, 0.02);
+  public LinearFilter leftFilterFullSpeed = LinearFilter.singlePoleIIR(0.4, 0.02);  // TODO: to be deleted
+  public LinearFilter rightFilterFullSpeed = LinearFilter.singlePoleIIR(0.4, 0.02);  // TODO: to be deleted
 
   // auto
   private final DifferentialDriveOdometry m_odometry;
@@ -46,7 +46,6 @@ public class Drive extends SubsystemBase {
   // other
   private boolean isReverse = false;
   private boolean isDriveLocked = false;
-  private long turboTimer = 0;
 
   /** Creates a new Drive. */
   public Drive() {
@@ -92,35 +91,27 @@ public class Drive extends SubsystemBase {
     double leftMotorRaw = driveY - driveX;
     double rightMotorRaw = driveY + driveX;
 
-    boolean atRiskForTipping = isDrivingForward() && yAxisSpeed > Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE;
+    boolean atRiskForTippingReverse = isDrivingForward() && yAxisSpeed > Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE;
 
-    if (atRiskForTipping) {
-      leftMotorRaw *= 0.05;
-      rightMotorRaw *= 0.05;
+    if (atRiskForTippingReverse) {
+      leftMotorRaw *= 0.2;
+      rightMotorRaw *= 0.2;
     }
 
-    double leftMotorsRegularFilter = leftFilterRegular.calculate(leftMotorRaw * 0.6);
-    double rightMotorsRegularFilter = rightFilterRegular.calculate(rightMotorRaw * 0.6);
+    double leftMotorsRegularFilter = leftFilterRegular.calculate(leftMotorRaw * 0.7);
+    double rightMotorsRegularFilter = rightFilterRegular.calculate(rightMotorRaw * 0.7);
 
-    double leftMotorsFullSpeedFilter = leftFilterFullSpeed.calculate(leftMotorRaw * 0.8);
-    double rightMotorsFullSpeedFilter = rightFilterFullSpeed.calculate(rightMotorRaw * 0.8);
+    double leftMotorsFullSpeedFilter = leftFilterFullSpeed.calculate(leftMotorRaw * 0.8);  // TODO: to be deleted
+    double rightMotorsFullSpeedFilter = rightFilterFullSpeed.calculate(rightMotorRaw * 0.8);  // TODO: to be deleted
 
     // logDriveData();
-    SmartDashboard.putBoolean("turbo button", turbo);
 
-    SmartDashboard.putNumber("turboTimer", turboTimer);
-    SmartDashboard.putNumber("System.currentTimeMillis()", System.currentTimeMillis());
+    turbo = false;  // TODO: remove turbo functionality
 
     if (!isDriveLocked) {
       if (turbo) {
-        SmartDashboard.putBoolean("turbo", true);
-        turboTimer = System.currentTimeMillis() + 2000;
-        setMotors(leftMotorsFullSpeedFilter, rightMotorsFullSpeedFilter);
-      } else if (turboTimer > System.currentTimeMillis()) {
-        SmartDashboard.putBoolean("turbo", true);
         setMotors(leftMotorsFullSpeedFilter, rightMotorsFullSpeedFilter);
       } else {
-        SmartDashboard.putBoolean("turbo", false);
         setMotors(leftMotorsRegularFilter, rightMotorsRegularFilter);
       }
     }
