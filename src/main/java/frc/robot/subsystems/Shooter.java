@@ -56,11 +56,11 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry tvEntry = table.getEntry("tv");
   
   public double autoRPMsetp = 0;
-  private double kP = Constants.Flywheel.PROPORTIONAL;
-  private double kI = Constants.Flywheel.INTEGRAL;
-  private double kD = Constants.Flywheel.DERIVATIVE;
-  private double kIz = Constants.Flywheel.INTEGRAL_ZONE;
-  private double kFF = Constants.Flywheel.FEED_FORWARD;
+  private double kP_Flywheel = Constants.Flywheel.PROPORTIONAL;
+  private double kI_Flywheel = Constants.Flywheel.INTEGRAL;
+  private double kD_Flywheel = Constants.Flywheel.DERIVATIVE;
+  private double kIz_Flywheel = Constants.Flywheel.INTEGRAL_ZONE;
+  private double kFF_Flywheel = Constants.Flywheel.FEED_FORWARD;
 
   public Shooter() {
     rotateMotor.setInverted(true);
@@ -77,11 +77,11 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Limelight camera angle (deg)", 29.8);
     SmartDashboard.putNumber("Shooter offset", 0);
 
-    SmartDashboard.putNumber("kP", kP);
-    SmartDashboard.putNumber("kI", kI);
-    SmartDashboard.putNumber("kD", kD);
-    SmartDashboard.putNumber("kIz", kIz);
-    SmartDashboard.putNumber("kFF", kFF);
+    SmartDashboard.putNumber("kP", kP_Flywheel);
+    SmartDashboard.putNumber("kI", kI_Flywheel);
+    SmartDashboard.putNumber("kD", kD_Flywheel);
+    SmartDashboard.putNumber("kIz", kIz_Flywheel);
+    SmartDashboard.putNumber("kFF", kFF_Flywheel);
     SmartDashboard.putNumber("m", 68);
     SmartDashboard.putNumber("b", 1700);
 
@@ -185,12 +185,30 @@ public class Shooter extends SubsystemBase {
         Constants.Rotate.MAX_OUTPUT);
   }
 
-  public void turnLimelightOff() {
-    table.getEntry("ledMode").setNumber(1); // force LEDs off
+  public void turnLimelightOff() { table.getEntry("ledMode").setNumber(1); }
+
+  public void turnLimelightOn() { table.getEntry("ledMode").setNumber(3); }
+
+  private void autoFlywheel() {
+    double distance = calcDistance();
+
+    if (distance < 0) {
+      return;
+    }
+    distance = Math.round(distance);
+
+    calcFlywheelRpm(distance);
+
+    rightFlywheelPIDController.setReference(autoFlywheelRpm, ControlType.kVelocity);
+
+    autoRPMsetp = autoFlywheelRpm;
+    SmartDashboard.putNumber("Auto Flywheel RPM", autoFlywheelRpm);
   }
 
-  public void turnLimelightOn() {
-    table.getEntry("ledMode").setNumber(3); // force LEDs on
+  private void calcFlywheelRpm(double distance) {
+    // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
+    // 68, 1700
+    autoFlywheelRpm = SmartDashboard.getNumber("m", 0)*distance + SmartDashboard.getNumber("b", 0) + autoFlywheelRpmTrim;
   }
 
   private double calcDistance() {
@@ -282,37 +300,11 @@ public class Shooter extends SubsystemBase {
     }
 
     double rateError = (tx - kD_LastError) / (TimeUnit.NANOSECONDS.toMillis(currTime) - TimeUnit.NANOSECONDS.toMillis(kD_LastTime));
-    //SmartDashboard.putNumber("rateError", rateError);
-
     rotatePower = tx*kP + frictionPower*isNegative + rateError*kD;
-
     rotateMotor.set(rotatePower);
-    // SmartDashboard.putNumber("Auto Rotate Power", rotatePower);
 
     kD_LastError = tx;
     kD_LastTime = currTime;
-  }
-
-  private void autoFlywheel() {
-    double distance = calcDistance();
-
-    if (distance < 0) {
-      return;
-    }
-    distance = Math.round(distance);
-
-    calcFlywheelRpm(distance);
-
-    rightFlywheelPIDController.setReference(autoFlywheelRpm, ControlType.kVelocity);
-
-    autoRPMsetp = autoFlywheelRpm;
-    SmartDashboard.putNumber("Auto Flywheel RPM", autoFlywheelRpm);
-  }
-
-  private void calcFlywheelRpm(double distance) {
-    // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
-    // 68, 1700
-    autoFlywheelRpm = SmartDashboard.getNumber("m", 0)*distance + SmartDashboard.getNumber("b", 0);
   }
 
   // manual shooter control methods
@@ -349,19 +341,17 @@ public class Shooter extends SubsystemBase {
     double val = stick.getRawAxis(Constants.Xbox.RIGHT_STICK_X_AXIS);
     val = (Math.abs(val) < Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE) ? 0 : val;
 
-    // SmartDashboard.putNumber("Manual Rotate Power", val);
-
     rotateMotor.set(val / 4);
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Actual Flywheel RPM", rightFlywheelMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Actual Rotate Position", rotateMotor.getEncoder().getPosition());
-    SmartDashboard.putNumber("Flywheel RPM Trim", autoFlywheelRpmTrim);
-    SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
+    SmartDashboard.putNumber("Auto Flywheel RPM Trim", autoFlywheelRpmTrim);
     SmartDashboard.putBoolean("Target Locked", isTargetLocked());
-    SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
+    // SmartDashboard.putNumber("Actual Rotate Position", rotateMotor.getEncoder().getPosition());
+    // SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
+    // SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
     // //SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
     // SmartDashboard.putNumber("Intake Sensor Proximity", intakeSensor.getProximity());
 
