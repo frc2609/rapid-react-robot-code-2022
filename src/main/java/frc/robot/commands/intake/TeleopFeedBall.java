@@ -31,37 +31,40 @@ public class TeleopFeedBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    boolean isBallAtIntake = RobotContainer.m_shooterSubsystem.getIntakeSensor();
-    boolean isBallAtShooter = RobotContainer.m_shooterSubsystem.shooterSensor.get();
+    m_intake.setUpperBelt(1);
+    m_intake.setLowerBelt(1);
+    // AUTO STAGING
+    // boolean isBallAtIntake = RobotContainer.m_shooterSubsystem.getIntakeSensor();
+    // boolean isBallAtShooter = RobotContainer.m_shooterSubsystem.shooterSensor.get();
 
-    if(SmartDashboard.getBoolean(Constants.INTAKE_OVERRIDE_STRING, true)) {
-      isBallAtIntake = false;
-      isBallAtShooter = false;
-      RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);
-    } else {
-      RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 0);
-    }
+    // if(SmartDashboard.getBoolean(Constants.INTAKE_OVERRIDE_STRING, true)) {
+    //   isBallAtIntake = false;
+    //   isBallAtShooter = false;
+    //   RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);
+    // } else {
+    //   RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 0);
+    // }
 
-    if (isBallAtIntake == false && isBallAtShooter == false) {
-      // No balls
-      m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-      m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
-    } 
-    else if (isBallAtIntake == false && isBallAtShooter == true) {
-      // Staged ball
-      m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-      m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
-    } 
-    else if (isBallAtIntake == true && isBallAtShooter == false) {
-      // Intake ball
-      m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-      m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
-    }
-    else if (isBallAtIntake == true && isBallAtShooter == true) {
-      // Full
-      m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-      m_intake.setLowerBelt(-0.1);
-    }
+    // if (isBallAtIntake == false && isBallAtShooter == false) {
+    //   // No balls
+    //   m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
+    //   m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    // } 
+    // else if (isBallAtIntake == false && isBallAtShooter == true) {
+    //   // Staged ball
+    //   m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
+    //   m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    // } 
+    // else if (isBallAtIntake == true && isBallAtShooter == false) {
+    //   // Intake ball
+    //   m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
+    //   m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    // }
+    // else if (isBallAtIntake == true && isBallAtShooter == true) {
+    //   // Full
+    //   m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
+    //   m_intake.setLowerBelt(-0.1);
+    // }
   }
 
   // Called once the command ends or is interrupted.
