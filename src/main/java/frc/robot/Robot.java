@@ -155,7 +155,7 @@ public class Robot extends TimedRobot {
      * RobotContainer.driveJoystick.getRawButton(Constants.Xbox.X_BUTTON));
      */
     RobotContainer.m_intakeSubsystem
-        .setIntakeLift(-RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS) * Constants.Motors.INTAKE_LIFT_SPEED);
+        .setIntakeLift(RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS) * Constants.Motors.INTAKE_LIFT_SPEED);
   }
 
   @Override
