@@ -34,15 +34,8 @@ public class Drive extends SubsystemBase {
   private RelativeEncoder leftEncoder = m_leftFrontMotor.getEncoder();
   private RelativeEncoder rightEncoder = m_rightFrontMotor.getEncoder();
   // filters
-  public LinearFilter leftFilterRegular = LinearFilter.singlePoleIIR(0.37, 0.02);
-  public LinearFilter rightFilterRegular = LinearFilter.singlePoleIIR(0.37, 0.02);
-  public LinearFilter leftFilterFullSpeed = LinearFilter.singlePoleIIR(0.4, 0.02);  // TODO: to be deleted
-  public LinearFilter rightFilterFullSpeed = LinearFilter.singlePoleIIR(0.4, 0.02);  // TODO: to be deleted
-
   public LinearFilter yJoystickFilter = LinearFilter.singlePoleIIR(0.3, 0.02);
   public LinearFilter xJoystickFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
-
-
 
   // auto
   private final DifferentialDriveOdometry m_odometry;
@@ -54,14 +47,12 @@ public class Drive extends SubsystemBase {
 
   /** Creates a new Drive. */
   public Drive() {
-    // invert left side
+    this.bodyNavx = RobotContainer.bodyNavx;
+    m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
+
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
-    // navx
-    this.bodyNavx = RobotContainer.bodyNavx;
-    // auto
-    m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
-    // encoders
+  
     leftEncoder.setPositionConversionFactor(0.4780 / 10.71);
     rightEncoder.setPositionConversionFactor(0.4780 / 10.71);
     leftEncoder.setVelocityConversionFactor(0.4780 / 10.71);
@@ -81,16 +72,14 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean isDrivingForward() {
-    double leftRearVelocity = m_leftRearMotor.getEncoder().getVelocity();
-    double rightRearVelocity = m_rightRearMotor.getEncoder().getVelocity();
-    boolean leftRearNegative = leftRearVelocity < Constants.Drive.isDrivingForwardDeadzone;
-    boolean rightRearNegative = rightRearVelocity < Constants.Drive.isDrivingForwardDeadzone;
-    
-    return leftRearNegative && rightRearNegative;
+    return (
+      m_leftRearMotor.getEncoder().getVelocity() < Constants.Drive.isDrivingForwardDeadzone
+      && m_rightRearMotor.getEncoder().getVelocity() < Constants.Drive.isDrivingForwardDeadzone
+    );
   }
 
   // constant turning speed even at high speeds
-  public void manualDrive(double xAxisSpeed, double yAxisSpeed, boolean turbo) {
+  public void manualDrive(double xAxisSpeed, double yAxisSpeed) {
     double driveX = xJoystickFilter.calculate(Math.pow(xAxisSpeed, 3));
     double driveY = Math.pow(yAxisSpeed, 3);
     boolean atRiskForTippingReverse = isDrivingForward() && yAxisSpeed > Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE;
@@ -101,53 +90,11 @@ public class Drive extends SubsystemBase {
 
     driveY = yJoystickFilter.calculate(driveY);
 
-    double leftMotorRaw = driveY - driveX;
-    double rightMotorRaw = driveY + driveX;
-
-    // double leftMotorsRegularFilter = leftFilterRegular.calculate(leftMotorRaw * 0.7);
-    // double rightMotorsRegularFilter = rightFilterRegular.calculate(rightMotorRaw * 0.7);
-
-    double leftMotorsRegularFilter = leftMotorRaw;
-    double rightMotorsRegularFilter = rightMotorRaw;
-
-    // double leftMotorsFullSpeedFilter = leftFilterFullSpeed.calculate(leftMotorRaw * 0.8);  // TODO: to be deleted
-    // double rightMotorsFullSpeedFilter = rightFilterFullSpeed.calculate(rightMotorRaw * 0.8);  // TODO: to be deleted
-
-    // logDriveData();
-
-    turbo = false;  // TODO: remove turbo functionality
+    double leftMotorPower = driveY - driveX;
+    double rightMotorPower = driveY + driveX;
 
     if (!isDriveLocked) {
-      if (turbo) {
-        // setMotors(leftMotorsFullSpeedFilter, rightMotorsFullSpeedFilter);
-      } else {
-        setMotors(leftMotorsRegularFilter, rightMotorsRegularFilter);
-      }
-    }
-  }
-
-  // drives similar to a car, slower turning at high speeds
-  public void curveDrive(double xAxisSpeed, double yAxisSpeed, boolean turnInPlace) {
-    double speedY = yAxisSpeed;
-    double rotation = xAxisSpeed;
-    double leftMotors;
-    double rightMotors;
-    if (turnInPlace) {
-      leftMotors = speedY - rotation;
-      rightMotors = speedY + rotation;
-    } else {
-      leftMotors = speedY - Math.abs(speedY) * rotation;
-      rightMotors = speedY + Math.abs(speedY) * rotation;
-    }
-
-    double maxMagnitude = Math.max(Math.abs(leftMotors), Math.abs(rightMotors));
-    if (maxMagnitude > 1.0) {
-      leftMotors /= maxMagnitude;
-      rightMotors /= maxMagnitude;
-    }
-
-    if (!isDriveLocked) {
-      setMotors(leftMotors * 0.5, rightMotors * 0.5);
+        setMotors(leftMotorPower, rightMotorPower);
     }
   }
 
@@ -189,27 +136,13 @@ public class Drive extends SubsystemBase {
     m_rightRearMotor.setVoltage(right);
   }
 
-  public void tankDriveVoltsReverse(double left, double right) {
-    m_leftFrontMotor.setVoltage(-right);
-    m_leftRearMotor.setVoltage(-right);
-    m_rightFrontMotor.setVoltage(-left);
-    m_rightRearMotor.setVoltage(-left);
-  }
-
-  public double getLeftMotorPosition() {
-    return m_leftFrontMotor.getEncoder().getPosition();
-  }
-
-  public double getRightMotorPosition() {
-    return m_rightFrontMotor.getEncoder().getPosition();
-  }
-
+  public double getLeftMotorPosition() { return m_leftFrontMotor.getEncoder().getPosition(); }
+  public double getRightMotorPosition() { return m_rightFrontMotor.getEncoder().getPosition(); }
   public Pose2d getPose() { return m_odometry.getPoseMeters(); }
   public void setReverse(boolean on) { isReverse = on; }
   public void setDriveLock(boolean on) { isDriveLocked = on; }
 
   private void updateOdometry() {
-    // I assume this code is for updating the location info of the robot
     if (isReverse) {
       m_odometry.update(bodyNavx.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
     } else {
