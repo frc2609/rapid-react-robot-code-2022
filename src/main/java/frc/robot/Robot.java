@@ -132,7 +132,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
+    if (m_autonomousCommand != null) {  
       m_autonomousCommand.cancel();
     }
     m_robotContainer.enabledLooper.start();
@@ -146,21 +146,15 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     RobotContainer.m_driveSubsystem.manualDrive(
         RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS),
-        RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS),
-        RobotContainer.driveJoystick.getRawButton(Constants.Xbox.LEFT_BUMPER));
-    /*
-     * RobotContainer.m_driveSubsystem.curveDrive(
-     * RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_X_AXIS),
-     * RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS),
-     * RobotContainer.driveJoystick.getRawButton(Constants.Xbox.X_BUTTON));
-     */
+        RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.LEFT_STICK_Y_AXIS)
+    );
 
-     double rightJoystickYAxis = RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS);
+    double rightJoystickYAxis = RobotContainer.driveJoystick.getRawAxis(Constants.Xbox.RIGHT_STICK_Y_AXIS);
+    
     if (Math.abs(rightJoystickYAxis) > Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE) {
       RobotContainer.m_intakeSubsystem
         .setIntakeLift(rightJoystickYAxis * Constants.Motors.INTAKE_LIFT_SPEED);
     }
-    
   }
 
   @Override
