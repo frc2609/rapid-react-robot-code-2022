@@ -21,12 +21,13 @@ public class RetractIntakeTimer extends CommandBase {
   @Override
   public void initialize() {
     startTime = Timer.getFPGATimestamp();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_intakeSubsystem.setIntakeLift(0.6);
+    RobotContainer.m_intakeSubsystem.setIntakeLift(0.4);
   }
 
   // Called once the command ends or is interrupted.
