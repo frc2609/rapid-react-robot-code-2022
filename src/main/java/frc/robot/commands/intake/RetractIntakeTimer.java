@@ -26,7 +26,7 @@ public class RetractIntakeTimer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_intakeSubsystem.setIntakeLift(0.3);
+    RobotContainer.m_intakeSubsystem.setIntakeLift(0.6);
   }
 
   // Called once the command ends or is interrupted.
