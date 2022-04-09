@@ -291,7 +291,8 @@ public class Shooter extends SubsystemBase {
 
   private double calcFlywheelRpm(double distance) {
     // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
-    return 105*distance + 1320;
+
+    return 74*distance + 1480;
   }
 
   // manual shooter control methods
