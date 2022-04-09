@@ -39,6 +39,11 @@ public class Drive extends SubsystemBase {
   public LinearFilter leftFilterFullSpeed = LinearFilter.singlePoleIIR(0.4, 0.02);  // TODO: to be deleted
   public LinearFilter rightFilterFullSpeed = LinearFilter.singlePoleIIR(0.4, 0.02);  // TODO: to be deleted
 
+  public LinearFilter yJoystickFilter = LinearFilter.singlePoleIIR(0.3, 0.02);
+  public LinearFilter xJoystickFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
+
+
+
   // auto
   private final DifferentialDriveOdometry m_odometry;
   // navx
@@ -86,23 +91,27 @@ public class Drive extends SubsystemBase {
 
   // constant turning speed even at high speeds
   public void manualDrive(double xAxisSpeed, double yAxisSpeed, boolean turbo) {
-    double driveX = Math.pow(xAxisSpeed, 3);
+    double driveX = xJoystickFilter.calculate(Math.pow(xAxisSpeed, 3));
     double driveY = Math.pow(yAxisSpeed, 3);
-    double leftMotorRaw = driveY - driveX;
-    double rightMotorRaw = driveY + driveX;
-
     boolean atRiskForTippingReverse = isDrivingForward() && yAxisSpeed > Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE;
 
     if (atRiskForTippingReverse) {
-      leftMotorRaw *= 0.2;
-      rightMotorRaw *= 0.2;
+      driveY *= 0.22;
     }
 
-    double leftMotorsRegularFilter = leftFilterRegular.calculate(leftMotorRaw * 0.7);
-    double rightMotorsRegularFilter = rightFilterRegular.calculate(rightMotorRaw * 0.7);
+    driveY = yJoystickFilter.calculate(driveY);
 
-    double leftMotorsFullSpeedFilter = leftFilterFullSpeed.calculate(leftMotorRaw * 0.8);  // TODO: to be deleted
-    double rightMotorsFullSpeedFilter = rightFilterFullSpeed.calculate(rightMotorRaw * 0.8);  // TODO: to be deleted
+    double leftMotorRaw = driveY - driveX;
+    double rightMotorRaw = driveY + driveX;
+
+    // double leftMotorsRegularFilter = leftFilterRegular.calculate(leftMotorRaw * 0.7);
+    // double rightMotorsRegularFilter = rightFilterRegular.calculate(rightMotorRaw * 0.7);
+
+    double leftMotorsRegularFilter = leftMotorRaw;
+    double rightMotorsRegularFilter = rightMotorRaw;
+
+    // double leftMotorsFullSpeedFilter = leftFilterFullSpeed.calculate(leftMotorRaw * 0.8);  // TODO: to be deleted
+    // double rightMotorsFullSpeedFilter = rightFilterFullSpeed.calculate(rightMotorRaw * 0.8);  // TODO: to be deleted
 
     // logDriveData();
 
@@ -110,7 +119,7 @@ public class Drive extends SubsystemBase {
 
     if (!isDriveLocked) {
       if (turbo) {
-        setMotors(leftMotorsFullSpeedFilter, rightMotorsFullSpeedFilter);
+        // setMotors(leftMotorsFullSpeedFilter, rightMotorsFullSpeedFilter);
       } else {
         setMotors(leftMotorsRegularFilter, rightMotorsRegularFilter);
       }
