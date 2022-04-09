@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 //import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     // printVersion();
     x = new ThreeBallAuto();
+    CameraServer.startAutomaticCapture();
 
     SmartDashboard.putBoolean(Constants.INTAKE_OVERRIDE_STRING, false);
     SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, false);
