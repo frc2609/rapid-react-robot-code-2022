@@ -202,7 +202,6 @@ public class Shooter extends SubsystemBase {
     rightFlywheelPIDController.setReference(autoFlywheelRpm, ControlType.kVelocity);
 
     autoRPMsetp = autoFlywheelRpm;
-    SmartDashboard.putNumber("Auto Flywheel RPM", autoFlywheelRpm);
   }
 
   private void calcFlywheelRpm(double distance) {
@@ -265,7 +264,7 @@ public class Shooter extends SubsystemBase {
     double rotatePower = 0.0;
     double isNegative = 1.0;
     boolean isValidTarget = tvEntry.getDouble(0.0) > 0.0;
-    double currTurretPosition = rotateMotor.getEncoder().getPosition();
+    // double currTurretPosition = rotateMotor.getEncoder().getPosition();
     long currTime = System.nanoTime();
     double kD = 0.3;
     double offset = SmartDashboard.getNumber("Shooter offset", 0);
@@ -283,21 +282,21 @@ public class Shooter extends SubsystemBase {
       return;
     }
 
-    if (tx < 0.0) {
-      isNegative = -1.0;
-      if (currTurretPosition <= Constants.Rotate.MIN_POS) {
-        rotateMotor.set(0.0);
-        return;
-      }
-    }
+    // if (tx < 0.0) {
+    //   isNegative = -1.0;
+    //   if (currTurretPosition <= Constants.Rotate.MIN_POS) {
+    //     rotateMotor.set(0.0);
+    //     return;
+    //   }
+    // }
 
-    if (tx > 0.0) {
-      isNegative = 1.0;
-      if (currTurretPosition >= Constants.Rotate.MAX_POS) {
-        rotateMotor.set(0.0);
-        return;
-      }
-    }
+    // if (tx > 0.0) {
+    //   isNegative = 1.0;
+    //   if (currTurretPosition >= Constants.Rotate.MAX_POS) {
+    //     rotateMotor.set(0.0);
+    //     return;
+    //   }
+    // }
 
     double rateError = (tx - kD_LastError) / (TimeUnit.NANOSECONDS.toMillis(currTime) - TimeUnit.NANOSECONDS.toMillis(kD_LastTime));
     rotatePower = tx*kP + frictionPower*isNegative + rateError*kD;
@@ -348,7 +347,10 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Actual Flywheel RPM", rightFlywheelMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Auto Flywheel RPM Trim", autoFlywheelRpmTrim);
+    SmartDashboard.putNumber("Auto Flywheel RPM", autoFlywheelRpm);
     SmartDashboard.putBoolean("Target Locked", isTargetLocked());
+    SmartDashboard.putNumber("Left Flywheel Current", leftFlywheelMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Right Flywheel Current", rightFlywheelMotor.getOutputCurrent());
     // SmartDashboard.putNumber("Actual Rotate Position", rotateMotor.getEncoder().getPosition());
     // SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
     // SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
