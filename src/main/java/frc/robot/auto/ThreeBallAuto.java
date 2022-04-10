@@ -19,6 +19,9 @@ import frc.robot.commands.autonomous.ShootAndIntake;
 // import frc.robot.commands.autonomous.ShootAndIntakeHumanStation;
 import frc.robot.commands.autonomous.TimerDelay;
 import frc.robot.commands.autonomous.ZeroYaw;
+import frc.robot.commands.intake.RetractIntake;
+import frc.robot.commands.intake.RetractIntakeTimer;
+import frc.robot.commands.intake.RetractIntakeTimerAndRunIntakeBelt;
 // import frc.robot.commands.intake.FeedBall;
 // import frc.robot.commands.intake.IntakeBall;
 // import frc.robot.commands.intake.SetBelt;
@@ -44,6 +47,7 @@ public class ThreeBallAuto extends SequentialCommandGroup {
         new DriveStopCommand(),
         new TimerDelay(0.2),
         new ShootAndIntake(),
+        new RetractIntakeTimerAndRunIntakeBelt(2),
         new AutoShoot(),
         new DisableFlywheel(),
         new StopIntakeAndBelt(),
@@ -55,15 +59,17 @@ public class ThreeBallAuto extends SequentialCommandGroup {
         new DriveStopCommand(),
         new TimerDelay(0.2),
         new ShootAndIntake(),
+        new RetractIntakeTimerAndRunIntakeBelt(2),
         new AutoShoot(),
         new DisableFlywheel(),
-        new StopIntakeAndBelt(),
+        new StopIntakeAndBelt()
 
         // below is 4 ball stuff (experimental)
-        new ResetPose(factory.getTrajectory("thirdBallToForth").getInitialPose()),
-        new DriveAndExtendIntake(factory.constructRamseteCommand("thirdBallToForth")),
-        new DriveStopCommand(),
-        new TimerDelay(0.2)
+        // new ResetPose(factory.getTrajectory("thirdBallToForth").getInitialPose()),
+        // new DriveAndExtendIntake(factory.constructRamseteCommand("thirdBallToForth")),
+        // new DriveStopCommand(),
+        // new TimerDelay(0.2)
+
         // new ShootAndIntake(),
         // new ShootAndIntakeHumanStation(),
         // new AutoShoot()
