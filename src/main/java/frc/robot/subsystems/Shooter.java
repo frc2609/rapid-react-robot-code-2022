@@ -282,22 +282,6 @@ public class Shooter extends SubsystemBase {
       return;
     }
 
-    // if (tx < 0.0) {
-    //   isNegative = -1.0;
-    //   if (currTurretPosition <= Constants.Rotate.MIN_POS) {
-    //     rotateMotor.set(0.0);
-    //     return;
-    //   }
-    // }
-
-    // if (tx > 0.0) {
-    //   isNegative = 1.0;
-    //   if (currTurretPosition >= Constants.Rotate.MAX_POS) {
-    //     rotateMotor.set(0.0);
-    //     return;
-    //   }
-    // }
-
     double rateError = (tx - kD_LastError) / (TimeUnit.NANOSECONDS.toMillis(currTime) - TimeUnit.NANOSECONDS.toMillis(kD_LastTime));
     rotatePower = tx*kP + frictionPower*isNegative + rateError*kD;
     rotateMotor.set(rotatePower);
