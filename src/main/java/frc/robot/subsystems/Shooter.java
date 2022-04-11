@@ -56,11 +56,11 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry tvEntry = table.getEntry("tv");
   
   public double autoRPMsetp = 0;
-  private double kP_Flywheel = Constants.Flywheel.PROPORTIONAL;
-  private double kI_Flywheel = Constants.Flywheel.INTEGRAL;
-  private double kD_Flywheel = Constants.Flywheel.DERIVATIVE;
-  private double kIz_Flywheel = Constants.Flywheel.INTEGRAL_ZONE;
-  private double kFF_Flywheel = Constants.Flywheel.FEED_FORWARD;
+  // private double kP_Flywheel = Constants.Flywheel.PROPORTIONAL;
+  // private double kI_Flywheel = Constants.Flywheel.INTEGRAL;
+  // private double kD_Flywheel = Constants.Flywheel.DERIVATIVE;
+  // private double kIz_Flywheel = Constants.Flywheel.INTEGRAL_ZONE;
+  // private double kFF_Flywheel = Constants.Flywheel.FEED_FORWARD;
 
   public Shooter() {
     rotateMotor.setInverted(true);
@@ -77,13 +77,13 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Limelight camera angle (deg)", 29.8);
     SmartDashboard.putNumber("Shooter offset", 0);
 
-    SmartDashboard.putNumber("kP", kP_Flywheel);
-    SmartDashboard.putNumber("kI", kI_Flywheel);
-    SmartDashboard.putNumber("kD", kD_Flywheel);
-    SmartDashboard.putNumber("kIz", kIz_Flywheel);
-    SmartDashboard.putNumber("kFF", kFF_Flywheel);
-    SmartDashboard.putNumber("m", 68);
-    SmartDashboard.putNumber("b", 1700);
+    // SmartDashboard.putNumber("kP", kP_Flywheel);
+    // SmartDashboard.putNumber("kI", kI_Flywheel);
+    // SmartDashboard.putNumber("kD", kD_Flywheel);
+    // SmartDashboard.putNumber("kIz", kIz_Flywheel);
+    // SmartDashboard.putNumber("kFF", kFF_Flywheel);
+    // SmartDashboard.putNumber("m", 68);
+    // SmartDashboard.putNumber("b", 1700);
 
     turnLimelightOff();
     setPidValues();
@@ -161,17 +161,17 @@ public class Shooter extends SubsystemBase {
   }
 
   private void setPidValues() {
-    // rightFlywheelPIDController.setP(Constants.Flywheel.PROPORTIONAL);
-    // rightFlywheelPIDController.setI(Constants.Flywheel.INTEGRAL);
-    // rightFlywheelPIDController.setD(Constants.Flywheel.DERIVATIVE);
-    // rightFlywheelPIDController.setIZone(Constants.Flywheel.INTEGRAL_ZONE);
-    // rightFlywheelPIDController.setFF(Constants.Flywheel.FEED_FORWARD);
+    rightFlywheelPIDController.setP(Constants.Flywheel.PROPORTIONAL);
+    rightFlywheelPIDController.setI(Constants.Flywheel.INTEGRAL);
+    rightFlywheelPIDController.setD(Constants.Flywheel.DERIVATIVE);
+    rightFlywheelPIDController.setIZone(Constants.Flywheel.INTEGRAL_ZONE);
+    rightFlywheelPIDController.setFF(Constants.Flywheel.FEED_FORWARD);
 
-    rightFlywheelPIDController.setP(SmartDashboard.getNumber("kP", 0));
-    rightFlywheelPIDController.setI(SmartDashboard.getNumber("kI", 0));
-    rightFlywheelPIDController.setD(SmartDashboard.getNumber("kD", 0));
-    rightFlywheelPIDController.setIZone(SmartDashboard.getNumber("kIz", 0));
-    rightFlywheelPIDController.setFF(SmartDashboard.getNumber("kFF", 0));
+    // rightFlywheelPIDController.setP(SmartDashboard.getNumber("kP", 0));
+    // rightFlywheelPIDController.setI(SmartDashboard.getNumber("kI", 0));
+    // rightFlywheelPIDController.setD(SmartDashboard.getNumber("kD", 0));
+    // rightFlywheelPIDController.setIZone(SmartDashboard.getNumber("kIz", 0));
+    // rightFlywheelPIDController.setFF(SmartDashboard.getNumber("kFF", 0));
 
     rightFlywheelPIDController.setOutputRange(Constants.Flywheel.MIN_OUTPUT,
         Constants.Flywheel.MAX_OUTPUT);
@@ -207,7 +207,8 @@ public class Shooter extends SubsystemBase {
   private void calcFlywheelRpm(double distance) {
     // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
     // 68, 1700
-    autoFlywheelRpm = SmartDashboard.getNumber("m", 0)*distance + SmartDashboard.getNumber("b", 0) + autoFlywheelRpmTrim;
+    // autoFlywheelRpm = SmartDashboard.getNumber("m", 0)*distance + SmartDashboard.getNumber("b", 0) + autoFlywheelRpmTrim;
+    autoFlywheelRpm = 64*distance + 1700 + autoFlywheelRpmTrim;
   }
 
   private double calcDistance() {
@@ -341,7 +342,7 @@ public class Shooter extends SubsystemBase {
     // //SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
     // SmartDashboard.putNumber("Intake Sensor Proximity", intakeSensor.getProximity());
 
-    setPidValues();
+    // setPidValues();
 
     if (isClimbingFullRotate) {
       rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out
