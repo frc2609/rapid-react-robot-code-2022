@@ -94,7 +94,7 @@ public class Drive extends SubsystemBase {
     double rightMotorPower = driveY + driveX;
 
     if (!isDriveLocked) {
-        setMotors(leftMotorPower, rightMotorPower);
+        setMotors(leftMotorPower * 0.7, rightMotorPower * 0.7);
     }
   }
 
