@@ -99,25 +99,25 @@ public final class Constants {
     }
 
     public final class Flywheel {
-        public static final double PROPORTIONAL = 0.00008; // 0.0005;
-        public static final double INTEGRAL = 0.0000007; //0.0002;
-        public static final double DERIVATIVE = 0.0003;
-        public static final double INTEGRAL_ZONE = 300.0;
-        public static final double FEED_FORWARD = 0.000229; //0.000195; //0.000183;
+        public static final double PROPORTIONAL = 0; //0.00008;
+        public static final double INTEGRAL = 0; //0.0000007;
+        public static final double DERIVATIVE = 0; //0.0003;
+        public static final double INTEGRAL_ZONE = 0; //300.0;
+        public static final double FEED_FORWARD = 0; //0.000229;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0.0;
-        public static final double LOW_GOAL_RPM = 1600;
+        public static final double LOW_GOAL_RPM = 1600; //= 1600;
     }
 
     public final class Hood {
-        public static final double PROPORTIONAL = 0.00008;
-        public static final double INTEGRAL = 0.0000007;
-        public static final double DERIVATIVE = 0.0003;
-        public static final double INTEGRAL_ZONE = 300.0;
-        public static final double FEED_FORWARD = 0.000229;
+        public static final double PROPORTIONAL = 0;
+        public static final double INTEGRAL = 0;
+        public static final double DERIVATIVE = 0;
+        public static final double INTEGRAL_ZONE = 0;
+        public static final double FEED_FORWARD = 0;
         public static final double MAX_OUTPUT = 1.0;
-        public static final double MIN_OUTPUT = 0.0;
-        public static final double LOW_GOAL_RPM = 1600;
+        public static final double MIN_OUTPUT = 0;
+        public static final double LOW_GOAL_RPM = 0;
     }
 
     public final class Motors {
