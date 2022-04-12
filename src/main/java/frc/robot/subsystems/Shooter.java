@@ -28,6 +28,8 @@ public class Shooter extends SubsystemBase {
       MotorType.kBrushless);
   private final CANSparkMax rotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
       MotorType.kBrushless);
+  private final CANSparkMax hoodMotor = new CANSparkMax(Constants.CanMotorId.HOOD_MOTOR,
+      MotorType.kBrushless);
 
   private SparkMaxPIDController rightFlywheelPIDController;
   private SparkMaxPIDController rotatePIDController;
@@ -66,9 +68,11 @@ public class Shooter extends SubsystemBase {
     rotateMotor.setInverted(true);
     rightFlywheelMotor.setInverted(false);
     leftFlywheelMotor.follow(rightFlywheelMotor, true);
+    hoodMotor.follow(rightFlywheelMotor, true);
 
     rightFlywheelMotor.setIdleMode(IdleMode.kCoast);
     leftFlywheelMotor.setIdleMode(IdleMode.kCoast);
+    hoodMotor.setIdleMode(IdleMode.kCoast);
     rotateMotor.setIdleMode(IdleMode.kBrake);
 
     rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
@@ -331,6 +335,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Actual Flywheel RPM", rightFlywheelMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Hood RPM", hoodMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Auto Flywheel RPM Trim", autoFlywheelRpmTrim);
     SmartDashboard.putNumber("Auto Flywheel RPM", autoFlywheelRpm);
     SmartDashboard.putBoolean("Target Locked", isTargetLocked());
