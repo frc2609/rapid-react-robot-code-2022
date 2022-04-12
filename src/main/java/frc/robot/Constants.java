@@ -118,6 +118,7 @@ public final class Constants {
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0;
         public static final double LOW_GOAL_RPM = 0;
+        public static final double FLYWHEEL_TO_HOOD_RATIO = 1;
     }
 
     public final class Motors {
