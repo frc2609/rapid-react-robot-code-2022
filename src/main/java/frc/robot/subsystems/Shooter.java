@@ -161,6 +161,7 @@ public class Shooter extends SubsystemBase {
       isValidTarget
       && Math.abs(tx) < Constants.Rotate.TOLERANCE
       && Math.abs(autoFlywheelRpm - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
+      && Math.abs(autoFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO - hoodMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
     );
   }
 
@@ -227,6 +228,7 @@ public class Shooter extends SubsystemBase {
     calcFlywheelRpm(distance);
 
     rightFlywheelPIDController.setReference(autoFlywheelRpm, ControlType.kVelocity);
+    hoodPIDController.setReference(autoFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO, ControlType.kVelocity);
 
     autoRPMsetp = autoFlywheelRpm;
   }
