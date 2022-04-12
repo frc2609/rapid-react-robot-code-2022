@@ -32,6 +32,7 @@ public class Shooter extends SubsystemBase {
       MotorType.kBrushless);
 
   private SparkMaxPIDController rightFlywheelPIDController;
+  private SparkMaxPIDController hoodPIDController;
   private SparkMaxPIDController rotatePIDController;
   private boolean isAutoAimMode = false;
   private boolean pov_pressed = false;
@@ -66,9 +67,9 @@ public class Shooter extends SubsystemBase {
 
   public Shooter() {
     rotateMotor.setInverted(true);
+    hoodMotor.setInverted(true);
     rightFlywheelMotor.setInverted(false);
     leftFlywheelMotor.follow(rightFlywheelMotor, true);
-    hoodMotor.follow(rightFlywheelMotor, true);
 
     rightFlywheelMotor.setIdleMode(IdleMode.kCoast);
     leftFlywheelMotor.setIdleMode(IdleMode.kCoast);
@@ -77,17 +78,24 @@ public class Shooter extends SubsystemBase {
 
     rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
     rotatePIDController = rotateMotor.getPIDController();
+    hoodPIDController = hoodMotor.getPIDController();
 
     SmartDashboard.putNumber("Limelight camera angle (deg)", 29.8);
     SmartDashboard.putNumber("Shooter offset", 0);
-
-    // SmartDashboard.putNumber("kP", kP_Flywheel);
-    // SmartDashboard.putNumber("kI", kI_Flywheel);
-    // SmartDashboard.putNumber("kD", kD_Flywheel);
-    // SmartDashboard.putNumber("kIz", kIz_Flywheel);
-    // SmartDashboard.putNumber("kFF", kFF_Flywheel);
     // SmartDashboard.putNumber("m", 68);
     // SmartDashboard.putNumber("b", 1700);
+
+    SmartDashboard.putNumber("kP Flywheel", Constants.Flywheel.PROPORTIONAL);
+    SmartDashboard.putNumber("kI Flywheel", Constants.Flywheel.INTEGRAL);
+    SmartDashboard.putNumber("kD Flywheel", Constants.Flywheel.DERIVATIVE);
+    SmartDashboard.putNumber("kIz Flywheel", Constants.Flywheel.INTEGRAL_ZONE);
+    SmartDashboard.putNumber("kFF Flywheel", Constants.Flywheel.FEED_FORWARD);
+
+    SmartDashboard.putNumber("kP Hood", Constants.Hood.PROPORTIONAL);
+    SmartDashboard.putNumber("kI Hood", Constants.Hood.INTEGRAL);
+    SmartDashboard.putNumber("kD Hood", Constants.Hood.DERIVATIVE);
+    SmartDashboard.putNumber("kIz Hood", Constants.Hood.INTEGRAL_ZONE);
+    SmartDashboard.putNumber("kFF Hood", Constants.Hood.FEED_FORWARD);
 
     turnLimelightOff();
     setPidValues();
@@ -170,15 +178,16 @@ public class Shooter extends SubsystemBase {
     rightFlywheelPIDController.setD(Constants.Flywheel.DERIVATIVE);
     rightFlywheelPIDController.setIZone(Constants.Flywheel.INTEGRAL_ZONE);
     rightFlywheelPIDController.setFF(Constants.Flywheel.FEED_FORWARD);
-
-    // rightFlywheelPIDController.setP(SmartDashboard.getNumber("kP", 0));
-    // rightFlywheelPIDController.setI(SmartDashboard.getNumber("kI", 0));
-    // rightFlywheelPIDController.setD(SmartDashboard.getNumber("kD", 0));
-    // rightFlywheelPIDController.setIZone(SmartDashboard.getNumber("kIz", 0));
-    // rightFlywheelPIDController.setFF(SmartDashboard.getNumber("kFF", 0));
-
     rightFlywheelPIDController.setOutputRange(Constants.Flywheel.MIN_OUTPUT,
         Constants.Flywheel.MAX_OUTPUT);
+
+    hoodPIDController.setP(Constants.Hood.PROPORTIONAL);
+    hoodPIDController.setI(Constants.Hood.INTEGRAL);
+    hoodPIDController.setD(Constants.Hood.DERIVATIVE);
+    hoodPIDController.setIZone(Constants.Hood.INTEGRAL_ZONE);
+    hoodPIDController.setFF(Constants.Hood.FEED_FORWARD);
+    hoodPIDController.setOutputRange(Constants.Hood.MIN_OUTPUT,
+        Constants.Hood.MAX_OUTPUT);
 
     rotatePIDController.setP(Constants.Rotate.PROPORTIONAL);
     rotatePIDController.setI(Constants.Rotate.INTEGRAL);
@@ -187,6 +196,20 @@ public class Shooter extends SubsystemBase {
     rotatePIDController.setFF(Constants.Rotate.FEED_FORWARD);
     rotatePIDController.setOutputRange(Constants.Rotate.MIN_OUTPUT,
         Constants.Rotate.MAX_OUTPUT);
+  }
+
+  private void setPidValues_FlywheelTuning() {
+    rightFlywheelPIDController.setP(SmartDashboard.getNumber("kP Flywheel", 0));
+    rightFlywheelPIDController.setI(SmartDashboard.getNumber("kI Flywheel", 0));
+    rightFlywheelPIDController.setD(SmartDashboard.getNumber("kD Flywheel", 0));
+    rightFlywheelPIDController.setIZone(SmartDashboard.getNumber("kIz Flywheel", 0));
+    rightFlywheelPIDController.setFF(SmartDashboard.getNumber("kFF Flywheel", 0));
+
+    hoodPIDController.setP(SmartDashboard.getNumber("kP Hood", 0));
+    hoodPIDController.setI(SmartDashboard.getNumber("kI Hood", 0));
+    hoodPIDController.setD(SmartDashboard.getNumber("kD Hood", 0));
+    hoodPIDController.setIZone(SmartDashboard.getNumber("kIz Hood", 0));
+    hoodPIDController.setFF(SmartDashboard.getNumber("kFF Hood", 0));
   }
 
   public void turnLimelightOff() { table.getEntry("ledMode").setNumber(1); }
@@ -335,7 +358,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Actual Flywheel RPM", rightFlywheelMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Hood RPM", hoodMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Actual Hood RPM", hoodMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Auto Flywheel RPM Trim", autoFlywheelRpmTrim);
     SmartDashboard.putNumber("Auto Flywheel RPM", autoFlywheelRpm);
     SmartDashboard.putBoolean("Target Locked", isTargetLocked());
@@ -347,7 +370,7 @@ public class Shooter extends SubsystemBase {
     // //SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
     // SmartDashboard.putNumber("Intake Sensor Proximity", intakeSensor.getProximity());
 
-    // setPidValues();
+    setPidValues_FlywheelTuning();  // TODO: remove when done tuning flywheel and hood
 
     if (isClimbingFullRotate) {
       rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out

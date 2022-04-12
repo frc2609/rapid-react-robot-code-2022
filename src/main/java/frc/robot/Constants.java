@@ -109,6 +109,17 @@ public final class Constants {
         public static final double LOW_GOAL_RPM = 1600;
     }
 
+    public final class Hood {
+        public static final double PROPORTIONAL = 0.00008;
+        public static final double INTEGRAL = 0.0000007;
+        public static final double DERIVATIVE = 0.0003;
+        public static final double INTEGRAL_ZONE = 300.0;
+        public static final double FEED_FORWARD = 0.000229;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = 0.0;
+        public static final double LOW_GOAL_RPM = 1600;
+    }
+
     public final class Motors {
         public static final double INTAKE_SPEED = 1;
         public static final double INTAKE_LIFT_SPEED = 0.4;
