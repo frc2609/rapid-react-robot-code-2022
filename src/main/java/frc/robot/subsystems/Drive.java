@@ -85,7 +85,7 @@ public class Drive extends SubsystemBase {
     boolean atRiskForTippingReverse = isDrivingForward() && yAxisSpeed > Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE;
 
     if (atRiskForTippingReverse) {
-      driveY *= 0.22;
+      driveY *= 0.17;
     }
 
     driveY = yJoystickFilter.calculate(driveY);
@@ -94,7 +94,7 @@ public class Drive extends SubsystemBase {
     double rightMotorPower = driveY + driveX;
 
     if (!isDriveLocked) {
-        setMotors(leftMotorPower * 0.7, rightMotorPower * 0.7);
+        setMotors(leftMotorPower * 0.85, rightMotorPower * 0.85);
     }
   }
 
