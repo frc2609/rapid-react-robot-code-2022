@@ -61,7 +61,8 @@ public final class Constants {
     }
 
     public final class CanMotorId {
-        public static final int HOOD_MOTOR = 11;
+        public static final int RIGHT_HOOD_MOTOR = 11;
+        public static final int LEFT_HOOD_MOTOR = 12;
         public static final int SHOOTER_ROTATE_MOTOR = 10;
         public static final int SHOOTER_RIGHT_MOTOR = 9;
         public static final int SHOOTER_LEFT_MOTOR = 8;
@@ -107,6 +108,7 @@ public final class Constants {
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0.0;
         public static final double LOW_GOAL_RPM = 1600; //= 1600;
+        public static final double HOOD_TO_FLYWHEEL_RATIO = 1;
     }
 
     public final class Hood {
