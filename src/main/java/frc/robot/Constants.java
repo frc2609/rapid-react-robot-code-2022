@@ -61,6 +61,8 @@ public final class Constants {
     }
 
     public final class CanMotorId {
+        public static final int RIGHT_HOOD_MOTOR = 11;  // NOTE: left hood and left flywheel may be on opposite sides, I didn't have time to check
+        public static final int LEFT_HOOD_MOTOR = 12;
         public static final int SHOOTER_ROTATE_MOTOR = 10;
         public static final int SHOOTER_RIGHT_MOTOR = 9;
         public static final int SHOOTER_LEFT_MOTOR = 8;
@@ -98,14 +100,27 @@ public final class Constants {
     }
 
     public final class Flywheel {
-        public static final double PROPORTIONAL = 0.00008; // 0.0005;
-        public static final double INTEGRAL = 0.0000007; //0.0002;
-        public static final double DERIVATIVE = 0.0003;
-        public static final double INTEGRAL_ZONE = 300.0;
-        public static final double FEED_FORWARD = 0.000229; //0.000195; //0.000183;
+        public static final double PROPORTIONAL = 0.00005; //0.00008;
+        public static final double INTEGRAL = 0.0000003; //0.0000007;
+        public static final double DERIVATIVE = 0.00001; //0.0003;
+        public static final double INTEGRAL_ZONE = 200; //300.0;
+        public static final double FEED_FORWARD = 0.000195; //0.000229;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0.0;
-        public static final double LOW_GOAL_RPM = 1600;
+        public static final double LOW_GOAL_RPM = 1600; //= 1600;
+        public static final double FLYWHEEL_OVERDRIVE = 0.9;
+    }
+
+    public final class Hood {
+        public static final double PROPORTIONAL = 0.0001;
+        public static final double INTEGRAL = 0.0000005;
+        public static final double DERIVATIVE = 0.00001;
+        public static final double INTEGRAL_ZONE = 300;
+        public static final double FEED_FORWARD = 0.00018;
+        public static final double MAX_OUTPUT = 1.0;
+        public static final double MIN_OUTPUT = 0;
+        public static final double LOW_GOAL_RPM = 0;
+        public static final double HOOD_OVERDRIVE = 1.1;
     }
 
     public final class Motors {

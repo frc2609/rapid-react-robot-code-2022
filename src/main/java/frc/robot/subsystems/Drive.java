@@ -34,8 +34,8 @@ public class Drive extends SubsystemBase {
   private RelativeEncoder leftEncoder = m_leftFrontMotor.getEncoder();
   private RelativeEncoder rightEncoder = m_rightFrontMotor.getEncoder();
   // filters
-  public LinearFilter yJoystickFilter = LinearFilter.singlePoleIIR(0.3, 0.02);
-  public LinearFilter xJoystickFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
+  public LinearFilter yJoystickFilter = LinearFilter.singlePoleIIR(0.5, 0.02);
+  public LinearFilter xJoystickFilter = LinearFilter.singlePoleIIR(0.2, 0.02);
 
   // auto
   private final DifferentialDriveOdometry m_odometry;
@@ -80,12 +80,12 @@ public class Drive extends SubsystemBase {
 
   // constant turning speed even at high speeds
   public void manualDrive(double xAxisSpeed, double yAxisSpeed) {
-    double driveX = xJoystickFilter.calculate(Math.pow(xAxisSpeed, 3));
+    double driveX = xJoystickFilter.calculate(Math.pow(xAxisSpeed, 3)) * 0.7;
     double driveY = Math.pow(yAxisSpeed, 3);
     boolean atRiskForTippingReverse = isDrivingForward() && yAxisSpeed > Constants.Xbox.JOYSTICK_DRIFT_TOLERANCE;
 
     if (atRiskForTippingReverse) {
-      driveY *= 0.22;
+      driveY *= 0.18;
     }
 
     driveY = yJoystickFilter.calculate(driveY);
@@ -94,7 +94,7 @@ public class Drive extends SubsystemBase {
     double rightMotorPower = driveY + driveX;
 
     if (!isDriveLocked) {
-        setMotors(leftMotorPower * 0.7, rightMotorPower * 0.7);
+        setMotors(leftMotorPower * 0.85, rightMotorPower * 0.85);
     }
   }
 

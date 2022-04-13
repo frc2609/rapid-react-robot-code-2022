@@ -24,8 +24,8 @@ public class FeedBall extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-    m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    // m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
+    // m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
     startTime = Timer.getFPGATimestamp();
     System.out.println("initializing FeedBall");
   }
@@ -33,8 +33,10 @@ public class FeedBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-    m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    if (RobotContainer.m_shooterSubsystem.isTargetLocked()) {
+      m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
+      m_intake.setLowerBelt(Constants.Motors.BELT_SPEED);
+    }
     if (!RobotContainer.m_shooterSubsystem.stagingSensor.get()
         && !RobotContainer.m_shooterSubsystem.shooterSensor.get()
         && !RobotContainer.m_shooterSubsystem.getIntakeSensor()) {
