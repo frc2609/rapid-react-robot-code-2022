@@ -80,20 +80,20 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Limelight camera angle (deg)", 32.2); //29.8
     SmartDashboard.putNumber("Shooter offset", 0);
-    SmartDashboard.putNumber("m", 80);
-    SmartDashboard.putNumber("b", 1800);
+    // SmartDashboard.putNumber("m", 80);
+    // SmartDashboard.putNumber("b", 1800);
 
-    SmartDashboard.putNumber("kP Flywheel", Constants.Flywheel.PROPORTIONAL);
-    SmartDashboard.putNumber("kI Flywheel", Constants.Flywheel.INTEGRAL);
-    SmartDashboard.putNumber("kD Flywheel", Constants.Flywheel.DERIVATIVE);
-    SmartDashboard.putNumber("kIz Flywheel", Constants.Flywheel.INTEGRAL_ZONE);
-    SmartDashboard.putNumber("kFF Flywheel", Constants.Flywheel.FEED_FORWARD);
+    // SmartDashboard.putNumber("kP Flywheel", Constants.Flywheel.PROPORTIONAL);
+    // SmartDashboard.putNumber("kI Flywheel", Constants.Flywheel.INTEGRAL);
+    // SmartDashboard.putNumber("kD Flywheel", Constants.Flywheel.DERIVATIVE);
+    // SmartDashboard.putNumber("kIz Flywheel", Constants.Flywheel.INTEGRAL_ZONE);
+    // SmartDashboard.putNumber("kFF Flywheel", Constants.Flywheel.FEED_FORWARD);
 
-    SmartDashboard.putNumber("kP Hood", Constants.Hood.PROPORTIONAL);
-    SmartDashboard.putNumber("kI Hood", Constants.Hood.INTEGRAL);
-    SmartDashboard.putNumber("kD Hood", Constants.Hood.DERIVATIVE);
-    SmartDashboard.putNumber("kIz Hood", Constants.Hood.INTEGRAL_ZONE);
-    SmartDashboard.putNumber("kFF Hood", Constants.Hood.FEED_FORWARD);
+    // SmartDashboard.putNumber("kP Hood", Constants.Hood.PROPORTIONAL);
+    // SmartDashboard.putNumber("kI Hood", Constants.Hood.INTEGRAL);
+    // SmartDashboard.putNumber("kD Hood", Constants.Hood.DERIVATIVE);
+    // SmartDashboard.putNumber("kIz Hood", Constants.Hood.INTEGRAL_ZONE);
+    // SmartDashboard.putNumber("kFF Hood", Constants.Hood.FEED_FORWARD);
 
     turnLimelightOff();
     setPidValues();
@@ -377,7 +377,7 @@ public class Shooter extends SubsystemBase {
     // //SmartDashboard.putNumber("Rotate Motor Current", rotateMotor.getOutputCurrent());
     // SmartDashboard.putNumber("Intake Sensor Proximity", intakeSensor.getProximity());
 
-    setPidValues_FlywheelTuning();  // TODO: remove when done tuning flywheel and hood
+    // setPidValues_FlywheelTuning();  // TODO: remove when done tuning flywheel and hood
 
     if (isClimbingFullRotate) {
       rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out
