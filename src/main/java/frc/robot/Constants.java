@@ -108,7 +108,7 @@ public final class Constants {
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0.0;
         public static final double LOW_GOAL_RPM = 1600; //= 1600;
-        public static final double HOOD_TO_FLYWHEEL_RATIO = 1.20;
+        public static final double FLYWHEEL_OVERDRIVE = 0.9;
     }
 
     public final class Hood {
@@ -120,7 +120,7 @@ public final class Constants {
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0;
         public static final double LOW_GOAL_RPM = 0;
-        public static final double FLYWHEEL_TO_HOOD_RATIO = 0.8;
+        public static final double HOOD_OVERDRIVE = 1.1;
     }
 
     public final class Motors {
