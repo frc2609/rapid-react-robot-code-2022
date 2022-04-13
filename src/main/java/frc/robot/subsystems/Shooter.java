@@ -28,7 +28,9 @@ public class Shooter extends SubsystemBase {
       MotorType.kBrushless);
   private final CANSparkMax rotateMotor = new CANSparkMax(Constants.CanMotorId.SHOOTER_ROTATE_MOTOR,
       MotorType.kBrushless);
-  private final CANSparkMax hoodMotor = new CANSparkMax(Constants.CanMotorId.HOOD_MOTOR,
+  private final CANSparkMax rightHoodMotor = new CANSparkMax(Constants.CanMotorId.RIGHT_HOOD_MOTOR,
+      MotorType.kBrushless);
+  private final CANSparkMax leftHoodMotor = new CANSparkMax(Constants.CanMotorId.LEFT_HOOD_MOTOR,
       MotorType.kBrushless);
 
   private SparkMaxPIDController rightFlywheelPIDController;
@@ -59,26 +61,22 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry tvEntry = table.getEntry("tv");
   
   public double autoRPMsetp = 0;
-  // private double kP_Flywheel = Constants.Flywheel.PROPORTIONAL;
-  // private double kI_Flywheel = Constants.Flywheel.INTEGRAL;
-  // private double kD_Flywheel = Constants.Flywheel.DERIVATIVE;
-  // private double kIz_Flywheel = Constants.Flywheel.INTEGRAL_ZONE;
-  // private double kFF_Flywheel = Constants.Flywheel.FEED_FORWARD;
 
   public Shooter() {
     rotateMotor.setInverted(true);
-    hoodMotor.setInverted(true);
+    rightHoodMotor.setInverted(true);
     rightFlywheelMotor.setInverted(false);
     leftFlywheelMotor.follow(rightFlywheelMotor, true);
+    leftHoodMotor.follow(rightHoodMotor, true);
 
     rightFlywheelMotor.setIdleMode(IdleMode.kCoast);
     leftFlywheelMotor.setIdleMode(IdleMode.kCoast);
-    hoodMotor.setIdleMode(IdleMode.kCoast);
+    rightHoodMotor.setIdleMode(IdleMode.kCoast);
     rotateMotor.setIdleMode(IdleMode.kBrake);
 
     rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
     rotatePIDController = rotateMotor.getPIDController();
-    hoodPIDController = hoodMotor.getPIDController();
+    hoodPIDController = rightHoodMotor.getPIDController();
 
     SmartDashboard.putNumber("Limelight camera angle (deg)", 32.2); //29.8
     SmartDashboard.putNumber("Shooter offset", 0);
@@ -160,8 +158,8 @@ public class Shooter extends SubsystemBase {
     return (
       isValidTarget
       && Math.abs(tx) < Constants.Rotate.TOLERANCE
-      && Math.abs(autoFlywheelRpm - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
-      && Math.abs(autoFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO - hoodMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
+      && Math.abs(autoFlywheelRpm * Constants.Flywheel.HOOD_TO_FLYWHEEL_RATIO - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
+      && Math.abs(autoFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO - rightHoodMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
     );
   }
 
@@ -227,7 +225,7 @@ public class Shooter extends SubsystemBase {
 
     calcFlywheelRpm(distance);
 
-    rightFlywheelPIDController.setReference(autoFlywheelRpm, ControlType.kVelocity);
+    rightFlywheelPIDController.setReference(autoFlywheelRpm * Constants.Flywheel.HOOD_TO_FLYWHEEL_RATIO, ControlType.kVelocity);
     hoodPIDController.setReference(autoFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO, ControlType.kVelocity);
 
     autoRPMsetp = autoFlywheelRpm;
@@ -347,7 +345,7 @@ public class Shooter extends SubsystemBase {
     manualFlywheelRpm = Math.max(manualFlywheelRpm, 0);
 
     SmartDashboard.putNumber("Manual Flywheel RPM", manualFlywheelRpm);
-    rightFlywheelPIDController.setReference(manualFlywheelRpm, ControlType.kVelocity);
+    rightFlywheelPIDController.setReference(manualFlywheelRpm * Constants.Flywheel.HOOD_TO_FLYWHEEL_RATIO, ControlType.kVelocity);
     hoodPIDController.setReference(manualFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO, ControlType.kVelocity);
   }
 
@@ -361,13 +359,14 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Actual Flywheel RPM", rightFlywheelMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Actual Hood RPM", hoodMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Actual Hood RPM", rightHoodMotor.getEncoder().getVelocity());
     SmartDashboard.putNumber("Auto Flywheel RPM Trim", autoFlywheelRpmTrim);
     SmartDashboard.putNumber("Auto Flywheel RPM", autoFlywheelRpm);
     SmartDashboard.putBoolean("Target Locked", isTargetLocked());
     SmartDashboard.putNumber("Left Flywheel Current", leftFlywheelMotor.getOutputCurrent());
     SmartDashboard.putNumber("Right Flywheel Current", rightFlywheelMotor.getOutputCurrent());
-    SmartDashboard.putNumber("Hood Current", hoodMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Right Hood Current", rightHoodMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Left Hood Current", leftHoodMotor.getOutputCurrent());
 
     // SmartDashboard.putNumber("Actual Rotate Position", rotateMotor.getEncoder().getPosition());
     // SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
@@ -394,7 +393,7 @@ public class Shooter extends SubsystemBase {
       autoAim();
     } else if(isAutoAimMode && isFlywheelDisabled){
       rightFlywheelMotor.set(0);
-      hoodMotor.set(0);
+      rightHoodMotor.set(0);
       autoRotate();
     } else if(!isAutoAimMode) {
       manualAim();
