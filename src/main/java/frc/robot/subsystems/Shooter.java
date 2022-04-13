@@ -80,10 +80,10 @@ public class Shooter extends SubsystemBase {
     rotatePIDController = rotateMotor.getPIDController();
     hoodPIDController = hoodMotor.getPIDController();
 
-    SmartDashboard.putNumber("Limelight camera angle (deg)", 29.8);
+    SmartDashboard.putNumber("Limelight camera angle (deg)", 32.2); //29.8
     SmartDashboard.putNumber("Shooter offset", 0);
-    // SmartDashboard.putNumber("m", 68);
-    // SmartDashboard.putNumber("b", 1700);
+    SmartDashboard.putNumber("m", 80);
+    SmartDashboard.putNumber("b", 2300);
 
     SmartDashboard.putNumber("kP Flywheel", Constants.Flywheel.PROPORTIONAL);
     SmartDashboard.putNumber("kI Flywheel", Constants.Flywheel.INTEGRAL);
@@ -236,15 +236,15 @@ public class Shooter extends SubsystemBase {
   private void calcFlywheelRpm(double distance) {
     // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
     // 68, 1700
-    // autoFlywheelRpm = SmartDashboard.getNumber("m", 0)*distance + SmartDashboard.getNumber("b", 0) + autoFlywheelRpmTrim;
-    autoFlywheelRpm = 64*distance + 1700 + autoFlywheelRpmTrim;
+    autoFlywheelRpm = SmartDashboard.getNumber("m", 0)*distance + SmartDashboard.getNumber("b", 0) + autoFlywheelRpmTrim;
+    // autoFlywheelRpm = 64*distance + 1700 + autoFlywheelRpmTrim;
   }
 
   private double calcDistance() {
     double cameraHeight = 0.889; // height of camera in meters (from ground)
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
     double tv = tvEntry.getDouble(0.0);
-    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 29.8);
+    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 32.2);
 
     if (tv <= 0) {
       SmartDashboard.putBoolean("Valid Limelight Target", false);
@@ -348,6 +348,7 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Manual Flywheel RPM", manualFlywheelRpm);
     rightFlywheelPIDController.setReference(manualFlywheelRpm, ControlType.kVelocity);
+    hoodPIDController.setReference(manualFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO, ControlType.kVelocity);
   }
 
   private void manualSetRotatePower(Joystick stick) {
@@ -366,6 +367,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putBoolean("Target Locked", isTargetLocked());
     SmartDashboard.putNumber("Left Flywheel Current", leftFlywheelMotor.getOutputCurrent());
     SmartDashboard.putNumber("Right Flywheel Current", rightFlywheelMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Hood Current", hoodMotor.getOutputCurrent());
+
     // SmartDashboard.putNumber("Actual Rotate Position", rotateMotor.getEncoder().getPosition());
     // SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
     // SmartDashboard.putBoolean("Autoaim Enabled", isAutoAimMode);
@@ -391,6 +394,7 @@ public class Shooter extends SubsystemBase {
       autoAim();
     } else if(isAutoAimMode && isFlywheelDisabled){
       rightFlywheelMotor.set(0);
+      hoodMotor.set(0);
       autoRotate();
     } else if(!isAutoAimMode) {
       manualAim();
