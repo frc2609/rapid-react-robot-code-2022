@@ -158,8 +158,8 @@ public class Shooter extends SubsystemBase {
     return (
       isValidTarget
       && Math.abs(tx) < Constants.Rotate.TOLERANCE
-      && Math.abs(autoFlywheelRpm * Constants.Flywheel.HOOD_TO_FLYWHEEL_RATIO - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
-      && Math.abs(autoFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO - rightHoodMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
+      && Math.abs(autoFlywheelRpm * Constants.Flywheel.FLYWHEEL_OVERDRIVE - rightFlywheelMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
+      && Math.abs(autoFlywheelRpm * Constants.Hood.HOOD_OVERDRIVE - rightHoodMotor.getEncoder().getVelocity()) < Constants.AutoConstants.rpmTolerance
     );
   }
 
@@ -226,8 +226,8 @@ public class Shooter extends SubsystemBase {
     calcFlywheelRpm(distance);
     
     // changing the ratio for the hood:flywheel will change the rpm we need to set it to (i.e. the equation)
-    rightFlywheelPIDController.setReference(autoFlywheelRpm * Constants.Flywheel.HOOD_TO_FLYWHEEL_RATIO, ControlType.kVelocity);
-    hoodPIDController.setReference(autoFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO, ControlType.kVelocity);
+    rightFlywheelPIDController.setReference(autoFlywheelRpm * Constants.Flywheel.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
+    hoodPIDController.setReference(autoFlywheelRpm * Constants.Hood.HOOD_OVERDRIVE, ControlType.kVelocity);
 
     autoRPMsetp = autoFlywheelRpm;
   }
@@ -348,8 +348,8 @@ public class Shooter extends SubsystemBase {
     manualFlywheelRpm = Math.max(manualFlywheelRpm, 0);
 
     SmartDashboard.putNumber("Manual Flywheel RPM", manualFlywheelRpm);
-    rightFlywheelPIDController.setReference(manualFlywheelRpm * Constants.Flywheel.HOOD_TO_FLYWHEEL_RATIO, ControlType.kVelocity);
-    hoodPIDController.setReference(manualFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO, ControlType.kVelocity);
+    rightFlywheelPIDController.setReference(manualFlywheelRpm * Constants.Flywheel.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
+    hoodPIDController.setReference(manualFlywheelRpm * Constants.Hood.HOOD_OVERDRIVE, ControlType.kVelocity);
   }
 
   private void manualSetRotatePower(Joystick stick) {
