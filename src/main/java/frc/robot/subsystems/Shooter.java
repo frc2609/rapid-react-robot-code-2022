@@ -233,7 +233,7 @@ public class Shooter extends SubsystemBase {
   }
 
   private void calcFlywheelRpm(double distance) {
-    autoFlywheelRpm = 2.77*distance*distance + 63*distance + 1740 + autoFlywheelRpmTrim;
+    autoFlywheelRpm = 2.77*distance*distance + 62*distance + 1740 + autoFlywheelRpmTrim;
   }
 
   private double calcDistance() {
