@@ -221,7 +221,7 @@ public class Shooter extends SubsystemBase {
     if (distance < 0) {
       return;
     }
-    distance = Math.round(distance);
+    distance = Math.round(distance * 2) / 2;
 
     calcFlywheelRpm(distance);
     
@@ -233,12 +233,7 @@ public class Shooter extends SubsystemBase {
   }
 
   private void calcFlywheelRpm(double distance) {
-    // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
-    // 68, 1700
-    // autoFlywheelRpm = SmartDashboard.getNumber("m", 0)*distance + SmartDashboard.getNumber("b", 0) + autoFlywheelRpmTrim;
-    //autoFlywheelRpm = 100 * distance + 1600;
-    autoFlywheelRpm = Math.pow(1.67*distance, 2) + 68 * distance + 1700;
-    // autoFlywheelRpm = 64*distance + 1700 + autoFlywheelRpmTrim;
+    autoFlywheelRpm = 2.77*distance*distance + 63*distance + 1740 + autoFlywheelRpmTrim;
   }
 
   private double calcDistance() {
