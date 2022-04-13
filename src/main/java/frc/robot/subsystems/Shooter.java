@@ -81,7 +81,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Limelight camera angle (deg)", 32.2); //29.8
     SmartDashboard.putNumber("Shooter offset", 0);
     SmartDashboard.putNumber("m", 80);
-    SmartDashboard.putNumber("b", 2300);
+    SmartDashboard.putNumber("b", 1800);
 
     SmartDashboard.putNumber("kP Flywheel", Constants.Flywheel.PROPORTIONAL);
     SmartDashboard.putNumber("kI Flywheel", Constants.Flywheel.INTEGRAL);
