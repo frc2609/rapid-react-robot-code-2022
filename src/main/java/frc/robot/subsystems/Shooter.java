@@ -224,7 +224,8 @@ public class Shooter extends SubsystemBase {
     distance = Math.round(distance);
 
     calcFlywheelRpm(distance);
-
+    
+    // changing the ratio for the hood:flywheel will change the rpm we need to set it to (i.e. the equation)
     rightFlywheelPIDController.setReference(autoFlywheelRpm * Constants.Flywheel.HOOD_TO_FLYWHEEL_RATIO, ControlType.kVelocity);
     hoodPIDController.setReference(autoFlywheelRpm * Constants.Hood.FLYWHEEL_TO_HOOD_RATIO, ControlType.kVelocity);
 
@@ -234,7 +235,9 @@ public class Shooter extends SubsystemBase {
   private void calcFlywheelRpm(double distance) {
     // return 1.2*distance*distance + 105*distance + 2800 + autoFlywheelRpmTrim;
     // 68, 1700
-    autoFlywheelRpm = SmartDashboard.getNumber("m", 0)*distance + SmartDashboard.getNumber("b", 0) + autoFlywheelRpmTrim;
+    // autoFlywheelRpm = SmartDashboard.getNumber("m", 0)*distance + SmartDashboard.getNumber("b", 0) + autoFlywheelRpmTrim;
+    //autoFlywheelRpm = 100 * distance + 1600;
+    autoFlywheelRpm = Math.pow(1.67*distance, 2) + 68 * distance + 1700;
     // autoFlywheelRpm = 64*distance + 1700 + autoFlywheelRpmTrim;
   }
 
@@ -242,7 +245,7 @@ public class Shooter extends SubsystemBase {
     double cameraHeight = 0.889; // height of camera in meters (from ground)
     double tapeHeight = 2.65; // height of retroreflective tape in meters (from ground)
     double tv = tvEntry.getDouble(0.0);
-    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 32.2);
+    double cameraAngleDegrees = SmartDashboard.getNumber("Limelight camera angle (deg)", 31.8);
 
     if (tv <= 0) {
       SmartDashboard.putBoolean("Valid Limelight Target", false);
