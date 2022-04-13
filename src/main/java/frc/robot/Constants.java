@@ -61,7 +61,7 @@ public final class Constants {
     }
 
     public final class CanMotorId {
-        public static final int RIGHT_HOOD_MOTOR = 11;
+        public static final int RIGHT_HOOD_MOTOR = 11;  // NOTE: left hood and left flywheel may be on opposite sides, I didn't have time to check
         public static final int LEFT_HOOD_MOTOR = 12;
         public static final int SHOOTER_ROTATE_MOTOR = 10;
         public static final int SHOOTER_RIGHT_MOTOR = 9;
