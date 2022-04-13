@@ -116,7 +116,7 @@ public final class Constants {
         public static final double INTEGRAL = 0.0000005;
         public static final double DERIVATIVE = 0.00001;
         public static final double INTEGRAL_ZONE = 300;
-        public static final double FEED_FORWARD = 0.00025;
+        public static final double FEED_FORWARD = 0.0002;
         public static final double MAX_OUTPUT = 1.0;
         public static final double MIN_OUTPUT = 0;
         public static final double LOW_GOAL_RPM = 0;
