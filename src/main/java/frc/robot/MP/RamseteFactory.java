@@ -99,7 +99,7 @@ public class RamseteFactory {
                 trajectoryMap.put("startToBall", startToBall);
                 trajectoryMap.put("secondToThird", secondToThird);
                 trajectoryMap.put("thirdBallToForth", thirdBallToForth);
-                trajectoryMap.put("secondToThirdPast", secondToThirdPast);
+                trajectoryMap.put("crossTaxi", crossTaxi);
         }
 
         public Trajectory getTrajectory(String pathName) {

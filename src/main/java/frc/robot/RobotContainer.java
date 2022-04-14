@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.SerialPort;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Shooter;
@@ -30,6 +31,8 @@ import frc.robot.commands.intake.TeleopFeedBall;
 //import frc.robot.commands.intake.TeleopIntakeBall;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
+import frc.robot.auto.TwoBallAuto;
+import frc.robot.auto.ThreeBallAuto;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -108,8 +111,9 @@ public class RobotContainer {
    * 
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // Put autonomous command here when ready
-    return null;
+  public static Command getAutonomousCommand() {
+    boolean isTwoBall = SmartDashboard.getBoolean("Enable 2 Ball Auto", false);
+    if (isTwoBall) return new TwoBallAuto();
+    else return new ThreeBallAuto();
   }
 }

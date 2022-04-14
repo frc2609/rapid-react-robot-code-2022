@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.auto.ThreeBallAuto;
+// import frc.robot.auto.ThreeBallAuto;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,9 +40,10 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     // printVersion();
-    x = new ThreeBallAuto();
+    // x = new ThreeBallAuto();
     CameraServer.startAutomaticCapture();
 
+    SmartDashboard.putBoolean("Enable 2 Ball Auto", false);
     SmartDashboard.putBoolean(Constants.INTAKE_OVERRIDE_STRING, false);
     SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, false);
     RobotContainer.m_shooterSubsystem.disableAutoAim();
@@ -104,8 +105,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    m_autonomousCommand = x;
+    m_autonomousCommand = RobotContainer.getAutonomousCommand();
+    // m_autonomousCommand = x;
     RobotContainer.m_driveSubsystem.resetEncoders();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
