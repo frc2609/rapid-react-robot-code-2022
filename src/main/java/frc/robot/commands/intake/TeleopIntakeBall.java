@@ -35,7 +35,7 @@ public class TeleopIntakeBall extends CommandBase {
     if(SmartDashboard.getBoolean(Constants.INTAKE_OVERRIDE_STRING, true)) {
       isBallAtIntake = false;
       isBallAtShooter = false;
-      RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);
+      //RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 1);
     } else {
       RobotContainer.operatorJoystick.setRumble(RumbleType.kLeftRumble, 0);
     }
