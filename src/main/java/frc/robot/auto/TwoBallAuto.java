@@ -10,6 +10,7 @@ import frc.robot.commands.autoaim.AutoAim;
 import frc.robot.commands.autonomous.DriveAndExtendIntake;
 import frc.robot.commands.autonomous.DriveStopCommand;
 import frc.robot.commands.autonomous.ResetPose;
+import frc.robot.commands.autonomous.ZeroYaw;
 import frc.robot.commands.intake.FeedBall;
 import frc.robot.commands.intake.StageBall;
 import frc.robot.commands.intake.TimedIntake;
@@ -33,6 +34,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
       new AutoAim(),
       new StageBall(),
       new FeedBall(), // second ball
+      new ZeroYaw(),
       new ResetPose(factory.getTrajectory("crossTaxi").getInitialPose()),
       factory.constructRamseteCommand("crossTaxi"),
       new DriveStopCommand()

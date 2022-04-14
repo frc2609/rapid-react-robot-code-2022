@@ -54,8 +54,15 @@ public class ThreeBallAuto extends SequentialCommandGroup {
         new PointTurn(120),
         new DriveStopCommand(),
         new ZeroYaw(),
+
+        //This first
         new ResetPose(factory.getTrajectory("secondToThird").getInitialPose()),
         new DriveAndExtendIntake(factory.constructRamseteCommand("secondToThird")),
+
+        // This second
+        // new ResetPose(factory.getTrajectory("secondToThirdModified").getInitialPose()),
+        // new DriveAndExtendIntake(factory.constructRamseteCommand("secondToThirdModified")),
+
         new DriveStopCommand(),
         new TimerDelay(0.2),
         new ShootAndIntake(),

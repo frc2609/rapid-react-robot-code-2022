@@ -142,7 +142,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.enabledLooper.start();
     RobotContainer.m_shooterSubsystem.disableAutoAim(); // auto will leave it running, disables at start of teleop
     RobotContainer.m_underglowSubsystem.checkSweetSpot();
-
+    SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, true); // enable feed override on teleop start
   }
 
   /** This function is called periodically during operator control. */

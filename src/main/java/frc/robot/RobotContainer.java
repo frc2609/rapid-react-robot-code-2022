@@ -112,8 +112,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public static Command getAutonomousCommand() {
-    boolean isTwoBall = SmartDashboard.getBoolean("Enable 2 Ball Auto", false);
-    if (isTwoBall) return new TwoBallAuto();
-    else return new ThreeBallAuto();
+    // boolean isTwoBall = SmartDashboard.getBoolean("Enable 2 Ball Auto", false);
+    // if (isTwoBall) return new TwoBallAuto();
+    // else return new ThreeBallAuto();
+    return new ThreeBallAuto();
   }
 }
