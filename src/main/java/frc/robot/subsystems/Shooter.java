@@ -166,6 +166,9 @@ public class Shooter extends SubsystemBase {
   public void enableFlywheel() {
     isFlywheelDisabled = false;
   }
+  public double getRPM(){
+    return rightFlywheelMotor.getEncoder().getVelocity();
+  }
 
   public void disableFlywheel() {
     isFlywheelDisabled = true;

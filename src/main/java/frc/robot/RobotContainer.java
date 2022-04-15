@@ -21,8 +21,10 @@ import frc.robot.subsystems.Underglow;
 import frc.robot.MP.Looper;
 // import frc.robot.MP.RamseteFactory;
 import frc.robot.commands.autoaim.AutoAimAndLock;
+import frc.robot.commands.autonomous.PointTurn;
 // import frc.robot.commands.autonomous.PointTurn;
 import frc.robot.commands.intake.ExtendIntakeRunBelt;
+import frc.robot.commands.intake.IntakeAndBeltReverse;
 import frc.robot.commands.intake.IntakeReverse;
 import frc.robot.commands.intake.RetractIntakeStopBelt;
 import frc.robot.commands.intake.ReverseUpperBelt;
@@ -52,6 +54,7 @@ public class RobotContainer {
   public static JoystickButton autoAimButton = new JoystickButton(operatorJoystick, Constants.Xbox.A_BUTTON);
   public static JoystickButton outtakeButton = new JoystickButton(driveJoystick, Constants.Xbox.START_BUTTON);
   public static JoystickButton reverseUpperBeltButton = new JoystickButton(operatorJoystick, Constants.Xbox.X_BUTTON);
+  public static JoystickButton reverseIntakeButton = new JoystickButton(operatorJoystick, Constants.Xbox.Y_BUTTON);
   public static JoystickButton testButton = new JoystickButton(driveJoystick, 7);
   // subsystems
   public static Drive m_driveSubsystem;
@@ -101,9 +104,10 @@ public class RobotContainer {
     autoAimButton.toggleWhenPressed(new AutoAimAndLock());
     feedButton.whileHeld(new TeleopFeedBall());
     feedButton.whenReleased(new ReverseUpperBeltTimer(0.2));
-    outtakeButton.whileHeld(new IntakeReverse());
+    outtakeButton.whileHeld(new IntakeAndBeltReverse());
     reverseUpperBeltButton.whileHeld(new ReverseUpperBelt());
-    // testButton.whenPressed(RamseteFactory.getInstance().constructRamseteCommand("secondToThird"));
+    reverseIntakeButton.whileHeld(new IntakeReverse());
+    testButton.whenPressed(new PointTurn(110));
   }
 
   /**

@@ -37,8 +37,16 @@ public class Underglow extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(RobotContainer.m_shooterSubsystem.isAutoAim()){
+      if(RobotContainer.m_shooterSubsystem.isTargetLocked()){
+        color = Constants.LED.GREEN;
+      }else{
+        color = Constants.LED.RED;
+      }
+    }else{
     checkColor();
     color = Constants.LED.PURPLE;  // force set purple for now
+    }
     LEDController.set(color); // changes colour of LED
   }
 }
