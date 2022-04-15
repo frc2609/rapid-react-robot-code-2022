@@ -38,6 +38,6 @@ public class Intake extends SubsystemBase {
   }
 
   public void setIntakeLift(double speed) {
-    intakeLiftMotor.set(speed);
+    intakeLiftMotor.set(speed*0.7); // new motor more powerful
   }
 }
