@@ -21,7 +21,9 @@ import frc.robot.subsystems.Underglow;
 import frc.robot.MP.Looper;
 // import frc.robot.MP.RamseteFactory;
 import frc.robot.commands.autoaim.AutoAimAndLock;
+import frc.robot.commands.autoaim.SpitAim;
 import frc.robot.commands.autonomous.PointTurn;
+import frc.robot.commands.autonomous.Spit;
 // import frc.robot.commands.autonomous.PointTurn;
 import frc.robot.commands.intake.ExtendIntakeRunBelt;
 import frc.robot.commands.intake.IntakeAndBeltReverse;
@@ -34,6 +36,7 @@ import frc.robot.commands.intake.TeleopFeedBall;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import frc.robot.auto.TwoBallAuto;
+import frc.robot.auto.SecondPickTwoBallAuto;
 import frc.robot.auto.ThreeBallAuto;
 
 /**
@@ -107,7 +110,7 @@ public class RobotContainer {
     outtakeButton.whileHeld(new IntakeAndBeltReverse());
     reverseUpperBeltButton.whileHeld(new ReverseUpperBelt());
     reverseIntakeButton.whileHeld(new IntakeReverse());
-    testButton.whenPressed(new PointTurn(110));
+    testButton.whenPressed(new Spit());
   }
 
   /**
@@ -119,6 +122,9 @@ public class RobotContainer {
     // boolean isTwoBall = SmartDashboard.getBoolean("Enable 2 Ball Auto", false);
     // if (isTwoBall) return new TwoBallAuto();
     // else return new ThreeBallAuto();
-    return new ThreeBallAuto();
+
+    // return new ThreeBallAuto();
+    return new SecondPickTwoBallAuto();
+
   }
 }

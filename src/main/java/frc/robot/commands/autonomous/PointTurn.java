@@ -17,7 +17,7 @@ public class PointTurn extends CommandBase {
 
   public PointTurn(double desiredAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
-    pid = new SimPID(0.05, 0, 0); // 4.9014, 0, 0.99603 or 0.76093
+    pid = new SimPID(0.05, 0.05, 0.005); // 4.9014, 0, 0.99603 or 0.76093
     pid.setMaxOutput(10);
     angle = desiredAngle;
   }
@@ -38,7 +38,7 @@ public class PointTurn extends CommandBase {
   public void execute() {
     double p,i,d;
     p = SmartDashboard.getNumber("pt P", 0.05);
-    i = SmartDashboard.getNumber("pt I", 0);
+    i = SmartDashboard.getNumber("pt I", 0.05);
     d = SmartDashboard.getNumber("pt D", 0.005);
     pid.setConstants(p,i,d);
     double output = pid.calcPID(RobotContainer.bodyNavx.getAngle()) + 0.30291; //0.36185;

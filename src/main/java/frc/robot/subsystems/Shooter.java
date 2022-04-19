@@ -43,6 +43,9 @@ public class Shooter extends SubsystemBase {
   private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, 0.02);
   public boolean isClimbingFullRotate = false;
   public boolean isClimbingLowRotate = false;
+  public boolean isSpittingFullRotate = false;
+  public boolean isSpittingLowRotate = false;
+  public boolean isSpitting = false;
 
   private double manualFlywheelRpm = 0;
   private double autoFlywheelRpm = 0;
@@ -111,6 +114,11 @@ public class Shooter extends SubsystemBase {
 
   public void setRPMTrim(double trimAmt){
     this.autoFlywheelRpmTrim = trimAmt;
+  }
+
+  public void setFlywheelAndHoodRpmPower(double power) {
+    rightFlywheelMotor.set(power);
+    rightHoodMotor.set(power);
   }
 
   public void manualAim() {
@@ -287,6 +295,20 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  public void rotateToPos(double pos){
+    setPidValues();
+    rotatePIDController.setReference(pos, ControlType.kSmartMotion);
+  }
+
+  public void shootWithBackspin(double rpm){
+    rightFlywheelPIDController.setReference(rpm * Constants.Flywheel.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
+    hoodPIDController.setReference(rpm * 0.25, ControlType.kVelocity);
+  }
+
+  public double getRotatePos(){
+    return rotateMotor.getEncoder().getPosition();
+  }
+
   private void autoRotate() {
     double kP = 0.02; // 0.017
     double frictionPower = 0.004; //0.004;  // 0.016 in + direction, -0.013 in - direction
@@ -345,6 +367,8 @@ public class Shooter extends SubsystemBase {
 
     manualFlywheelRpm = Math.max(manualFlywheelRpm, 0);
 
+    System.out.println("USING MANUAL FLYWHEEL");
+
     SmartDashboard.putNumber("Manual Flywheel RPM", manualFlywheelRpm);
     rightFlywheelPIDController.setReference(manualFlywheelRpm * Constants.Flywheel.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
     hoodPIDController.setReference(manualFlywheelRpm * Constants.Hood.HOOD_OVERDRIVE, ControlType.kVelocity);
@@ -368,6 +392,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Right Flywheel Current", rightFlywheelMotor.getOutputCurrent());
     SmartDashboard.putNumber("Right Hood Current", rightHoodMotor.getOutputCurrent());
     SmartDashboard.putNumber("Left Hood Current", leftHoodMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Turret pos", rotateMotor.getEncoder().getPosition());
 
     // SmartDashboard.putNumber("Actual Rotate Position", rotateMotor.getEncoder().getPosition());
     // SmartDashboard.putBoolean("Climbing", isClimbingFullRotate || isClimbingLowRotate);
@@ -377,11 +402,11 @@ public class Shooter extends SubsystemBase {
 
     // setPidValues_FlywheelTuning();  // TODO: remove when done tuning flywheel and hood
 
-    if (isClimbingFullRotate) {
+    if (isClimbingFullRotate || isSpittingFullRotate) {
       rotateMotor.setSmartCurrentLimit(1); // prevent motor from burning itself out
       rotateMotor.set(-1.0);
       return;
-    } else if (isClimbingLowRotate) {
+    } else if (isClimbingLowRotate || isSpittingLowRotate) {
       rotateMotor.setSmartCurrentLimit(1);
       rotateMotor.set(-0.1);
       return;
@@ -392,11 +417,11 @@ public class Shooter extends SubsystemBase {
     // keeps autoAim enabled for rotate in auto mode so the robot doesn't lose track of the target
     if (isAutoAimMode && !isFlywheelDisabled) {
       autoAim();
-    } else if(isAutoAimMode && isFlywheelDisabled){
+    } else if(isAutoAimMode && isFlywheelDisabled && !isSpitting){
       rightFlywheelMotor.set(0);
       rightHoodMotor.set(0);
       autoRotate();
-    } else if(!isAutoAimMode) {
+    } else if(!isAutoAimMode && !isSpitting) {
       manualAim();
     }
   }

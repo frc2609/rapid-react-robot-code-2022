@@ -104,12 +104,32 @@ public class RamseteFactory {
                         new Pose2d(-4.15, 2, new Rotation2d(0.1)),
                         config);
 
+        Trajectory SecondPickDriveForwardToShoot = TrajectoryGenerator.generateTrajectory(
+                        new Pose2d(0.0, 0.0, new Rotation2d(0)),
+                        List.of(
+                        // new Translation2d(1, 1),
+                        // new Translation2d(2, 0.5)
+                        ),
+                        new Pose2d(-1.5, 0, new Rotation2d(0)),
+                        config);
+        
+        Trajectory SecondPickDriveForwardToWrongBall = TrajectoryGenerator.generateTrajectory(
+                        new Pose2d(0.0, 0.0, new Rotation2d(0)),
+                        List.of(
+                        // new Translation2d(1, 1),
+                        // new Translation2d(2, 0.5)
+                        ),
+                        new Pose2d(-1, 0, new Rotation2d(0)),
+                        config);
+
         private RamseteFactory() {
                 trajectoryMap.put("startToBall", startToBall);
                 trajectoryMap.put("secondToThird", secondToThird);
                 trajectoryMap.put("secondToThirdModified", secondToThirdModified);
                 trajectoryMap.put("thirdBallToForth", thirdBallToForth);
                 trajectoryMap.put("crossTaxi", crossTaxi);
+                trajectoryMap.put("SecondPickDriveForwardToShoot", SecondPickDriveForwardToShoot);
+                trajectoryMap.put("SecondPickDriveForwardToWrongBall", SecondPickDriveForwardToWrongBall);
         }
 
         public Trajectory getTrajectory(String pathName) {
@@ -130,7 +150,7 @@ public class RamseteFactory {
                 return m_instance;
         }
 
-        public RamseteCommand constructRamseteCommand(String pathName) {
+        public RamseteCommand  constructRamseteCommand(String pathName) {
                 return new RamseteCommand(getTrajectory(pathName),
                                 RobotContainer.m_driveSubsystem::getPose,
                                 new RamseteController(Constants.DriveKin.kRamseteB, Constants.DriveKin.kRamseteZeta),

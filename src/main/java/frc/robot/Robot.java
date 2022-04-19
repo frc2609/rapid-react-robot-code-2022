@@ -7,12 +7,14 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 //import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.auto.SecondPickTwoBallAuto;
 // import frc.robot.auto.ThreeBallAuto;
 import frc.robot.auto.ThreeBallAuto;
 import frc.robot.auto.TwoBallAuto;
@@ -30,6 +32,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private SendableChooser<Command> autoChooser = new SendableChooser<>();
+  public static DigitalInput intakeSensor;
   Command x;
 
   /**
@@ -43,8 +46,11 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    autoChooser.setDefaultOption("Threeballauto", new ThreeBallAuto());
+    intakeSensor = new DigitalInput(3);
+    autoChooser.setDefaultOption("SecondPickTwoBallAuto", new SecondPickTwoBallAuto());
+    autoChooser.addOption("Threeballauto", new ThreeBallAuto());
     autoChooser.addOption("TwoBallAuto", new TwoBallAuto());
+
     // printVersion();
     // x = new TwoBallAuto();
     // CameraServer.startAutomaticCapture();
@@ -61,7 +67,7 @@ public class Robot extends TimedRobot {
 
     
     SmartDashboard.putNumber("pt P", 0.035);
-    SmartDashboard.putNumber("pt I", 0);
+    SmartDashboard.putNumber("pt I", 0.05);
     SmartDashboard.putNumber("pt D", 0.005);
   }
 
@@ -89,7 +95,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("intakeSensor", RobotContainer.m_shooterSubsystem.getIntakeSensor());
     SmartDashboard.putBoolean("stagingSensor", RobotContainer.m_shooterSubsystem.stagingSensor.get());
     SmartDashboard.putBoolean("shooterSensor", RobotContainer.m_shooterSubsystem.shooterSensor.get());
-    RobotContainer.m_shooterSubsystem.isSweetSpot();
+    SmartDashboard.putBoolean("intakesensor", intakeSensor.get());
+    // RobotContainer.m_shooterSubsystem.isSweetSpot();
     // RamseteFactory.getInstance().printPath();
   }
 
