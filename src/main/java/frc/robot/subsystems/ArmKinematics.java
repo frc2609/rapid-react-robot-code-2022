@@ -8,7 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.utils.FiniteDoubleQueue;
 
 /** Add your docs here. */
@@ -96,12 +96,12 @@ public class ArmKinematics {
 
   public void putSD() {
 
-    SmartDashboard.putNumber("getArmAngle()", getArmAngle());
-    SmartDashboard.putNumber("getBodyAngle()", getBodyAngle());
-    SmartDashboard.putNumber("getArmAverage()", getArmAverage());
-    SmartDashboard.putNumber("getBodyAverage()", getBodyAverage());
-    SmartDashboard.putNumber("getArmVelocity()", getArmVelocity());
-    SmartDashboard.putNumber("getBodyVelocity()", getBodyVelocity());
-    SmartDashboard.putBoolean("isHooked()", isHooked());
+    // SmartDashboard.putNumber("getArmAngle()", getArmAngle());
+    // SmartDashboard.putNumber("getBodyAngle()", getBodyAngle());
+    // SmartDashboard.putNumber("getArmAverage()", getArmAverage());
+    // SmartDashboard.putNumber("getBodyAverage()", getBodyAverage());
+    // SmartDashboard.putNumber("getArmVelocity()", getArmVelocity());
+    // SmartDashboard.putNumber("getBodyVelocity()", getBodyVelocity());
+    // SmartDashboard.putBoolean("isHooked()", isHooked());
   }
 }

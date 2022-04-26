@@ -21,12 +21,13 @@ public class ExtendIntakeTimer extends CommandBase {
   @Override
   public void initialize() {
     startTime = Timer.getFPGATimestamp();
+    RobotContainer.m_intakeSubsystem.isIntake = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_intakeSubsystem.setIntakeLift(-2.5);
+    RobotContainer.m_intakeSubsystem.setIntakeLift(-0.3);
   }
 
   // Called once the command ends or is interrupted.

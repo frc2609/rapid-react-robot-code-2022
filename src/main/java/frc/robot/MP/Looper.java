@@ -9,7 +9,7 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This code runs all of the robot's loops. Loop objects are stored in a List
@@ -37,7 +37,7 @@ public class Looper {
           }
           dt_ = now - timestamp_;
           timestamp_ = now;
-          outputToSmartDashboard();
+          // outputToSmartDashboard();
         }
       }
     }
@@ -84,6 +84,6 @@ public class Looper {
   }
 
   public void outputToSmartDashboard() {
-    SmartDashboard.putNumber("looper_dt", dt_);
+    // SmartDashboard.putNumber("looper_dt", dt_);
   }
 }

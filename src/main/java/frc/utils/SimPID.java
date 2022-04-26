@@ -75,13 +75,13 @@ public class SimPID {
   }
 
   public void setMaxOutput(double max) {
-    if (max < 0.0) {
-      this.maxOutput = 0.0;
-    } else if (max > 1.0) {
-      this.maxOutput = 1.0;
-    } else {
-      this.maxOutput = max;
-    }
+    // if (max < 0.0) {
+    //   this.maxOutput = 0.0;
+    // } else if (max > 1.0) {
+    //   this.maxOutput = 1.0;
+    // } else {
+        this.maxOutput = max;
+    // }
   }
 
   public void setMinDoneCycles(int num) {

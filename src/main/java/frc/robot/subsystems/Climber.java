@@ -10,7 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -60,7 +60,7 @@ public class Climber extends SubsystemBase {
       RobotContainer.m_shooterSubsystem.isClimbingLowRotate = false;
     }
 
-    SmartDashboard.putNumber("climb step", currentStep);
+    //SmartDashboard.putNumber("climb step", currentStep);
     Calculate_theta();
     Climb_Sequence();
     Climb_Speed_Calc();
@@ -68,7 +68,7 @@ public class Climber extends SubsystemBase {
 
   private void Calculate_theta(){
     double hook_flip = 0;
-    if (currentStep>=7 && currentStep<=10) hook_flip = 356 - HookMotor.getEncoder().getPosition();
+    if (currentStep>=7 && currentStep<=10) hook_flip = 356 - HookMotor.getEncoder().getPosition(); //was 8 to 12
     else hook_flip = HookMotor.getEncoder().getPosition();
 
     // Hook Position = Encoder position * (total travel in mm:850) / (NEO rotations:356)
@@ -115,11 +115,13 @@ public class Climber extends SubsystemBase {
       case 1: sp_Hook=0.0; sp_Lift=0.0; break; // Send Hooks & Lift HOME (0)
       case 2: sp_Hook=0.0; sp_Lift=-133; break; // Lift up to MID rung
       case 3: sp_Hook=80.0; sp_Lift=-133.0; break; // Hooks pull robot up off ground
-      case 4: sp_Hook=355.0; sp_Lift=-Lift_angle_command; break; // Move under HIGH rung
-      case 5: sp_Hook=355.0; sp_Lift=-132.0; break; // Move up against HIGH rung
+      case 4: sp_Hook=355.0; sp_Lift=-Lift_angle_command; break; // Move under HIGH rung **was280.0
+      //case 5: sp_Hook=355.0; sp_Lift=-Lift_angle_command+6; break; // Move under HIGH rung
+      case 5: sp_Hook=355.0; sp_Lift=-133.0; break; // Move up against HIGH rung
       case 6: sp_Hook=330.0; sp_Lift=-133.0; break; // Move back to double hook
       case 7: sp_Hook=330.0; sp_Lift=-Lift_angle_command+6; break; // **Swing body
-      case 8: sp_Hook=0.0; sp_Lift=-Lift_angle_command+6; break; // Move under TRAVERSAL rung
+      case 8: sp_Hook=0.0; sp_Lift=-Lift_angle_command+6; break; // Move under TRAVERSAL rung **was60.0
+      //case 10: sp_Hook=0.0; sp_Lift=-Lift_angle_command+12; break; // Move under TRAVERSAL rung
       case 9: sp_Hook=0.0; sp_Lift=-133.0; break; // Move up against TRAVERSAL rung
       case 10: sp_Hook=25.0; sp_Lift=-133.0; break; // Move back to double hook
       case 11: sp_Hook=25.0; sp_Lift=-Lift_angle_command; break; // **Swing body
