@@ -23,14 +23,13 @@ public class IntakeReverse extends CommandBase {
   @Override
   public void execute() {
     RobotContainer.m_intakeSubsystem.setIntakeBelt(-Constants.Motors.INTAKE_SPEED);
-    RobotContainer.m_intakeSubsystem.setLowerBelt(-Constants.Motors.BELT_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     RobotContainer.m_intakeSubsystem.setIntakeBelt(0);
-    RobotContainer.m_intakeSubsystem.setLowerBelt(0);}
+  }
 
   // Returns true when the command should end.
   @Override

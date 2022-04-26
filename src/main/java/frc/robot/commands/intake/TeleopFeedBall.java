@@ -25,7 +25,7 @@ public class TeleopFeedBall extends CommandBase {
   @Override
   public void initialize() {
     m_intake.setUpperBelt(Constants.Motors.BELT_SPEED);
-    // DriverStation.reportError("RPMSETP" + RobotContainer.m_shooterSubsystem.autoRPMsetp, false);
+    DriverStation.reportError("RPMDelta" + (RobotContainer.m_shooterSubsystem.autoRPMsetp-RobotContainer.m_shooterSubsystem.getRPM()), false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -78,7 +78,7 @@ public class TeleopFeedBall extends CommandBase {
   @Override
   public boolean isFinished() {
     if(SmartDashboard.getBoolean(Constants.FEEDER_OVERRIDE_STRING, true)) {
-      RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 1);
+      //RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 1);
       return false;
     } else {
       RobotContainer.operatorJoystick.setRumble(RumbleType.kRightRumble, 0);

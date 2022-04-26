@@ -7,11 +7,17 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 //import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.auto.SecondPickTwoBallAuto;
+// import frc.robot.auto.ThreeBallAuto;
 import frc.robot.auto.ThreeBallAuto;
+import frc.robot.auto.TwoBallAuto;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,6 +31,8 @@ import frc.robot.auto.ThreeBallAuto;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private SendableChooser<Command> autoChooser = new SendableChooser<>();
+  public static DigitalInput intakeSensor;
   Command x;
 
   /**
@@ -38,15 +46,29 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    intakeSensor = new DigitalInput(3);
+    autoChooser.setDefaultOption("SecondPickTwoBallAuto", new SecondPickTwoBallAuto());
+    autoChooser.addOption("Threeballauto", new ThreeBallAuto());
+    autoChooser.addOption("TwoBallAuto", new TwoBallAuto());
+
     // printVersion();
-    x = new ThreeBallAuto();
-    CameraServer.startAutomaticCapture();
+    // x = new TwoBallAuto();
+    // CameraServer.startAutomaticCapture();
+
+    SmartDashboard.putBoolean("Enable 2 Ball Auto", false);
 
     SmartDashboard.putBoolean(Constants.INTAKE_OVERRIDE_STRING, false);
     SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, false);
     RobotContainer.m_shooterSubsystem.disableAutoAim();
     RobotContainer.m_shooterSubsystem.turnLimelightOff();
     SmartDashboard.putBoolean("LIMELIGHT LED", false);
+    SmartDashboard.putData(autoChooser);
+    SmartDashboard.putNumber("Matchstate", 0);
+
+    
+    SmartDashboard.putNumber("pt P", 0.035);
+    SmartDashboard.putNumber("pt I", 0.05);
+    SmartDashboard.putNumber("pt D", 0.005);
   }
 
   /**
@@ -73,6 +95,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("intakeSensor", RobotContainer.m_shooterSubsystem.getIntakeSensor());
     SmartDashboard.putBoolean("stagingSensor", RobotContainer.m_shooterSubsystem.stagingSensor.get());
     SmartDashboard.putBoolean("shooterSensor", RobotContainer.m_shooterSubsystem.shooterSensor.get());
+    SmartDashboard.putBoolean("intakesensor", intakeSensor.get());
+    // RobotContainer.m_shooterSubsystem.isSweetSpot();
     // RamseteFactory.getInstance().printPath();
   }
 
@@ -83,6 +107,9 @@ public class Robot extends TimedRobot {
     m_robotContainer.enabledLooper.stop();
     RobotContainer.m_driveSubsystem.setBrake(false);
     RobotContainer.m_shooterSubsystem.disableAutoAim();
+    RobotContainer.driveJoystick.setRumble(RumbleType.kLeftRumble, 0);
+
+    SmartDashboard.putNumber("Matchstate", -1);
   }
 
   @Override
@@ -101,8 +128,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    m_autonomousCommand = x;
+    m_autonomousCommand = autoChooser.getSelected();
+    // m_autonomousCommand = x;
     RobotContainer.m_driveSubsystem.resetEncoders();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -113,6 +140,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.enabledLooper.start();
     RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
     RobotContainer.m_underglowSubsystem.checkSweetSpot();
+    SmartDashboard.putNumber("Matchstate", 1);
   }
 
   /** This function is called periodically during autonomous. */
@@ -128,6 +156,8 @@ public class Robot extends TimedRobot {
     RobotContainer.bodyNavx.zeroYaw();
     RobotContainer.m_driveSubsystem.resetOdometry(new Pose2d());
     RobotContainer.m_driveSubsystem.resetEncoders();
+    
+    SmartDashboard.putNumber("Matchstate", 2);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -138,7 +168,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.enabledLooper.start();
     RobotContainer.m_shooterSubsystem.disableAutoAim(); // auto will leave it running, disables at start of teleop
     RobotContainer.m_underglowSubsystem.checkSweetSpot();
-
+    SmartDashboard.putBoolean(Constants.FEEDER_OVERRIDE_STRING, true); // enable feed override on teleop start
   }
 
   /** This function is called periodically during operator control. */

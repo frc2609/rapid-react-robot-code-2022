@@ -7,6 +7,7 @@ package frc.robot.auto;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.MP.RamseteFactory;
 import frc.robot.commands.autoaim.AutoAim;
+import frc.robot.commands.autonomous.AutoShoot;
 import frc.robot.commands.autonomous.DriveAndExtendIntake;
 import frc.robot.commands.autonomous.DriveStopCommand;
 import frc.robot.commands.autonomous.ResetPose;
@@ -18,9 +19,9 @@ import frc.robot.commands.intake.TimedIntake;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TwoBallAuto extends SequentialCommandGroup {
+public class OnePlusBallAuto extends SequentialCommandGroup {
   /** Creates a new ThreeBallAuto. */
-  public TwoBallAuto() {
+  public OnePlusBallAuto() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     RamseteFactory factory = RamseteFactory.getInstance();
@@ -28,13 +29,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
     addCommands(
       new DriveAndExtendIntake(factory.constructRamseteCommand("startToBall")),
       new DriveStopCommand(),
-      new TimedIntake(2),
-      new AutoAim(),
-      new FeedBall(), // first ball
-      new AutoAim(),
-      new StageBall(),
-      new FeedBall(), // second ball
-      new ZeroYaw(),
+      new AutoShoot(),
       new ResetPose(factory.getTrajectory("crossTaxi").getInitialPose()),
       factory.constructRamseteCommand("crossTaxi"),
       new DriveStopCommand()

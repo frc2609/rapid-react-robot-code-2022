@@ -164,7 +164,7 @@ public final class Constants {
         public static final int proxThreshold = 100;
     
         public static boolean isReversed = false;
-        public static double rpmTolerance = 20;
+        public static double rpmTolerance = 50;
         public static double commandTimer = 3;
     }
 }
