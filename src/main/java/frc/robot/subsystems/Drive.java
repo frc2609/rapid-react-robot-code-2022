@@ -48,7 +48,7 @@ public class Drive extends SubsystemBase {
   /** Creates a new Drive. */
   public Drive() {
     this.bodyNavx = RobotContainer.bodyNavx;
-    m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d());
+    m_odometry = new DifferentialDriveOdometry(bodyNavx.getRotation2d(), 0, 0);
 
     m_leftFrontMotor.setInverted(true);
     m_leftRearMotor.setInverted(true);
@@ -112,7 +112,7 @@ public class Drive extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(-RobotContainer.bodyNavx.getYaw()));
+    m_odometry.resetPosition(Rotation2d.fromDegrees(-RobotContainer.bodyNavx.getYaw()), 0, 0, pose);
   }
 
   public void setBrake(boolean isBrake) {
