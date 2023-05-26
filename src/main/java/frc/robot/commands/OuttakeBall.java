@@ -5,36 +5,32 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Intake;
 
-// who did this?
-// put in utilities
-// why not just use system.out.println()????
-public class Print extends CommandBase {
-  /** Creates a new Print. */
-  String message;
-  public Print(String message) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.message = message;
+public class OuttakeBall extends CommandBase {
+  private final Intake intake;
+
+  /** Creates a new OuttakeBall. */
+  public OuttakeBall(Intake intake) {
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println(message);
+    intake.outtake();
   }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    System.out.println(message);}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    intake.stopBallMotor();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

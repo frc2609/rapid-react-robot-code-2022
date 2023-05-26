@@ -2,16 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.intake;
+package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.Xbox;
+import frc.robot.subsystems.Turret;
 
-public class ReverseUpperBelt extends CommandBase {
-  /** Creates a new ReverseUpperBelt. */
-  public ReverseUpperBelt() {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class ManualTurretRotation extends CommandBase {
+  private final Turret turret;
+  private final CommandXboxController controller;
+
+  /** Creates a new ManualTurretRotation. */
+  public ManualTurretRotation(Turret turret, CommandXboxController controller) {
+    this.turret = turret;
+    this.controller = controller;
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
@@ -21,13 +28,15 @@ public class ReverseUpperBelt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_intakeSubsystem.setUpperBelt(-Constants.Motors.BELT_SPEED);
+    turret.rotateTurret(
+      MathUtil.applyDeadband(controller.getRightX(), Xbox.DEADBAND)
+    );
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.m_intakeSubsystem.setUpperBelt(0);
+    turret.stopMotor();
   }
 
   // Returns true when the command should end.

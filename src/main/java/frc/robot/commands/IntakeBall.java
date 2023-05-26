@@ -2,33 +2,30 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.intake;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
+import frc.robot.subsystems.Intake;
 
-public class IntakeReverse extends CommandBase {
-  /** Creates a new IntakeReverse. */
-  public IntakeReverse() {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class IntakeBall extends CommandBase {
+  private final Intake intake;
+
+  /** Creates a new IntakeBall. */
+  public IntakeBall(Intake intake) {
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    RobotContainer.m_intakeSubsystem.setIntakeBelt(-Constants.Motors.INTAKE_SPEED);
+    intake.intake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.m_intakeSubsystem.setIntakeBelt(0);
+    intake.stopBallMotor();
   }
 
   // Returns true when the command should end.

@@ -22,7 +22,7 @@ Wait until the router light turns yellow (it will take about a minute)
 
 ![](pictures/router.jpg)
 
-Next, go to Wi-Fi settings and connect to "2609_widetestbot"
+Next, go to Wi-Fi settings and connect to "2609_BrunoBars"
 
 ![](pictures/wifi_setting.jpg)
 

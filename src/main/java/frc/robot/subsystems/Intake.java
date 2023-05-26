@@ -1,49 +1,89 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 
-import frc.robot.Constants;
-import frc.robot.Robot;
+import frc.robot.Constants.MotorID.PWM;
 
 public class Intake extends SubsystemBase {
-  private final PWMVictorSPX lowerBeltMotor = new PWMVictorSPX(Constants.PwmMotorId.LOWER_BELT_MOTOR);
-  private final PWMVictorSPX upperBeltMotor = new PWMVictorSPX(Constants.PwmMotorId.UPPER_BELT_MOTOR);
-  private final PWMVictorSPX intakeLiftMotor = new PWMVictorSPX(Constants.PwmMotorId.INTAKE_LIFT_MOTOR);
-  private final PWMVictorSPX intakeBallMotor = new PWMVictorSPX(Constants.PwmMotorId.INTAKE_BALL_MOTOR);
-  public boolean isIntake = false;
+  private final PWMVictorSPX lowerBeltMotor = new PWMVictorSPX(PWM.LOWER_BELT);
+  private final PWMVictorSPX upperBeltMotor = new PWMVictorSPX(PWM.UPPER_BELT);
+  private final PWMVictorSPX intakeLiftMotor = new PWMVictorSPX(PWM.INTAKE_LIFT);
+  private final PWMVictorSPX intakeBallMotor = new PWMVictorSPX(PWM.INTAKE_BALL);
+  private final double beltSpeed, intakeSpeed, intakeLiftSpeed;
 
-  public Intake() {}
-
-  @Override
-  public void periodic() {
-    // if(!isIntake && Robot.intakeSensor.get()){
-    //   intakeLiftMotor.set(1);
-    // }
+  public Intake(
+    double intakeSpeed,
+    double intakeLiftSpeed,
+    double beltSpeed
+  ) {
+    this.intakeSpeed = MathUtil.clamp(intakeSpeed, 0, 1);
+    this.intakeLiftSpeed = MathUtil.clamp(intakeLiftSpeed, 0, 1);
+    this.beltSpeed = MathUtil.clamp(beltSpeed, 0, 1);
   }
 
   @Override
-  public void simulationPeriodic() {
+  public void periodic() {}
+
+  public void allBeltsForward() {
+    lowerBeltForward();
+    upperBeltForward();
   }
 
-  public void setBelts(double speed) {
-    setLowerBelt(speed);
-    setUpperBelt(speed);
+  public void allBeltsReverse() {
+    lowerBeltReverse();
+    upperBeltReverse();
   }
 
-  public void setLowerBelt(double speed) {
-    lowerBeltMotor.set(speed);
+  public void extendIntake() {
+    intakeLiftMotor.set(intakeLiftSpeed); // check whether motor should be inverted or not
   }
 
-  public void setUpperBelt(double speed) {
-    upperBeltMotor.set(speed);
+  public void retractIntake() {
+    intakeLiftMotor.set(-intakeLiftSpeed);
   }
 
-  public void setIntakeBelt(double speed) {
-    intakeBallMotor.set(speed);
+  public void lowerBeltForward() {
+    lowerBeltMotor.set(beltSpeed);
   }
 
-  public void setIntakeLift(double speed) {
-    intakeLiftMotor.set(speed);
+  public void lowerBeltReverse() {
+    lowerBeltMotor.set(-beltSpeed);
+  }
+
+  public void upperBeltForward() {
+    upperBeltMotor.set(beltSpeed);
+  }
+
+  public void upperBeltReverse() {
+    upperBeltMotor.set(-beltSpeed);
+  }
+
+  public void intake() {
+    intakeBallMotor.set(intakeSpeed);
+  }
+
+  public void outtake() {
+    intakeBallMotor.set(-intakeSpeed);
+  }
+
+  public void setIntakeLift(double set) {
+    intakeLiftMotor.set(set);
+  }
+
+  public void stopBallMotor() { intakeBallMotor.stopMotor(); }
+
+  public void stopLiftMotor() { intakeLiftMotor.stopMotor(); }
+
+  public void stopLowerBelt() { lowerBeltMotor.stopMotor(); }
+
+  public void stopUpperBelt() { upperBeltMotor.stopMotor(); }
+
+  public void stopMotors() {
+    intakeBallMotor.stopMotor();
+    intakeLiftMotor.stopMotor();
+    lowerBeltMotor.stopMotor();
+    upperBeltMotor.stopMotor();
   }
 }

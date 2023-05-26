@@ -4,14 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.Scanner;
+
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Utils {
-    public static double clamp(double input, double min, double max) {
-        return Math.max(Math.min(input, max), min);
-    }
-
     public static double degToRad(double degrees) {
         return degrees * Math.PI / 180;
     }
@@ -32,9 +29,5 @@ public class Utils {
         } catch (FileNotFoundException e) {
             SmartDashboard.putString("VERSION HASH:", "FNF ERROR");
         }
-    }
-
-    public static void print(String message) {
-        System.out.println(message);
     }
 }
