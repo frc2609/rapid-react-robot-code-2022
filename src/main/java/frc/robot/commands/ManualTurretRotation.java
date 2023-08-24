@@ -28,8 +28,8 @@ public class ManualTurretRotation extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.rotateTurret(
-      MathUtil.applyDeadband(controller.getRightX(), Xbox.DEADBAND)
+    turret.rotateTurret(0
+      // MathUtil.applyDeadband(controller.getRightX(), Xbox.DEADBAND)
     );
   }
 

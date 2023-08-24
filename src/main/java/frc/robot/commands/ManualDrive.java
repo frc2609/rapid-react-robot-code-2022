@@ -29,8 +29,9 @@ public class ManualDrive extends CommandBase {
   @Override
   public void execute() {
     drive.manualDrive(
-      MathUtil.applyDeadband(controller.getLeftX(), Xbox.DEADBAND),
-      MathUtil.applyDeadband(controller.getLeftY(), Xbox.DEADBAND)
+      MathUtil.applyDeadband(controller.getRightX(), Xbox.DEADBAND), // turn with right joystick
+      // MathUtil.applyDeadband(controller.getLeftX(), Xbox.DEADBAND),
+      MathUtil.applyDeadband(-controller.getLeftY(), Xbox.DEADBAND) // moves front of robot to intake-less side
     );
   }
 

@@ -19,7 +19,7 @@ package frc.robot;
 public final class Constants {
     public final class Drive {
         public static final double LONGITUDINAL_SPEED_MULTIPLIER = 1.0;
-        public static final double TURNING_SPEED_MULTIPLIER = 0.7;
+        public static final double TURNING_SPEED_MULTIPLIER = 0.3; //0.7;
         public static final double OVERALL_SPEED_MULTIPLIER = 0.8;
     }
 

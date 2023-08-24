@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {  
       autonomousCommand.cancel();
     }
-    robotContainer.driveSubsystem.setBrake(true);
+    robotContainer.driveSubsystem.setBrake(false);
     robotContainer.driveSubsystem.resetEncoders();
     SmartDashboard.putString("Matchstate", "Teleoperated");
   }
