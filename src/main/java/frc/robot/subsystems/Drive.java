@@ -28,6 +28,8 @@ public class Drive extends SubsystemBase {
   public Drive() {
     leftFrontMotor.setInverted(true);
     leftRearMotor.setInverted(true);
+    rightFrontMotor.setInverted(false);
+    rightRearMotor.setInverted(false);
 
     leftRearMotor.follow(leftFrontMotor, false);
     rightRearMotor.follow(rightFrontMotor, false);
