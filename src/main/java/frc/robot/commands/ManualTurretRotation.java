@@ -4,10 +4,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.Xbox;
 import frc.robot.subsystems.Turret;
 
 public class ManualTurretRotation extends CommandBase {
@@ -28,8 +26,10 @@ public class ManualTurretRotation extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.rotateTurret(0
-      // MathUtil.applyDeadband(controller.getRightX(), Xbox.DEADBAND)
+    final double left = -controller.getLeftTriggerAxis();
+    final double right = controller.getRightTriggerAxis();
+    turret.rotateTurret(
+      (-left > right) ? left : right
     );
   }
 
