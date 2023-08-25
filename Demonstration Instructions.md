@@ -33,8 +33,8 @@ Go to Wi-Fi settings and connect to "2609_BrunoBars":
 | Right Trigger      | Turn turret right |
 | DPAD Up            | Increase shooter RPM |
 | DPAD Down          | Decrease shooter RPM |
-| Left Bumper        | Retract intake |
-| Right Bumper       | Extend intake |
+| Left Bumper        | (While held) Retract intake |
+| Right Bumper       | (While held) Extend intake |
 | A Button           | (While held) Intake ball |
 | B Button           | (While held) Feed balls to shooter |
 | X Button           | (While held) Outtake ball |
