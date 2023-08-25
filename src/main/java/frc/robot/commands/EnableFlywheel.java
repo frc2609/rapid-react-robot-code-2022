@@ -13,7 +13,6 @@ public class EnableFlywheel extends CommandBase {
   /** Creates a new EnableFlywheel. */
   public EnableFlywheel(Shooter shooter) {
     this.shooter = shooter;
-    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
