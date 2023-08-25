@@ -23,13 +23,13 @@ public class EnableFlywheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.runFlywheel();
+    shooter.runMotors();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopFlywheel();
+    shooter.stopMotors();
   }
 
   // Returns true when the command should end.

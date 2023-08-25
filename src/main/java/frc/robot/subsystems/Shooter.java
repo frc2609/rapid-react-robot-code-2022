@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase {
     hoodPIDController = rightHoodMotor.getPIDController();
 
     setPidValues();
-    stopFlywheel();
+    stopMotors();
   }
 
   @Override
@@ -77,7 +77,7 @@ public class Shooter extends SubsystemBase {
     manualFlywheelRpm = Math.max(manualFlywheelRpm -= Constants.Shooter.FLYWHEEL_RPM_ADJUSTMENT, 0);
   }
 
-  public void runFlywheel() {
+  public void runMotors() {
     rightFlywheelPIDController.setReference(manualFlywheelRpm * Constants.Shooter.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
     hoodPIDController.setReference(manualFlywheelRpm * Constants.Shooter.HOOD_OVERDRIVE, ControlType.kVelocity);
   }
@@ -100,7 +100,8 @@ public class Shooter extends SubsystemBase {
         PID.Hood.MAX_OUTPUT);
   }
 
-  public void stopFlywheel() {
+  public void stopMotors() {
     rightFlywheelMotor.stopMotor();
+    rightHoodMotor.stopMotor();
   }
 }
