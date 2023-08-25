@@ -25,6 +25,7 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController flywheelPIDController;
   private SparkMaxPIDController hoodPIDController;
   private double manualFlywheelRpm = 0;
+  private boolean isEnabled = false;
 
   // public final ColorSensorV3 intakeSensor = new ColorSensorV3(I2C.Port.kMXP);
   // public final DigitalInput stagingSensor = new DigitalInput(0);
@@ -56,6 +57,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Right Hood Current", rightHoodMotor.getOutputCurrent());
     SmartDashboard.putNumber("Left Hood Current", leftHoodMotor.getOutputCurrent());
     SmartDashboard.putNumber("Manual Flywheel RPM", manualFlywheelRpm);
+    SmartDashboard.putBoolean("Shooter Enabled", isEnabled);
     // SmartDashboard.putNumber("Intake Sensor Proximity", intakeSensor.getProximity());
     // SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
     // SmartDashboard.putBoolean("Staging Sensor", stagingSensor.get());
@@ -76,13 +78,20 @@ public class Shooter extends SubsystemBase {
 
   public void increaseFlywheelRPM() {
     manualFlywheelRpm += Constants.Shooter.FLYWHEEL_RPM_ADJUSTMENT;
+    if (isEnabled) setPidReferences();
   }
 
   public void decreaseFlywheelRPM() {
     manualFlywheelRpm = Math.max(manualFlywheelRpm -= Constants.Shooter.FLYWHEEL_RPM_ADJUSTMENT, 0);
+    if (isEnabled) setPidReferences();
   }
 
   public void runMotors() {
+    isEnabled = true;
+    setPidReferences();
+  }
+
+  private void setPidReferences() {
     flywheelPIDController.setReference(manualFlywheelRpm * Constants.Shooter.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
     hoodPIDController.setReference(manualFlywheelRpm * Constants.Shooter.HOOD_OVERDRIVE, ControlType.kVelocity);
   }
@@ -106,6 +115,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stopMotors() {
+    isEnabled = false;
     rightFlywheelMotor.stopMotor();
     rightHoodMotor.stopMotor();
   }
