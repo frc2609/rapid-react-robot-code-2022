@@ -12,7 +12,7 @@ import frc.robot.commands.EnableFlywheel;
 import frc.robot.commands.ExtendIntake;
 import frc.robot.commands.IntakeBall;
 import frc.robot.commands.ManualDrive;
-import frc.robot.commands.ManualIntakeLift;
+// import frc.robot.commands.ManualIntakeLift;
 import frc.robot.commands.ManualTurretRotation;
 import frc.robot.commands.OuttakeBall;
 import frc.robot.commands.RetractIntake;
@@ -56,7 +56,7 @@ public class RobotContainer {
     underglowSubsystem = new Underglow();
 
     driveSubsystem.setDefaultCommand(new ManualDrive(driveSubsystem, controller));
-    intakeSubsystem.setDefaultCommand(new ManualIntakeLift(intakeSubsystem, controller));
+    // intakeSubsystem.setDefaultCommand(new ManualIntakeLift(intakeSubsystem, controller));
     turretSubsystem.setDefaultCommand(new ManualTurretRotation(turretSubsystem, controller));
     underglowSubsystem.setDefaultCommand(new InstantCommand(underglowSubsystem::setPurple, underglowSubsystem));
 
@@ -76,6 +76,9 @@ public class RobotContainer {
         new ExtendIntake(intakeSubsystem),
         new OuttakeBall(intakeSubsystem)
     ));
+    // intake control
+    controller.leftBumper().onTrue(new InstantCommand(intakeSubsystem::retractIntake));
+    controller.rightBumper().onTrue(new InstantCommand(intakeSubsystem::extendIntake));
     // upper and lower belts
     controller.b().whileTrue(new InstantCommand(intakeSubsystem::allBeltsForward));
     controller.y().whileTrue(new InstantCommand(intakeSubsystem::allBeltsReverse));
