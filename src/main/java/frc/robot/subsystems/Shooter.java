@@ -16,12 +16,13 @@ import frc.robot.Constants.PID;
 import frc.robot.Constants.MotorID.CAN;
 
 public class Shooter extends SubsystemBase {
+  // left motors follow right motors, so any operations on the right motors are copied by the left ones
   private final CANSparkMax leftFlywheelMotor = new CANSparkMax(CAN.SHOOTER_LEFT, MotorType.kBrushless);
   private final CANSparkMax rightFlywheelMotor = new CANSparkMax(CAN.SHOOTER_RIGHT, MotorType.kBrushless);
   private final CANSparkMax leftHoodMotor = new CANSparkMax(CAN.SHOOTER_LEFT_HOOD, MotorType.kBrushless);
   private final CANSparkMax rightHoodMotor = new CANSparkMax(CAN.SHOOTER_RIGHT_HOOD, MotorType.kBrushless);
 
-  private SparkMaxPIDController rightFlywheelPIDController;
+  private SparkMaxPIDController flywheelPIDController;
   private SparkMaxPIDController hoodPIDController;
   private double manualFlywheelRpm = 0;
 
@@ -39,7 +40,7 @@ public class Shooter extends SubsystemBase {
     leftFlywheelMotor.setIdleMode(IdleMode.kCoast);
     rightHoodMotor.setIdleMode(IdleMode.kCoast);
 
-    rightFlywheelPIDController = rightFlywheelMotor.getPIDController();
+    flywheelPIDController = rightFlywheelMotor.getPIDController();
     hoodPIDController = rightHoodMotor.getPIDController();
 
     setPidValues();
@@ -48,8 +49,8 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Actual Flywheel RPM", rightFlywheelMotor.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Actual Hood RPM", rightHoodMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Actual Flywheel RPM", getFlywheelRPM());
+    SmartDashboard.putNumber("Actual Hood RPM", getHoodRPM());
     SmartDashboard.putNumber("Left Flywheel Current", leftFlywheelMotor.getOutputCurrent());
     SmartDashboard.putNumber("Right Flywheel Current", rightFlywheelMotor.getOutputCurrent());
     SmartDashboard.putNumber("Right Hood Current", rightHoodMotor.getOutputCurrent());
@@ -69,6 +70,10 @@ public class Shooter extends SubsystemBase {
     return rightFlywheelMotor.getEncoder().getVelocity();
   }
 
+  public double getHoodRPM() {
+    return rightHoodMotor.getEncoder().getVelocity();
+  }
+
   public void increaseFlywheelRPM() {
     manualFlywheelRpm += Constants.Shooter.FLYWHEEL_RPM_ADJUSTMENT;
   }
@@ -78,17 +83,17 @@ public class Shooter extends SubsystemBase {
   }
 
   public void runMotors() {
-    rightFlywheelPIDController.setReference(manualFlywheelRpm * Constants.Shooter.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
+    flywheelPIDController.setReference(manualFlywheelRpm * Constants.Shooter.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
     hoodPIDController.setReference(manualFlywheelRpm * Constants.Shooter.HOOD_OVERDRIVE, ControlType.kVelocity);
   }
 
   private void setPidValues() {
-    rightFlywheelPIDController.setP(PID.Flywheel.PROPORTIONAL);
-    rightFlywheelPIDController.setI(PID.Flywheel.INTEGRAL);
-    rightFlywheelPIDController.setD(PID.Flywheel.DERIVATIVE);
-    rightFlywheelPIDController.setIZone(PID.Flywheel.INTEGRAL_ZONE);
-    rightFlywheelPIDController.setFF(PID.Flywheel.FEED_FORWARD);
-    rightFlywheelPIDController.setOutputRange(PID.Flywheel.MIN_OUTPUT,
+    flywheelPIDController.setP(PID.Flywheel.PROPORTIONAL);
+    flywheelPIDController.setI(PID.Flywheel.INTEGRAL);
+    flywheelPIDController.setD(PID.Flywheel.DERIVATIVE);
+    flywheelPIDController.setIZone(PID.Flywheel.INTEGRAL_ZONE);
+    flywheelPIDController.setFF(PID.Flywheel.FEED_FORWARD);
+    flywheelPIDController.setOutputRange(PID.Flywheel.MIN_OUTPUT,
         PID.Flywheel.MAX_OUTPUT);
 
     hoodPIDController.setP(PID.Hood.PROPORTIONAL);
