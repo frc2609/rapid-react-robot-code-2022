@@ -27,12 +27,14 @@ Go to Wi-Fi settings and connect to "2609_BrunoBars":
 ## Controls
 | Control            | Operation |
 | ------------------ | --------- |
-| Left Stick X Axis  | Drive forward/back |
-| Left Stick Y Axis  | Turn left/right |
-| Right Stick X Axis | Turn the turret left/right |
-| Right Stick Y Axis | Lift the intake up/down |
+| Left Stick Y Axis  | Drive forward/back |
+| Right Stick X Axis | Turn left/right |
+| Left Trigger       | Turn turret left |
+| Right Trigger      | Turn turret right |
 | DPAD Up            | Increase shooter RPM |
 | DPAD Down          | Decrease shooter RPM |
+| Left Bumper        | Retract intake |
+| Right Bumper       | Extend intake |
 | A Button           | (While held) Intake ball |
 | B Button           | (While held) Feed balls to shooter |
 | X Button           | (While held) Outtake ball |
