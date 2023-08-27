@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,6 +30,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    /* These methods log NetworkTables values & DS data to a WPILOG
+     * file that can be converted to a CSV or viewed with AdvantageScope. */
+    DataLogManager.start(); // log NetworkTables values
+    DriverStation.startDataLog(DataLogManager.getLog()); // log DS data
+
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
