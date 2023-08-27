@@ -5,10 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,10 +15,14 @@ import frc.robot.Constants.MotorID.CAN;
 
 public class Drive extends SubsystemBase {
   // motors
-  private final CANSparkMax leftFrontMotor = new CANSparkMax(CAN.DRIVE_LEFT_FRONT, MotorType.kBrushless);
-  private final CANSparkMax leftRearMotor = new CANSparkMax(CAN.DRIVE_LEFT_REAR, MotorType.kBrushless);
-  private final CANSparkMax rightFrontMotor = new CANSparkMax(CAN.DRIVE_RIGHT_FRONT, MotorType.kBrushless);
-  private final CANSparkMax rightRearMotor = new CANSparkMax(CAN.DRIVE_RIGHT_REAR, MotorType.kBrushless);
+  private final CANSparkMax leftFrontMotor =
+      new CANSparkMax(CAN.DRIVE_LEFT_FRONT, MotorType.kBrushless);
+  private final CANSparkMax leftRearMotor =
+      new CANSparkMax(CAN.DRIVE_LEFT_REAR, MotorType.kBrushless);
+  private final CANSparkMax rightFrontMotor =
+      new CANSparkMax(CAN.DRIVE_RIGHT_FRONT, MotorType.kBrushless);
+  private final CANSparkMax rightRearMotor =
+      new CANSparkMax(CAN.DRIVE_RIGHT_REAR, MotorType.kBrushless);
   // encoders
   private RelativeEncoder leftEncoder = leftFrontMotor.getEncoder();
   private RelativeEncoder rightEncoder = rightFrontMotor.getEncoder();
@@ -38,7 +41,7 @@ public class Drive extends SubsystemBase {
     rightEncoder.setPositionConversionFactor(0.4780 / 10.71);
     leftEncoder.setVelocityConversionFactor(0.4780 / 10.71);
     rightEncoder.setVelocityConversionFactor(0.4780 / 10.71);
-  
+
     resetEncoders();
     setBrake(true);
   }

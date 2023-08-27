@@ -18,7 +18,7 @@ Adding repeated # signs makes the heading smaller
 
 *Italic* text is surrounded by one asterisk *
 
-A single line code block is surrounded in one backtick: 
+A single line code block is surrounded in one backtick:
 
 `single line code block`
 

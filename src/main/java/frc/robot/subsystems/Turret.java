@@ -5,20 +5,17 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.PID;
 import frc.robot.Constants.MotorID.CAN;
+import frc.robot.Constants.PID;
 
-/**
- * Controls turret rotation only. Use {@link Shooter} for shooting balls.
- */
+/** Controls turret rotation only. Use {@link Shooter} for shooting balls. */
 public class Turret extends SubsystemBase {
   private final CANSparkMax rotateMotor = new CANSparkMax(CAN.SHOOTER_ROTATE, MotorType.kBrushless);
   private final RelativeEncoder rotateEncoder = rotateMotor.getEncoder();
@@ -55,8 +52,7 @@ public class Turret extends SubsystemBase {
     rotatePIDController.setD(PID.Rotate.DERIVATIVE);
     rotatePIDController.setIZone(PID.Rotate.INTEGRAL);
     rotatePIDController.setFF(PID.Rotate.FEED_FORWARD);
-    rotatePIDController.setOutputRange(PID.Rotate.MIN_OUTPUT,
-        PID.Rotate.MAX_OUTPUT);
+    rotatePIDController.setOutputRange(PID.Rotate.MIN_OUTPUT, PID.Rotate.MAX_OUTPUT);
   }
 
   public void stopMotor() {

@@ -14,10 +14,9 @@ public class RetractIntake extends SequentialCommandGroup {
   /** Creates a new RetractIntake. */
   public RetractIntake(Intake intake) {
     addCommands(
-      new InstantCommand(intake::retractIntake, intake),
-      new InstantCommand(intake::intake, intake),
-      Commands.waitSeconds(Constants.Intake.LIFT_TIME),
-      new InstantCommand(intake::stopMotors, intake)
-    );
+        new InstantCommand(intake::retractIntake, intake),
+        new InstantCommand(intake::intake, intake),
+        Commands.waitSeconds(Constants.Intake.LIFT_TIME),
+        new InstantCommand(intake::stopMotors, intake));
   }
 }

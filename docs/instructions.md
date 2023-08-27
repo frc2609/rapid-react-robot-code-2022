@@ -44,9 +44,9 @@ private final Joystick joystickName = new Joystick(Constants.);
 private AHRS navx;
 // below in robotInit():
 try { navx = new AHRS(SPI.Port.kMXP); }
-catch (RuntimeException ex) 
-{ 
-    System.out.println("Failed to initialize NAVX "); 
+catch (RuntimeException ex)
+{
+    System.out.println("Failed to initialize NAVX ");
 }
 ```
 
@@ -55,21 +55,21 @@ catch (RuntimeException ex)
 private AHRS navxUSB;
 // below in robotInit():
 try { navx = new AHRS(SerialPort.Port.kUSB1); }
-catch (RuntimeException ex) 
-{ 
-    System.out.println("Failed to initialize NAVX ON USB"); 
+catch (RuntimeException ex)
+{
+    System.out.println("Failed to initialize NAVX ON USB");
 }
 ```
 
 ## Motor Control
 ### Calculating Motor Values:
-X = get x axis to the power of 3: 
+X = get x axis to the power of 3:
 
 ```java
 double driveX = Math.pow(joystick.getRawAxis(0), 3);
 ```
 
-Y = get y axis to the power of 3: 
+Y = get y axis to the power of 3:
 
 ```java
 double driveY = Math.pow(joystick.getRawAxis(1), 3);
