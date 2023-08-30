@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.AllBeltsForward;
+import frc.robot.commands.AllBeltsReverse;
 import frc.robot.commands.EnableFlywheel;
 import frc.robot.commands.ExtendIntake;
 import frc.robot.commands.IntakeBall;
@@ -72,6 +74,7 @@ public class RobotContainer {
     ));
     controller.a().onFalse(new RetractIntake(intakeSubsystem));
     // outtake ball from storage
+    // this doesn't work correctly
     controller.x().onTrue(new SequentialCommandGroup(
         new ExtendIntake(intakeSubsystem),
         new OuttakeBall(intakeSubsystem)
@@ -80,8 +83,8 @@ public class RobotContainer {
     controller.leftBumper().onTrue(new InstantCommand(intakeSubsystem::retractIntake));
     controller.rightBumper().onTrue(new InstantCommand(intakeSubsystem::extendIntake));
     // upper and lower belts
-    controller.b().whileTrue(new InstantCommand(intakeSubsystem::allBeltsForward));
-    controller.y().whileTrue(new InstantCommand(intakeSubsystem::allBeltsReverse));
+    controller.b().whileTrue(new AllBeltsForward(intakeSubsystem));
+    controller.y().whileTrue(new AllBeltsReverse(intakeSubsystem));
     // flywheel
     controller.start().toggleOnTrue(new EnableFlywheel(shooterSubsystem));
     controller.povUp().onTrue(new InstantCommand(shooterSubsystem::increaseFlywheelRPM, shooterSubsystem));
