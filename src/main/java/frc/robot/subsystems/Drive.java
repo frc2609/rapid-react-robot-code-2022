@@ -38,9 +38,12 @@ public class Drive extends SubsystemBase {
     rightEncoder.setPositionConversionFactor(0.4780 / 10.71);
     leftEncoder.setVelocityConversionFactor(0.4780 / 10.71);
     rightEncoder.setVelocityConversionFactor(0.4780 / 10.71);
-  
+
     resetEncoders();
     setBrake(true);
+
+    SmartDashboard.putNumber("Left Drive Set", 0);
+    SmartDashboard.putNumber("Right Drive Set", 0);
   }
 
   @Override
@@ -54,8 +57,15 @@ public class Drive extends SubsystemBase {
   public void manualDrive(double xAxisSpeed, double yAxisSpeed) {
     final double driveX = Math.pow(xAxisSpeed, 3) * Constants.Drive.TURNING_SPEED_MULTIPLIER;
     final double driveY = Math.pow(yAxisSpeed, 3) * Constants.Drive.LONGITUDINAL_SPEED_MULTIPLIER;
-    leftFrontMotor.set((driveY - driveX) * Constants.Drive.OVERALL_SPEED_MULTIPLIER);
-    rightFrontMotor.set((driveY + driveX) * Constants.Drive.OVERALL_SPEED_MULTIPLIER);
+    
+    final double leftDriveSet = (driveY - driveX) * Constants.Drive.OVERALL_SPEED_MULTIPLIER;
+    final double rightDriveSet = (driveY + driveX) * Constants.Drive.OVERALL_SPEED_MULTIPLIER;
+    
+    SmartDashboard.putNumber("Left Drive Set", leftDriveSet);
+    SmartDashboard.putNumber("Right Drive Set", rightDriveSet);
+    
+    leftFrontMotor.set(leftDriveSet);
+    rightFrontMotor.set(rightDriveSet);
   }
 
   public void resetEncoders() {

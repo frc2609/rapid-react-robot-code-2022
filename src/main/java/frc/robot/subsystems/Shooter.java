@@ -45,7 +45,9 @@ public class Shooter extends SubsystemBase {
     hoodPIDController = rightHoodMotor.getPIDController();
 
     setPidValues();
-    stopMotors();
+    
+    SmartDashboard.putNumber("Desired Flywheel RPM", 0);
+    SmartDashboard.putNumber("Desired Hood RPM", 0);
   }
 
   @Override
@@ -92,8 +94,14 @@ public class Shooter extends SubsystemBase {
   }
 
   private void setPidReferences() {
-    flywheelPIDController.setReference(manualFlywheelRpm * Constants.Shooter.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
-    hoodPIDController.setReference(manualFlywheelRpm * Constants.Shooter.HOOD_OVERDRIVE, ControlType.kVelocity);
+    final double desiredFlywheelRPM = manualFlywheelRpm * Constants.Shooter.FLYWHEEL_OVERDRIVE;
+    final double desiredHoodRPM = manualFlywheelRpm * Constants.Shooter.HOOD_OVERDRIVE;
+    
+    SmartDashboard.putNumber("Desired Flywheel RPM", desiredFlywheelRPM);
+    SmartDashboard.putNumber("Desired Hood RPM", desiredHoodRPM);
+    
+    flywheelPIDController.setReference(desiredFlywheelRPM, ControlType.kVelocity);
+    hoodPIDController.setReference(desiredHoodRPM, ControlType.kVelocity);
   }
 
   private void setPidValues() {
