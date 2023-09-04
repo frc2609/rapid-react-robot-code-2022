@@ -28,7 +28,9 @@ public class ManualTurretRotation extends CommandBase {
   public void execute() {
     final double left = -controller.getLeftTriggerAxis();
     final double right = controller.getRightTriggerAxis();
-    turret.rotateTurret((-left > right) ? left : right);
+    turret.rotateTurret(
+      (-left > right) ? left : right
+    );
   }
 
   // Called once the command ends or is interrupted.

@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants.MotorID.PWM;
 
 public class Intake extends SubsystemBase {
@@ -12,7 +13,11 @@ public class Intake extends SubsystemBase {
   private final PWMVictorSPX intakeBallMotor = new PWMVictorSPX(PWM.INTAKE_BALL);
   private final double beltSpeed, intakeSpeed, intakeLiftSpeed;
 
-  public Intake(double intakeSpeed, double intakeLiftSpeed, double beltSpeed) {
+  public Intake(
+    double intakeSpeed,
+    double intakeLiftSpeed,
+    double beltSpeed
+  ) {
     this.intakeSpeed = MathUtil.clamp(intakeSpeed, 0, 1);
     this.intakeLiftSpeed = MathUtil.clamp(intakeLiftSpeed, 0, 1);
     this.beltSpeed = MathUtil.clamp(beltSpeed, 0, 1);
@@ -67,21 +72,13 @@ public class Intake extends SubsystemBase {
     intakeLiftMotor.set(set);
   }
 
-  public void stopBallMotor() {
-    intakeBallMotor.stopMotor();
-  }
+  public void stopBallMotor() { intakeBallMotor.stopMotor(); }
 
-  public void stopLiftMotor() {
-    intakeLiftMotor.stopMotor();
-  }
+  public void stopLiftMotor() { intakeLiftMotor.stopMotor(); }
 
-  public void stopLowerBelt() {
-    lowerBeltMotor.stopMotor();
-  }
+  public void stopLowerBelt() { lowerBeltMotor.stopMotor(); }
 
-  public void stopUpperBelt() {
-    upperBeltMotor.stopMotor();
-  }
+  public void stopUpperBelt() { upperBeltMotor.stopMotor(); }
 
   public void stopMotors() {
     intakeBallMotor.stopMotor();

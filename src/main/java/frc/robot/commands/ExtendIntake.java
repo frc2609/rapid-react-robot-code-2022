@@ -14,9 +14,10 @@ public class ExtendIntake extends SequentialCommandGroup {
   /** Creates a new ExtendIntake. */
   public ExtendIntake(Intake intake) {
     addCommands(
-        new InstantCommand(intake::extendIntake, intake),
-        new InstantCommand(intake::intake, intake),
-        Commands.waitSeconds(Constants.Intake.LIFT_TIME),
-        new InstantCommand(intake::stopMotors, intake));
+      new InstantCommand(intake::extendIntake, intake),
+      new InstantCommand(intake::intake, intake),
+      Commands.waitSeconds(Constants.Intake.LIFT_TIME),
+      new InstantCommand(intake::stopMotors, intake)
+    );
   }
 }

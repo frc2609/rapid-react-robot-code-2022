@@ -6,7 +6,7 @@ The `pictures` folder is for the embedded photos. Don't delete it.
 
 ## Prerequisites
 
-Install the latest version of WPILib 2022 from
+Install the latest version of WPILib 2022 from 
 [this link](https://github.com/wpilibsuite/allwpilib/releases/tag/v2022.3.1)
 
 Then, install the NI Game Tools for First Robotics from
@@ -30,7 +30,7 @@ After that, press `CTRL+SHIFT+P` or press the WPILib button in the top right cor
 
 ![](pictures/deploy.png)
 
-If you get an error saying `BUILD FAILED in Xs`, you are probably not connected to the robot. Scroll up in the console.
+If you get an error saying `BUILD FAILED in Xs`, you are probably not connected to the robot. Scroll up in the console. 
 
 If you see something along the lines of `Are you connected to the robot, and is it on?` You are likely not connected to the robot's Wi-Fi network.
 

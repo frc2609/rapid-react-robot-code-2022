@@ -1,30 +1,26 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 // import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxPIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import edu.wpi.first.wpilibj.DigitalInput;
 // import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Constants.MotorID.CAN;
 import frc.robot.Constants.PID;
+import frc.robot.Constants.MotorID.CAN;
 
 public class Shooter extends SubsystemBase {
-  // left motors follow right motors, so any operations on the right motors are copied by the left
-  // ones
-  private final CANSparkMax leftFlywheelMotor =
-      new CANSparkMax(CAN.SHOOTER_LEFT, MotorType.kBrushless);
-  private final CANSparkMax rightFlywheelMotor =
-      new CANSparkMax(CAN.SHOOTER_RIGHT, MotorType.kBrushless);
-  private final CANSparkMax leftHoodMotor =
-      new CANSparkMax(CAN.SHOOTER_LEFT_HOOD, MotorType.kBrushless);
-  private final CANSparkMax rightHoodMotor =
-      new CANSparkMax(CAN.SHOOTER_RIGHT_HOOD, MotorType.kBrushless);
+  // left motors follow right motors, so any operations on the right motors are copied by the left ones
+  private final CANSparkMax leftFlywheelMotor = new CANSparkMax(CAN.SHOOTER_LEFT, MotorType.kBrushless);
+  private final CANSparkMax rightFlywheelMotor = new CANSparkMax(CAN.SHOOTER_RIGHT, MotorType.kBrushless);
+  private final CANSparkMax leftHoodMotor = new CANSparkMax(CAN.SHOOTER_LEFT_HOOD, MotorType.kBrushless);
+  private final CANSparkMax rightHoodMotor = new CANSparkMax(CAN.SHOOTER_RIGHT_HOOD, MotorType.kBrushless);
 
   private SparkMaxPIDController flywheelPIDController;
   private SparkMaxPIDController hoodPIDController;
@@ -96,10 +92,8 @@ public class Shooter extends SubsystemBase {
   }
 
   private void setPidReferences() {
-    flywheelPIDController.setReference(
-        manualFlywheelRpm * Constants.Shooter.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
-    hoodPIDController.setReference(
-        manualFlywheelRpm * Constants.Shooter.HOOD_OVERDRIVE, ControlType.kVelocity);
+    flywheelPIDController.setReference(manualFlywheelRpm * Constants.Shooter.FLYWHEEL_OVERDRIVE, ControlType.kVelocity);
+    hoodPIDController.setReference(manualFlywheelRpm * Constants.Shooter.HOOD_OVERDRIVE, ControlType.kVelocity);
   }
 
   private void setPidValues() {
@@ -108,14 +102,16 @@ public class Shooter extends SubsystemBase {
     flywheelPIDController.setD(PID.Flywheel.DERIVATIVE);
     flywheelPIDController.setIZone(PID.Flywheel.INTEGRAL_ZONE);
     flywheelPIDController.setFF(PID.Flywheel.FEED_FORWARD);
-    flywheelPIDController.setOutputRange(PID.Flywheel.MIN_OUTPUT, PID.Flywheel.MAX_OUTPUT);
+    flywheelPIDController.setOutputRange(PID.Flywheel.MIN_OUTPUT,
+        PID.Flywheel.MAX_OUTPUT);
 
     hoodPIDController.setP(PID.Hood.PROPORTIONAL);
     hoodPIDController.setI(PID.Hood.INTEGRAL);
     hoodPIDController.setD(PID.Hood.DERIVATIVE);
     hoodPIDController.setIZone(PID.Hood.INTEGRAL_ZONE);
     hoodPIDController.setFF(PID.Hood.FEED_FORWARD);
-    hoodPIDController.setOutputRange(PID.Hood.MIN_OUTPUT, PID.Hood.MAX_OUTPUT);
+    hoodPIDController.setOutputRange(PID.Hood.MIN_OUTPUT,
+        PID.Hood.MAX_OUTPUT);
   }
 
   public void stopMotors() {

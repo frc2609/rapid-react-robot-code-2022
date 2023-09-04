@@ -28,7 +28,9 @@ public class ManualIntakeLift extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.setIntakeLift(MathUtil.applyDeadband(controller.getRightY(), Xbox.DEADBAND));
+    intake.setIntakeLift(
+      MathUtil.applyDeadband(controller.getRightY(), Xbox.DEADBAND)
+    );
   }
 
   // Called once the command ends or is interrupted.
