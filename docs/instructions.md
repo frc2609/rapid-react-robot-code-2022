@@ -1,5 +1,9 @@
 # Robot Code
 
+## Formatting
+- Check formatting: `./gradlew spotlessCheck` (output is difficult to read through powershell, so this may be of limited use)
+- Apply formatting: `./gradlew spotlessApply`
+
 ## Imports
 - `com.revrobotics.CANSparkMax` // Spark Max motor controllers
 - `com.revrobotics.CANSparkMaxLowLevel.MotorType` // to tell motor controller to use brushless motor
